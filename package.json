@@ -10,7 +10,7 @@
     "@oclif/errors": "^1",
     "@salesforce/command": "^2",
     "@salesforce/core": "^2",
-    "flowhealthcheck--core": "^1.0.24",
+    "flowhealthcheck--core": "^1.0.26",
     "tslib": "^1"
   },
   "devDependencies": {
