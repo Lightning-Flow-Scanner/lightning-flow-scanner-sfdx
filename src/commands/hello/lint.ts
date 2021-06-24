@@ -33,7 +33,7 @@ export default class Lint extends SfdxCommand {
   protected static supportsDevhubUsername = true;
 
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
-  protected static requiresProject = true;
+  protected static requiresProject = false;
 
   public async run(): Promise<AnyJson> {
 
