@@ -2,6 +2,7 @@ import { flags, SfdxCommand } from '@salesforce/command';
 import { Messages, SfdxError } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
 import * as core from 'flowhealthcheck--core';
+import missingFaultPaths = require('./main-example.json');
 
 // Initialize Messages with the current plugin directory
 Messages.importMessagesDirectory(__dirname);
@@ -38,9 +39,14 @@ export default class Lint extends SfdxCommand {
   public async run(): Promise<AnyJson> {
 
     // this.org is guaranteed because requiresUsername=true, as opposed to supportsUsername
-    // todo get latest version of all flows
 
-    const outputString = 'Hello ' + core.scan();
+    const flow = {
+      label: 'main',
+      path: 'anypath',
+      xmldata : missingFaultPaths
+    };
+
+    const outputString = 'Hello ' + JSON.stringify(core.scan([flow]));
     this.ux.log(outputString);
     // todo use project
     // this.project.
