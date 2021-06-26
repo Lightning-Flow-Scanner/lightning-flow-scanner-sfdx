@@ -10,7 +10,7 @@
     "@oclif/errors": "^1",
     "@salesforce/command": "^2",
     "@salesforce/core": "^2",
-    "flowhealthcheck--core": "^1.0.42",
+    "flowhealthcheck--core": "^1.0.70",
     "tslib": "^1"
   },
   "devDependencies": {
@@ -54,7 +54,7 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "IdeaProjects/flowhealthcheck-cli",
+  "repository": "https://github.com/IdeaProjects/flowhealthcheck-cli",
   "scripts": {
     "lint": "tslint --project . --config tslint.json --format stylish",
     "postpack": "rm -f oclif.manifest.json",
@@ -62,5 +62,6 @@
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
-  }
+  },
+  "main": "index.js"
 }

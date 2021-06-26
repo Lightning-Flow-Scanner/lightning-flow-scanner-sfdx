@@ -1,7 +1,7 @@
 import { flags, SfdxCommand } from '@salesforce/command';
 import { Messages, SfdxError } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
-import * as core from 'flowhealthcheck--core';
+import * as core from 'flowhealthcheck--core/out';
 import missingFaultPaths = require('./main-example.json');
 
 // Initialize Messages with the current plugin directory
