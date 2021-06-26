@@ -39,14 +39,15 @@ export default class Lint extends SfdxCommand {
   public async run(): Promise<AnyJson> {
 
     // this.org is guaranteed because requiresUsername=true, as opposed to supportsUsername
+    // const test = { Flow : missingFaultPaths};
 
-    const flow = {
+    const aflow = {
       label: 'main',
       path: 'anypath',
       xmldata : missingFaultPaths
     };
 
-    const outputString = 'Hello ' + JSON.stringify(core.scan([flow]));
+    const outputString = 'Hello ' + JSON.stringify(core.scan(aflow));
     this.ux.log(outputString);
     // todo use project
     // this.project.
