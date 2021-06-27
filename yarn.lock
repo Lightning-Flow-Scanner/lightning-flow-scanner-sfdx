@@ -386,9 +386,9 @@
   integrity sha512-NYrtPht0wGzhwe9+/idPaBB+TqkY9AhTvOLMkThm0IoEfLaiVQZwBwyJ5puCkO3AUCWrmcoePjp2mbFocKy4SQ==
 
 "@types/node@*":
-  version "15.12.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.12.4.tgz#e1cf817d70a1e118e81922c4ff6683ce9d422e26"
-  integrity sha512-zrNj1+yqYF4WskCMOHwN+w9iuD12+dGm0rQ35HLl9/Ouuq52cEtd0CH9qMgrdNmi5ejC1/V7vKEXYubB+65DkA==
+  version "15.12.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.12.5.tgz#9a78318a45d75c9523d2396131bd3cca54b2d185"
+  integrity sha512-se3yX7UHv5Bscf8f1ERKvQOD6sTyycH3hdaoozvaLxgUiY5lIGEeH37AD0G0Qi9kPqihPn0HOfd2yaIEN9VwEg==
 
 "@types/node@^10":
   version "10.17.60"
@@ -1418,9 +1418,9 @@ find-yarn-workspace-root@^2.0.0:
     micromatch "^4.0.2"
 
 flowhealthcheck--core@^1.0.70:
-  version "1.0.77"
-  resolved "https://registry.yarnpkg.com/flowhealthcheck--core/-/flowhealthcheck--core-1.0.77.tgz#3b2e5a694f829113bed1182fa7885b3372a28268"
-  integrity sha512-v42aFG+aAzEdhmvHmkstsPhvr9L/7lHqwOk1vHJRHqmio/FzAMemyrL2M8RoIIa5dMqRpwrFQyACxUSJlmKtIA==
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/flowhealthcheck--core/-/flowhealthcheck--core-1.1.5.tgz#9eb351701d51a08c037d0639cc295165b806d82e"
+  integrity sha512-r55gm5qZQB7GwaW8m1yFFRaQSzbGJ+JjWkFTLr/79Iz3pDNYh9mrBqH0XFyZl7LKM2U0fwev7xVqCIMTZjbzTg==
   dependencies:
     tslint "^6.1.3"
     typescript "^4.3.4"
