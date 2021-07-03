@@ -10,7 +10,7 @@ import {ParseFlows} from "../../libs/ParseFlows";
 
 Messages.importMessagesDirectory(__dirname);
 
-const messages = Messages.loadMessages('flowhealthcheck-cli', 'command');
+const messages = Messages.loadMessages('lightningflowscan-cli', 'command');
 
 export default class flowscan extends SfdxCommand {
 

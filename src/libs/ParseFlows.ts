@@ -1,7 +1,7 @@
-import * as fs from 'mz/fs';
 import path = require('path');
 import {Flow} from 'lightningflowscan-core/out/main/models/Flow';
 import {XMLParser} from './XMLParser';
+import { fs } from '@salesforce/core/lib/util/fs';
 
 export async function ParseFlows(selectedUris: any) {
 
