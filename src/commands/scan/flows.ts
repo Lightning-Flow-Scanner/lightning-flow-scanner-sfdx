@@ -12,7 +12,7 @@ Messages.importMessagesDirectory(__dirname);
 
 const messages = Messages.loadMessages('lightningflowscan-cli', 'command');
 
-export default class flowscan extends SfdxCommand {
+export default class flows extends SfdxCommand {
 
   public static description = messages.getMessage('commandDescription');
 
@@ -24,7 +24,6 @@ export default class flowscan extends SfdxCommand {
 
     const path = await SfdxProject.resolveProjectPath();
     const flowFiles = FindFlows(path);
-    // todo check for flow ignore file
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
     const scanResults: ScanResult[] = core.scan(parsedFlows);
     const lintResults: Violation[] = [];
