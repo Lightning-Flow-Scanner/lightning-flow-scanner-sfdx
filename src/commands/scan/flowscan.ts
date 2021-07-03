@@ -1,11 +1,12 @@
-import {flags, SfdxCommand} from '@salesforce/command';
-import {Messages, SfdxError} from '@salesforce/core';
+import {SfdxCommand} from '@salesforce/command';
+import {Messages, SfdxError, SfdxProject} from '@salesforce/core';
 import {AnyJson} from '@salesforce/ts-types';
 import * as core from 'lightningflowscan-core/out';
 import {Flow} from 'lightningflowscan-core/out/main/models/Flow';
 import {ScanResult} from 'lightningflowscan-core/out/main/models/ScanResult';
-import missingFaultPaths = require('./main-example.json');
 import { Violation } from '../../models/Violation';
+import {FindFlows} from "../../libs/FindFlows";
+import {ParseFlows} from "../../libs/ParseFlows";
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -16,20 +17,15 @@ export default class flowscan extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
   protected static requiresUsername = false;
-  protected static supportsDevhubUsername = true;
-  protected static requiresProject = false;
+  protected static supportsDevhubUsername = false;
+  protected static requiresProject = true;
 
   public async run(): Promise<AnyJson> {
 
-    // todo fetch flows from project (this.project)
-    const aFlow = new Flow({
-      label: 'main',
-      path: 'anypath',
-      xmldata: missingFaultPaths
-    });
-    const flows = [aFlow];
-
-    const scanResults: ScanResult[] = core.scan(flows);
+    const path = await SfdxProject.resolveProjectPath();
+    const flowFiles = FindFlows(path);
+    const parsedFlows: Flow[] = await ParseFlows(flowFiles);
+    const scanResults: ScanResult[] = core.scan(parsedFlows);
     const lintResults: Violation[] = [];
     for (const scanResult of scanResults) {
       for (const ruleResult of scanResult.ruleResults) {
@@ -55,7 +51,7 @@ export default class flowscan extends SfdxCommand {
       throw new SfdxError(messages.getMessage('commandDescription'), 'results',
         warnings, 1);
     }
-    // If no issues
+    // If there are no lintresults
     return 0;
   }
 }

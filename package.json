@@ -11,7 +11,9 @@
     "@salesforce/command": "^2",
     "@salesforce/core": "^2",
     "lightningflowscan-core": "^1.1.1",
-    "tslib": "^1"
+    "mz": "^2.7.0",
+    "tslib": "^1",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
