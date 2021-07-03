@@ -1,17 +1,17 @@
 {
-  "name": "flowhealthcheck-cli",
-  "version": "0.0.0",
+  "name": "lightningflowscan-cli",
+  "version": "0.0.3",
   "author": "Ruben",
-  "bugs": "https://github.com/IdeaProjects/flowhealthcheck-cli/issues",
-  "type": "module",
+  "bugs": "https://github.com/Force-Config-Control/lightningflowscan-cli/issues",
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/errors": "^1",
     "@salesforce/command": "^2",
     "@salesforce/core": "^2",
+    "@sinonjs/fake-timers": "6",
+    "@types/sinonjs__fake-timers": "6",
     "lightningflowscan-core": "^1.1.1",
-    "mz": "^2.7.0",
     "tslib": "^1",
     "xml2js": "^0.4.23"
   },
@@ -21,8 +21,8 @@
     "@oclif/test": "^1",
     "@salesforce/dev-config": "1.4.1",
     "@types/chai": "^4",
+    "@types/jsforce": "^1.9.30",
     "@types/mocha": "^5",
-    "@types/node": "^10",
     "chai": "^4",
     "globby": "^8",
     "mocha": "^5",
@@ -39,7 +39,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/IdeaProjects/flowhealthcheck-cli",
+  "homepage": "https://github.com/Force-Config-Control/lightningflowscan-cli/",
   "keywords": [
     "sfdx-plugin"
   ],
@@ -56,7 +56,7 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "https://github.com/IdeaProjects/flowhealthcheck-cli",
+  "repository": "https://github.com/Force-Config-Control/lightningflowscan-cli.git",
   "scripts": {
     "lint": "tslint --project . --config tslint.json --format stylish",
     "postpack": "rm -f oclif.manifest.json",

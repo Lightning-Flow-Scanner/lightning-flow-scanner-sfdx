@@ -4,13 +4,13 @@ import {AnyJson} from '@salesforce/ts-types';
 import * as core from 'lightningflowscan-core/out';
 import {Flow} from 'lightningflowscan-core/out/main/models/Flow';
 import {ScanResult} from 'lightningflowscan-core/out/main/models/ScanResult';
-import { Violation } from '../../models/Violation';
+import {Violation} from '../../models/Violation';
 import {FindFlows} from "../../libs/FindFlows";
 import {ParseFlows} from "../../libs/ParseFlows";
 
 Messages.importMessagesDirectory(__dirname);
 
-const messages = Messages.loadMessages('flowhealthcheck-cli', 'command');
+const messages = Messages.loadMessages('lightningflowscan-cli', 'command');
 
 export default class flowscan extends SfdxCommand {
 
@@ -24,6 +24,7 @@ export default class flowscan extends SfdxCommand {
 
     const path = await SfdxProject.resolveProjectPath();
     const flowFiles = FindFlows(path);
+    // todo check for flow ignore file
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
     const scanResults: ScanResult[] = core.scan(parsedFlows);
     const lintResults: Violation[] = [];
@@ -41,15 +42,12 @@ export default class flowscan extends SfdxCommand {
         }
       }
     }
-
     if (lintResults.length > 0) {
-      const warnings : string[] = [];
-      for(const lintResult of lintResults){
-        warnings.push('in Flow \'' + lintResult.label + '\', Rule:\''+lintResult.ruleLabel +'\' is violated '  + lintResult.numberOfViolations + ' times');
+      const warnings: string[] = [];
+      for (const lintResult of lintResults) {
+        warnings.push('in Flow \'' + lintResult.label + '\', Rule:\'' + lintResult.ruleLabel + '\' is violated ' + lintResult.numberOfViolations + ' times');
       }
-
-      throw new SfdxError(messages.getMessage('commandDescription'), 'results',
-        warnings, 1);
+      throw new SfdxError(messages.getMessage('commandDescription'), 'results', warnings, 1);
     }
     // If there are no lintresults
     return 0;
