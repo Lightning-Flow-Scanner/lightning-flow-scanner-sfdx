@@ -12,7 +12,7 @@ Messages.importMessagesDirectory(__dirname);
 
 const messages = Messages.loadMessages('lightningflowscan-cli', 'command');
 
-export default class flowscan extends SfdxCommand {
+export default class flows extends SfdxCommand {
 
   public static description = messages.getMessage('commandDescription');
 
