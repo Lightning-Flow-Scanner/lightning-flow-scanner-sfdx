@@ -1,4 +1,4 @@
 {
-  "commandDescription": "print a greeting and your org IDs",
+  "commandDescription": "Fix the following issues:",
   "errorNoOrgResults": "No results found for the org '%s'."
 }
