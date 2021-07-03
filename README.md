@@ -8,7 +8,7 @@ $ npm install -g lightningflowscan-cli
 $ sfdx COMMAND
 running command...
 $ sfdx (-v|--version|version)
-lightningflowscan-cli/0.0.4 darwin-x64 node-v14.16.1
+lightningflowscan-cli/0.0.5 darwin-x64 node-v14.16.1
 $ sfdx --help [COMMAND]
 USAGE
   $ sfdx COMMAND
