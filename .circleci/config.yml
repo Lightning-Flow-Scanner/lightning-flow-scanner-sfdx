@@ -49,7 +49,7 @@ jobs:
 
 workflows:
   version: 2
-  "flowhealthcheck-cli":
+  "lightningflowscan-cli":
     jobs:
       - node-latest
       - node-8

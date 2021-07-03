@@ -1,7 +1,7 @@
 import {readdirSync, statSync} from 'fs';
 import * as path from 'path';
 
-export function FindFlows(dir: string) {
+export function FindIgnoreFile(dir: string) {
   const allFiles = (dir, ext, files?, result?, regex?) => {
     files = files || readdirSync(dir);
     result = result || [];
@@ -23,5 +23,5 @@ export function FindFlows(dir: string) {
     }
     return result;
   };
-  return allFiles(dir, '.flow-meta.xml');
+  return allFiles(dir, '.flowscanignore');
 }

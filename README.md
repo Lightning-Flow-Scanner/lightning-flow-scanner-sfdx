@@ -1,4 +1,4 @@
-flowhealthcheck-cli
+lightningflowscan-cli
 ===================
 
 <!-- install -->
@@ -8,7 +8,7 @@ $ npm install -g lightningflowscan-cli
 $ sfdx COMMAND
 running command...
 $ sfdx (-v|--version|version)
-lightningflowscan-cli/0.0.5 darwin-x64 node-v14.16.1
+lightningflowscan-cli/0.0.7 darwin-x64 node-v14.16.1
 $ sfdx --help [COMMAND]
 USAGE
   $ sfdx COMMAND
@@ -20,7 +20,7 @@ $ npm install -g lightningflowscan-cli
 $ sfdx hello:lint
 running command...
 $ sfdx (-v|--version|version)
-flowhealthcheck-cli/0.0.0 darwin-x64 node-v16.1.0
+lightningflowscan-cli/0.0.0 darwin-x64 node-v16.1.0
 $ sfdx --help [COMMAND]
 USAGE
   $ sfdx scan:flowscan

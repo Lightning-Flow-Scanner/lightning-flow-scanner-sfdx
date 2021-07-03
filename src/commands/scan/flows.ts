@@ -7,6 +7,7 @@ import {ScanResult} from 'lightningflowscan-core/out/main/models/ScanResult';
 import {Violation} from '../../models/Violation';
 import {FindFlows} from "../../libs/FindFlows";
 import {ParseFlows} from "../../libs/ParseFlows";
+import {FindIgnoreFile} from "../../libs/FindIgnoreFile";
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -24,12 +25,20 @@ export default class flows extends SfdxCommand {
 
     const path = await SfdxProject.resolveProjectPath();
     const flowFiles = FindFlows(path);
+    const ignoreFiles = FindIgnoreFile(path);
+    if(ignoreFiles && ignoreFiles.length > 0){
+
+    }
+
+    // todo get ignore file
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
     const scanResults: ScanResult[] = core.scan(parsedFlows);
     const lintResults: Violation[] = [];
     for (const scanResult of scanResults) {
       for (const ruleResult of scanResult.ruleResults) {
         if (ruleResult.results.length > 0) {
+
+          
           lintResults.push(
             new Violation(
               scanResult.flow.label,
