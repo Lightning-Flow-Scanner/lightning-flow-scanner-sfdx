@@ -9,7 +9,7 @@ import {FindFlows} from "../../libs/FindFlows";
 import {ParseFlows} from "../../libs/ParseFlows";
 import * as path from 'path';
 import {IgnoredFlowViolations} from "../../models/IgnoredFlowViolations";
-import {IgnoredViolation} from "../../models/IgnoredViolation";
+import {IgnoredRuleViolationsInFlows} from "../../models/IgnoredRuleViolationsInFlows";
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -34,12 +34,12 @@ export default class flows extends SfdxCommand {
       foundPath = fs.readJsonSync(pathToIgnoreFile);
     }
     let ignoredFlowViolations;
-    let ignoredViolations;
+    let ignoredRuleViolationsInFlows;
     if (foundPath) {
       let ignoredFlows = foundPath['flowsToBeIgnored'];
       ignoredFlowViolations = new IgnoredFlowViolations(ignoredFlows);
       let ignoredRulesInFlows = foundPath['rulesToBeIgnoredInFlows'];
-      ignoredViolations = new IgnoredViolation(ignoredRulesInFlows);
+      ignoredRuleViolationsInFlows = new IgnoredRuleViolationsInFlows(ignoredRulesInFlows);
     }
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
     const scanResults: ScanResult[] = core.scan(parsedFlows);
@@ -47,19 +47,16 @@ export default class flows extends SfdxCommand {
     for (const scanResult of scanResults) {
       for (const ruleResult of scanResult.ruleResults) {
         if (ruleResult.results.length > 0) {
-
-
           if (ignoredFlowViolations && ignoredFlowViolations.flowlabels.length > 0 && ignoredFlowViolations.flowlabels.find(violation => {
             return (violation == scanResult.flow.label);
           })) {
             continue;
           }
-          // todo per rule
-          // else if (ignoredViolations && ignoredViolations.ignoredViolations.length > 0 && ignoredViolations.ignoredViolations.find(violation => {
-          //   return (violation.flowname == scanResult.flow.label && violation.rulename == ruleResult.ruleLabel);
-          // })) {
-          //   continue;
-          // }
+          else if (ignoredRuleViolationsInFlows && ignoredRuleViolationsInFlows.ignoredRuleViolationsInFlows.length > 0 && ignoredRuleViolationsInFlows.ignoredRuleViolationsInFlows.find(violation => {
+            return (violation.flowname == scanResult.flow.label && violation.rulename == ruleResult.ruleLabel);
+          })) {
+            continue;
+          }
           else {
             lintResults.push(
               new Violation(
