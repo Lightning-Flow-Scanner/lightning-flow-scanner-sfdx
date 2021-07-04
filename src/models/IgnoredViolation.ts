@@ -1,12 +1,12 @@
 export class IgnoredViolation {
 
-  public flowlabel: string;
-  public ruleLabel?: string;
+  public ignoredRulesInFlows;
 
-  constructor(label: string, ruleLabel?: string) {
-    this.flowlabel = label;
-    if(ruleLabel){
-      this.ruleLabel = ruleLabel;
+  constructor(ignoredRulesInFlows: any) {
+    if (Array.isArray(ignoredRulesInFlows)) {
+      this.ignoredRulesInFlows = ignoredRulesInFlows;
+    } else {
+      this.ignoredRulesInFlows = [ignoredRulesInFlows];
     }
   }
 }
