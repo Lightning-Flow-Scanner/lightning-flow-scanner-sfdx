@@ -23,5 +23,5 @@ export function FindIgnoreFile(dir: string) {
     }
     return result;
   };
-  return allFiles(dir, '.flowscanignore');
+  return allFiles(dir, '.flowscanignore.json');
 }

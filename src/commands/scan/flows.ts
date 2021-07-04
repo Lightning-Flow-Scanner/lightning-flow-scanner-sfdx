@@ -1,5 +1,5 @@
 import {SfdxCommand} from '@salesforce/command';
-import {Messages, SfdxError, SfdxProject} from '@salesforce/core';
+import {fs, Messages, SfdxError, SfdxProject} from '@salesforce/core';
 import {AnyJson} from '@salesforce/ts-types';
 import * as core from 'lightningflowscan-core/out';
 import {Flow} from 'lightningflowscan-core/out/main/models/Flow';
@@ -7,7 +7,8 @@ import {ScanResult} from 'lightningflowscan-core/out/main/models/ScanResult';
 import {Violation} from '../../models/Violation';
 import {FindFlows} from "../../libs/FindFlows";
 import {ParseFlows} from "../../libs/ParseFlows";
-import {FindIgnoreFile} from "../../libs/FindIgnoreFile";
+import * as path from 'path';
+import {IgnoredFlowViolations} from "../../models/IgnoredFlowViolations";
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -23,37 +24,53 @@ export default class flows extends SfdxCommand {
 
   public async run(): Promise<AnyJson> {
 
-    const path = await SfdxProject.resolveProjectPath();
-    const flowFiles = FindFlows(path);
-    const ignoreFiles = FindIgnoreFile(path);
-    if(ignoreFiles && ignoreFiles.length > 0){
+    const aPath = await SfdxProject.resolveProjectPath();
+    const flowFiles = FindFlows(aPath);
+    // const ignoreFiles = FindIgnoreFile(aPath);
 
+    const pathToIgnoreFile = path.join(aPath, 'flows.scanignore.json');
+    let foundPath;
+    if(fs.existsSync(pathToIgnoreFile)){
+      foundPath = fs.readJsonSync(pathToIgnoreFile);
     }
+    let ignoredFlowViolations;
+    if(foundPath){
+      let ignoredFlows = foundPath['ignoredFlows'];
+      if(Array.isArray(ignoredFlows)){
+        ignoredFlowViolations = new IgnoredFlowViolations(ignoredFlows);
+      } else {
+        ignoredFlowViolations = new IgnoredFlowViolations([ignoredFlows]);
+      }
+    }
+    // this.ux.log("ignoredFlowViolations: " + ignoredFlowViolations.flowlabels.length);
 
-    // todo get ignore file
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
     const scanResults: ScanResult[] = core.scan(parsedFlows);
     const lintResults: Violation[] = [];
     for (const scanResult of scanResults) {
       for (const ruleResult of scanResult.ruleResults) {
         if (ruleResult.results.length > 0) {
-
-          
-          lintResults.push(
-            new Violation(
-              scanResult.flow.label,
-              ruleResult.ruleLabel,
-              ruleResult.ruleDescription,
-              ruleResult.results.length
-            )
-          );
+          if(ignoredFlowViolations && ignoredFlowViolations.flowlabels.length > 0 && ignoredFlowViolations.flowlabels.find(violation => {
+            return (violation == scanResult.flow.label);
+          })){
+            continue;
+          } else {
+            lintResults.push(
+              new Violation(
+                scanResult.flow.label,
+                ruleResult.ruleLabel,
+                ruleResult.ruleDescription,
+                ruleResult.results.length
+              )
+            );
+          }
         }
       }
     }
     if (lintResults.length > 0) {
       const warnings: string[] = [];
       for (const lintResult of lintResults) {
-        warnings.push('in Flow \'' + lintResult.label + '\', Rule:\'' + lintResult.ruleLabel + '\' is violated ' + lintResult.numberOfViolations + ' times');
+        warnings.push('in Flow \'' + lintResult.flowlabel + '\', Rule:\'' + lintResult.ruleLabel + '\' is violated ' + lintResult.numberOfViolations + ' times');
       }
       throw new SfdxError(messages.getMessage('commandDescription'), 'results', warnings, 1);
     }

@@ -1,4 +1,4 @@
-import path = require('path');
+import * as path from 'path';
 import {Flow} from 'lightningflowscan-core/out/main/models/Flow';
 import {XMLParser} from './XMLParser';
 import { fs } from '@salesforce/core/lib/util/fs';
