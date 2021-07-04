@@ -23,41 +23,38 @@ export default class flows extends SfdxCommand {
   protected static supportsDevhubUsername = false;
   protected static requiresProject = true;
 
+  public ignoredFlowViolations: IgnoredFlowViolations;
+  public ignoredRuleViolationsInFlows: IgnoredRuleViolationsInFlows;
+
   public async run(): Promise<AnyJson> {
 
     const aPath = await SfdxProject.resolveProjectPath();
     const flowFiles = FindFlows(aPath);
 
+    // todo ugly code
+    // if ignore file found, populate this.ignoredFlowViolations & this.ignoredRuleViolationsInFlows
     const pathToIgnoreFile = path.join(aPath, 'flows.scanignore.json');
-    let foundPath;
-    if (fs.existsSync(pathToIgnoreFile)) {
-      foundPath = fs.readJsonSync(pathToIgnoreFile);
+    if(pathToIgnoreFile){
+      this.createIgnoreViolations(pathToIgnoreFile);
     }
-    let ignoredFlowViolations;
-    let ignoredRuleViolationsInFlows;
-    if (foundPath) {
-      let ignoredFlows = foundPath['flowsToBeIgnored'];
-      ignoredFlowViolations = new IgnoredFlowViolations(ignoredFlows);
-      let ignoredRulesInFlows = foundPath['rulesToBeIgnoredInFlows'];
-      ignoredRuleViolationsInFlows = new IgnoredRuleViolationsInFlows(ignoredRulesInFlows);
-    }
+
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
     const scanResults: ScanResult[] = core.scan(parsedFlows);
     const lintResults: Violation[] = [];
     for (const scanResult of scanResults) {
       for (const ruleResult of scanResult.ruleResults) {
         if (ruleResult.results.length > 0) {
-          if (ignoredFlowViolations && ignoredFlowViolations.flowlabels.length > 0 && ignoredFlowViolations.flowlabels.find(violation => {
+          if (this.ignoredFlowViolations && this.ignoredFlowViolations.flowlabels.length > 0 && this.ignoredFlowViolations.flowlabels.find(violation => {
             return (violation == scanResult.flow.label);
           })) {
             continue;
-          }
-          else if (ignoredRuleViolationsInFlows && ignoredRuleViolationsInFlows.ignoredRuleViolationsInFlows.length > 0 && ignoredRuleViolationsInFlows.ignoredRuleViolationsInFlows.find(violation => {
-            return (violation.flowname == scanResult.flow.label && violation.rulename == ruleResult.ruleLabel);
+          } else if (this.ignoredRuleViolationsInFlows && this.ignoredRuleViolationsInFlows.ignoredRuleViolationsInFlows.length > 0 && this.ignoredRuleViolationsInFlows.ignoredRuleViolationsInFlows.find(violation => {
+            if (violation && violation.flowname && violation.rulename) {
+              return (violation.flowname == scanResult.flow.label && violation.rulename == ruleResult.ruleLabel);
+            }
           })) {
             continue;
-          }
-          else {
+          } else {
             lintResults.push(
               new Violation(
                 scanResult.flow.label,
@@ -80,4 +77,23 @@ export default class flows extends SfdxCommand {
     // If there are no lintresults
     return 0;
   }
+
+  private createIgnoreViolations(pathToIgnoreFile) {
+
+    let foundPath;
+    if (fs.existsSync(pathToIgnoreFile)) {
+      foundPath = fs.readJsonSync(pathToIgnoreFile);
+    }
+    try {
+      let ignoredFlows = foundPath['flowsToBeIgnored'];
+      this.ignoredFlowViolations = new IgnoredFlowViolations(ignoredFlows);
+      let ignoredRulesInFlows = foundPath['rulesToBeIgnoredInFlows'];
+      this.ignoredRuleViolationsInFlows = new IgnoredRuleViolationsInFlows(ignoredRulesInFlows);
+    } catch (e) {
+
+    }
+
+    return
+  }
+
 }
