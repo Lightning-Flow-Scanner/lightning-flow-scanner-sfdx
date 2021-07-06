@@ -1,6 +1,6 @@
 {
   "name": "lightningflowscan-cli",
-  "version": "0.0.9",
+  "version": "0.0.14",
   "author": "Ruben",
   "bugs": "https://github.com/Force-Config-Control/lightningflowscan-cli/issues",
   "dependencies": {
@@ -9,7 +9,7 @@
     "@oclif/errors": "^1.3.4",
     "@salesforce/command": "^3.1.3",
     "@salesforce/core": "^2.25.1",
-    "lightningflowscan-core": "^1.1.7",
+    "lightningflowscan-core": "1.1.12",
     "tslib": "2.3.0",
     "xml2js": "^0.4.23"
   },
@@ -23,7 +23,6 @@
     "@types/chai": "^4.2.19",
     "@types/jsforce": "^1.9.30",
     "@types/mocha": "^8.2.2",
-    "@types/node": "^16.0.0",
     "@types/sinonjs__fake-timers": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",

@@ -4,12 +4,12 @@ import {AnyJson} from '@salesforce/ts-types';
 import * as core from 'lightningflowscan-core/out';
 import {Flow} from 'lightningflowscan-core/out/main/models/Flow';
 import {ScanResult} from 'lightningflowscan-core/out/main/models/ScanResult';
-import {Violation} from '../../models/Violation';
-import {FindFlows} from "../../libs/FindFlows";
-import {ParseFlows} from "../../libs/ParseFlows";
 import * as path from 'path';
-import {IgnoredFlowViolations} from "../../models/IgnoredFlowViolations";
-import {IgnoredRuleViolationsInFlows} from "../../models/IgnoredRuleViolationsInFlows";
+import {FindFlows} from '../../libs/FindFlows';
+import {ParseFlows} from '../../libs/ParseFlows';
+import {IgnoredFlowViolations} from '../../models/IgnoredFlowViolations';
+import {IgnoredRuleViolationsInFlows} from '../../models/IgnoredRuleViolationsInFlows';
+import {Violation} from '../../models/Violation';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -39,7 +39,7 @@ export default class flows extends SfdxCommand {
     }
 
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
-    const scanResults: ScanResult[] = core.Scan(parsedFlows);
+    const scanResults: ScanResult[] = core.scan(parsedFlows);
     const lintResults: Violation[] = [];
     for (const scanResult of scanResults) {
       for (const ruleResult of scanResult.ruleResults) {
@@ -85,15 +85,15 @@ export default class flows extends SfdxCommand {
       foundPath = fs.readJsonSync(pathToIgnoreFile);
     }
     try {
-      let ignoredFlows = foundPath['flowsToBeIgnored'];
+      const ignoredFlows = foundPath['flowsToBeIgnored'];
       this.ignoredFlowViolations = new IgnoredFlowViolations(ignoredFlows);
-      let ignoredRulesInFlows = foundPath['rulesToBeIgnoredInFlows'];
+      const ignoredRulesInFlows = foundPath['rulesToBeIgnoredInFlows'];
       this.ignoredRuleViolationsInFlows = new IgnoredRuleViolationsInFlows(ignoredRulesInFlows);
     } catch (e) {
 
     }
 
-    return
+    return;
   }
 
 }
