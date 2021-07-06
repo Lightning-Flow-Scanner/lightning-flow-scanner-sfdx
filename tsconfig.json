@@ -4,8 +4,7 @@
     "declaration": true,
     "outDir": "./lib",
     "importHelpers": true,
-    "rootDir": "./src",
-    "resolveJsonModule": true
+    "rootDir": "./src"
   },
   "include": [
     "./src/**/*"
