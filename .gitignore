@@ -1,8 +1,10 @@
 *-debug.log
 *-error.log
+/.vscode
 /.nyc_output
 /dist
 /lib
 /package-lock.json
 /tmp
-node_modules
+/node_modules
+.DS_Store
