@@ -39,7 +39,7 @@ export default class flows extends SfdxCommand {
     }
 
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
-    const scanResults: ScanResult[] = core.scan(parsedFlows);
+    const scanResults: ScanResult[] = core.Scan(parsedFlows);
     const lintResults: Violation[] = [];
     for (const scanResult of scanResults) {
       for (const ruleResult of scanResult.ruleResults) {
