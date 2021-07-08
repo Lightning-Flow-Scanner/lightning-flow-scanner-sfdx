@@ -9,7 +9,7 @@
     "@oclif/errors": "^1",
     "@salesforce/command": "^2",
     "@salesforce/core": "^2",
-    "lightningflowscan-core": "1.1.12",
+    "lightningflowscan-core": "1.1.13",
     "tslib": "^1",
     "xml2js": "^0.4.23"
   },

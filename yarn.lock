@@ -2628,10 +2628,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-lightningflowscan-core@1.1.12:
-  version "1.1.12"
-  resolved "https://registry.yarnpkg.com/lightningflowscan-core/-/lightningflowscan-core-1.1.12.tgz#a38f39e3a9a2cc1cade4f6e42303324de22b2b84"
-  integrity sha512-asgSWriqsq3iD6HxYxB3nUrqeJZIC3fE+x5bLvzpg0PaY182ga+oZY3g+avrOYH1qrL/dIvZzEW2aonhMwZUgA==
+lightningflowscan-core@1.1.13:
+  version "1.1.13"
+  resolved "https://registry.yarnpkg.com/lightningflowscan-core/-/lightningflowscan-core-1.1.13.tgz#10d8225454078fa0b81d66b5755789a0c8373c92"
+  integrity sha512-iNIywhFNnhCQ5814uNgSnMjD3wzPA+HkBZz1dtCEeWwsc4bMsFB2J4O/3x6NVB72Ax4JFvuBuT4Q92+kfNGz7A==
   dependencies:
     tslint "^6.1.3"
     typescript "^4.3.4"
