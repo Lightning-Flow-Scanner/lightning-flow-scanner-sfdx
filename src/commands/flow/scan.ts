@@ -59,6 +59,7 @@ export default class scan extends SfdxCommand {
                 scanResult.flow.label[0],
                 ruleResult.ruleLabel,
                 ruleResult.ruleDescription,
+                // @ts-ignore
                 result.element? result.element : result
               ));
             }
