@@ -13,16 +13,41 @@ lightning-flow-scanner-cli
 [![License](https://img.shields.io/npm/l/lightning-flow-scanner-cli.svg)](https://github.com/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git/blob/master/package.json)
 
 <!-- toc -->
-* [Debugging your plugin](#debugging-your-plugin)
+
 <!-- tocstop -->
 <!-- install -->
 <!-- usage -->
 ```sh-session
 $ npm install -g lightning-flow-scanner-cli
+$ sfdx COMMAND
+running command...
+$ sfdx (-v|--version|version)
+lightning-flow-scanner-cli/0.0.18 darwin-x64 node-v16.1.0
+$ sfdx --help [COMMAND]
+USAGE
+  $ sfdx COMMAND
+...
 ```
 <!-- usagestop -->
 <!-- commands -->
+* [`sfdx flow:scan [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-flowscan---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+
 ## `sfdx flow:scan [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
-_See code: [src/commands/flow/scan.ts](https://github.com/Force-Config-Control/lightning-flow-scanner-cli/blob/v0.0.15/src/commands/flow/scan.ts)_
+Fix the following flows:
+
+```
+Fix the following flows:
+
+USAGE
+  $ sfdx flow:scan [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+```
+
+_See code: [src/commands/flow/scan.ts](https://github.com/Force-Config-Control/lightning-flow-scanner-cli/blob/v0.0.18/src/commands/flow/scan.ts)_
 <!-- commandsstop -->
