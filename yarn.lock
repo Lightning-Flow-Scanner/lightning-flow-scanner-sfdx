@@ -2628,10 +2628,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-lightningflowscan-core@1.1.13:
-  version "1.1.13"
-  resolved "https://registry.yarnpkg.com/lightningflowscan-core/-/lightningflowscan-core-1.1.13.tgz#10d8225454078fa0b81d66b5755789a0c8373c92"
-  integrity sha512-iNIywhFNnhCQ5814uNgSnMjD3wzPA+HkBZz1dtCEeWwsc4bMsFB2J4O/3x6NVB72Ax4JFvuBuT4Q92+kfNGz7A==
+lightning-flow-scanner-core@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/lightning-flow-scanner-core/-/lightning-flow-scanner-core-1.0.1.tgz#bb0c8074b4452d0f56063e51579d1fa0689887a3"
+  integrity sha512-pCbRSAyNh68J9zr2MUbAyoRN0GC/i5D8M4LdBrPoDyhms1HMU+8fRAieA/ZII+yAHuw+8edAEu5fomWbXQUQNA==
   dependencies:
     tslint "^6.1.3"
     typescript "^4.3.4"
@@ -4303,7 +4303,12 @@ typescript@^3:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
   integrity sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==
 
-typescript@^4.3.4, typescript@^4.3.5:
+typescript@^4.3.4:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.2.tgz#6d618640d430e3569a1dfb44f7d7e600ced3ee86"
+  integrity sha512-gzP+t5W4hdy4c+68bfcv0t400HVJMMd2+H9B7gae1nQlBzCqvrXX+6GL/b3GAgyTH966pzrZ70/fRjwAtZksSQ==
+
+typescript@^4.3.5:
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
   integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==

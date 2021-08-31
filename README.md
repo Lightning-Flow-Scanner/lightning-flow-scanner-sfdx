@@ -1,16 +1,16 @@
-lightningflowscan-cli
+lightning-flow-scanner-cli
 =====================
 
 
 
-[![Version](https://img.shields.io/npm/v/lightningflowscan-cli.svg)](https://npmjs.org/package/lightningflowscan-cli)
-[![CircleCI](https://circleci.com/gh/https://github.com/Force-Config-Control/lightningflowscan-cli.git/tree/master.svg?style=shield)](https://circleci.com/gh/https://github.com/Force-Config-Control/lightningflowscan-cli.git/tree/master)
-[![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/https://github.com/Force-Config-Control/lightningflowscan-cli.git?branch=master&svg=true)](https://ci.appveyor.com/project/heroku/lightningflowscan-cli.git/branch/master)
-[![Codecov](https://codecov.io/gh/https://github.com/Force-Config-Control/lightningflowscan-cli.git/branch/master/graph/badge.svg)](https://codecov.io/gh/https://github.com/Force-Config-Control/lightningflowscan-cli.git)
-[![Greenkeeper](https://badges.greenkeeper.io/https://github.com/Force-Config-Control/lightningflowscan-cli.git.svg)](https://greenkeeper.io/)
-[![Known Vulnerabilities](https://snyk.io/test/github/https://github.com/Force-Config-Control/lightningflowscan-cli.git/badge.svg)](https://snyk.io/test/github/https://github.com/Force-Config-Control/lightningflowscan-cli.git)
-[![Downloads/week](https://img.shields.io/npm/dw/lightningflowscan-cli.svg)](https://npmjs.org/package/lightningflowscan-cli)
-[![License](https://img.shields.io/npm/l/lightningflowscan-cli.svg)](https://github.com/https://github.com/Force-Config-Control/lightningflowscan-cli.git/blob/master/package.json)
+[![Version](https://img.shields.io/npm/v/lightning-flow-scanner-cli.svg)](https://npmjs.org/package/lightning-flow-scanner-cli)
+[![CircleCI](https://circleci.com/gh/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git/tree/master.svg?style=shield)](https://circleci.com/gh/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git/tree/master)
+[![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git?branch=master&svg=true)](https://ci.appveyor.com/project/heroku/lightning-flow-scanner-cli.git/branch/master)
+[![Codecov](https://codecov.io/gh/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git/branch/master/graph/badge.svg)](https://codecov.io/gh/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git)
+[![Greenkeeper](https://badges.greenkeeper.io/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git.svg)](https://greenkeeper.io/)
+[![Known Vulnerabilities](https://snyk.io/test/github/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git/badge.svg)](https://snyk.io/test/github/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git)
+[![Downloads/week](https://img.shields.io/npm/dw/lightning-flow-scanner-cli.svg)](https://npmjs.org/package/lightning-flow-scanner-cli)
+[![License](https://img.shields.io/npm/l/lightning-flow-scanner-cli.svg)](https://github.com/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git/blob/master/package.json)
 
 <!-- toc -->
 * [Debugging your plugin](#debugging-your-plugin)
@@ -18,11 +18,11 @@ lightningflowscan-cli
 <!-- install -->
 <!-- usage -->
 ```sh-session
-$ npm install -g lightningflowscan-cli
+$ npm install -g lightning-flow-scanner-cli
 $ sfdx COMMAND
 running command...
 $ sfdx (-v|--version|version)
-lightningflowscan-cli/0.0.15 darwin-x64 node-v14.16.1
+lightning-flow-scanner-cli/0.0.15 darwin-x64 node-v14.16.1
 $ sfdx --help [COMMAND]
 USAGE
   $ sfdx COMMAND
@@ -30,9 +30,9 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
-* [`sfdx scan:flows [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-scanflows---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx scan:scan [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-scanflows---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx scan:flows [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx scan:scan [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Fix the following issues:
 
@@ -40,7 +40,7 @@ Fix the following issues:
 Fix the following issues:
 
 USAGE
-  $ sfdx scan:flows [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx scan:scan [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
   --json                                                                            format output as json
@@ -49,7 +49,7 @@ OPTIONS
                                                                                     this command invocation
 ```
 
-_See code: [src/commands/scan/flows.ts](https://github.com/Force-Config-Control/lightningflowscan-cli/blob/v0.0.15/src/commands/scan/flows.ts)_
+_See code: [src/commands/scan/scants](https://github.com/Force-Config-Control/lightning-flow-scanner-cli/blob/v0.0.15/src/commands/scan/flows.ts)_
 <!-- commandsstop -->
 <!-- debugging-your-plugin -->
 # Debugging your plugin

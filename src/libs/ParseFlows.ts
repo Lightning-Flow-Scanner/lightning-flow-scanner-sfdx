@@ -1,5 +1,5 @@
 import * as path from 'path';
-import {Flow} from 'lightningflowscan-core/out/main/models/Flow';
+import {Flow} from 'lightning-flow-scanner-core/out/main/models/Flow';
 import {XMLParser} from './XMLParser';
 import { fs } from '@salesforce/core/lib/util/fs';
 

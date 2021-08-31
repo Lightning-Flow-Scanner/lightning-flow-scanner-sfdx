@@ -1,9 +1,9 @@
 import {SfdxCommand} from '@salesforce/command';
 import {fs, Messages, SfdxError, SfdxProject} from '@salesforce/core';
 import {AnyJson} from '@salesforce/ts-types';
-import * as core from 'lightningflowscan-core/out';
-import {Flow} from 'lightningflowscan-core/out/main/models/Flow';
-import {ScanResult} from 'lightningflowscan-core/out/main/models/ScanResult';
+import * as core from 'lightning-flow-scanner-core/out';
+import {Flow} from 'lightning-flow-scanner-core/out/main/models/Flow';
+import {ScanResult} from 'lightning-flow-scanner-core/out/main/models/ScanResult';
 import * as path from 'path';
 import {FindFlows} from '../../libs/FindFlows';
 import {ParseFlows} from '../../libs/ParseFlows';
@@ -13,9 +13,9 @@ import {Violation} from '../../models/Violation';
 
 Messages.importMessagesDirectory(__dirname);
 
-const messages = Messages.loadMessages('lightningflowscan-cli', 'command');
+const messages = Messages.loadMessages('lightning-flow-scanner-cli', 'command');
 
-export default class flows extends SfdxCommand {
+export default class scan extends SfdxCommand {
 
   public static description = messages.getMessage('commandDescription');
 
@@ -33,7 +33,7 @@ export default class flows extends SfdxCommand {
 
     // todo ugly code
     // if ignore file found, populate this.ignoredFlowViolations & this.ignoredRuleViolationsInFlows
-    const pathToIgnoreFile = path.join(aPath, 'flows.scanignore.json');
+    const pathToIgnoreFile = path.join(aPath, 'scan.scanignore.json');
     if(pathToIgnoreFile){
       this.createIgnoreViolations(pathToIgnoreFile);
     }
@@ -67,14 +67,17 @@ export default class flows extends SfdxCommand {
         }
       }
     }
+    let totalScanResults = scanResults.length;
+    let totalLintResults = lintResults.length;
+    this.ux.log('Scanner processed ' + totalScanResults + ' flows, returning ' + totalLintResults + ' result(s)');
     if (lintResults.length > 0) {
       const warnings: string[] = [];
       for (const lintResult of lintResults) {
-        warnings.push('in Flow \'' + lintResult.flowlabel + '\', Rule:\'' + lintResult.ruleLabel + '\' is violated ' + lintResult.numberOfViolations + ' times');
+        warnings.push('\'' + lintResult.flowlabel + '\' has ' + lintResult.numberOfViolations + ' ' + lintResult.ruleLabel.toLowerCase());
       }
       throw new SfdxError(messages.getMessage('commandDescription'), 'results', warnings, 1);
     }
-    // If there are no lintresults
+
     return 0;
   }
 

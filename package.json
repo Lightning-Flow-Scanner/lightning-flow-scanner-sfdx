@@ -1,15 +1,15 @@
 {
-  "name": "lightningflowscan-cli",
+  "name": "lightning-flow-scanner-cli",
   "version": "0.0.15",
   "author": "Ruben",
-  "bugs": "https://github.com/Force-Config-Control/lightningflowscan-cli/issues",
+  "bugs": "https://github.com/Force-Config-Control/lightning-flow-scanner-cli/issues",
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/errors": "^1",
     "@salesforce/command": "^2",
     "@salesforce/core": "^2",
-    "lightningflowscan-core": "1.1.13",
+    "lightning-flow-scanner-core": "^1.0.1",
     "tslib": "^1",
     "xml2js": "^0.4.23"
   },
@@ -46,7 +46,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/Force-Config-Control/lightningflowscan-cli/",
+  "homepage": "https://github.com/Force-Config-Control/lightning-flow-scanner-cli/",
   "keywords": [
     "sfdx-plugin"
   ],
@@ -63,7 +63,7 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "https://github.com/Force-Config-Control/lightningflowscan-cli.git",
+  "repository": "https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git",
   "scripts": {
     "lint": "tslint --project . --config tslint.json --format stylish",
     "postpack": "rm -f oclif.manifest.json",
