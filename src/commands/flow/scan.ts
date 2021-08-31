@@ -31,7 +31,6 @@ export default class scan extends SfdxCommand {
     const aPath = await SfdxProject.resolveProjectPath();
     const flowFiles = FindFlows(aPath);
 
-    // todo ugly code
     // if ignore file found, populate this.ignoredFlowViolations & this.ignoredRuleViolationsInFlows
     const pathToIgnoreFile = path.join(aPath, 'scan.scanignore.json');
     if(pathToIgnoreFile){
@@ -55,27 +54,31 @@ export default class scan extends SfdxCommand {
           })) {
             continue;
           } else {
-            lintResults.push(
-              new Violation(
-                scanResult.flow.label,
+            for (const result of ruleResult.results) {
+              lintResults.push(new Violation(
+                scanResult.flow.label[0],
                 ruleResult.ruleLabel,
                 ruleResult.ruleDescription,
-                ruleResult.results.length
-              )
-            );
+                result.element? result.element : result
+              ));
+            }
           }
         }
       }
     }
-    let totalScanResults = scanResults.length;
-    let totalLintResults = lintResults.length;
-    this.ux.log('Scanner processed ' + totalScanResults + ' flows, returning ' + totalLintResults + ' result(s)');
+    let totalFlows = scanResults.length;
+    let totalResults = lintResults.length;
+    const summary = { totalFlows, totalResults};
+    const errors = lintResults;
+    this.ux.logJson(totalResults > 0 ? {summary, errors} : {summary});
     if (lintResults.length > 0) {
-      const warnings: string[] = [];
+      let labels: string[] = [];
       for (const lintResult of lintResults) {
-        warnings.push('\'' + lintResult.flowlabel + '\' has ' + lintResult.numberOfViolations + ' ' + lintResult.ruleLabel.toLowerCase());
+        if(!labels.includes(lintResult.flowlabel)){
+          labels.push(lintResult.flowlabel);
+        };
       }
-      throw new SfdxError(messages.getMessage('commandDescription'), 'results', warnings, 1);
+      throw new SfdxError(messages.getMessage('commandDescription'), 'results', labels, 1);
     }
 
     return 0;
