@@ -1,4 +1,4 @@
-import {SfdxCommand} from '@salesforce/command';
+import {SfdxCommand, flags} from '@salesforce/command';
 import {fs, Messages, SfdxError, SfdxProject} from '@salesforce/core';
 import {AnyJson} from '@salesforce/ts-types';
 import * as core from 'lightning-flow-scanner-core/out';
@@ -7,9 +7,10 @@ import {ScanResult} from 'lightning-flow-scanner-core/out/main/models/ScanResult
 import * as path from 'path';
 import {FindFlows} from '../../libs/FindFlows';
 import {ParseFlows} from '../../libs/ParseFlows';
-import {IgnoredFlowViolations} from '../../models/IgnoredFlowViolations';
-import {IgnoredRuleViolationsInFlows} from '../../models/IgnoredRuleViolationsInFlows';
 import {Violation} from '../../models/Violation';
+import {ScannerOptions} from 'lightning-flow-scanner-core/out/main/models/ScannerOptions';
+import {Override} from "lightning-flow-scanner-core/out/main/models/Override";
+import {FlowScanOverrides} from "lightning-flow-scanner-core/out/main/models/FlowScanOverrides";
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -23,60 +24,70 @@ export default class scan extends SfdxCommand {
   protected static supportsDevhubUsername = false;
   protected static requiresProject = true;
 
-  public ignoredFlowViolations: IgnoredFlowViolations;
-  public ignoredRuleViolationsInFlows: IgnoredRuleViolationsInFlows;
+  protected static flagsConfig = {
+    help: flags.help({ char: 'h' }),
+    silent: flags.boolean({
+      char: 's',
+      description: messages.getMessage('noErrors')
+    })
+  };
 
   public async run(): Promise<AnyJson> {
 
     const aPath = await SfdxProject.resolveProjectPath();
     const flowFiles = FindFlows(aPath);
 
-    // if ignore file found, populate this.ignoredFlowViolations & this.ignoredRuleViolationsInFlows
-    const pathToIgnoreFile = path.join(aPath, 'scan.scanignore.json');
-    if(pathToIgnoreFile){
-      this.createIgnoreViolations(pathToIgnoreFile);
+    const pathToIgnoreFile = path.join(aPath, '.flowscanignore');
+    let ruleOptions;
+    if (pathToIgnoreFile) {
+      ruleOptions = this.createScannerOptions(pathToIgnoreFile);
     }
 
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
-    const scanResults: ScanResult[] = core.scan(parsedFlows);
+    let scanResults: ScanResult[];
+    if (ruleOptions) {
+      scanResults = core.scan(parsedFlows, ruleOptions);
+    } else {
+      scanResults = core.scan(parsedFlows);
+    }
+
     const lintResults: Violation[] = [];
     for (const scanResult of scanResults) {
       for (const ruleResult of scanResult.ruleResults) {
-        if (ruleResult.results.length > 0) {
-          if (this.ignoredFlowViolations && this.ignoredFlowViolations.flowlabels.length > 0 && this.ignoredFlowViolations.flowlabels.find(violation => {
-            return (violation == scanResult.flow.label);
-          })) {
-            continue;
-          } else if (this.ignoredRuleViolationsInFlows && this.ignoredRuleViolationsInFlows.ignoredRuleViolationsInFlows.length > 0 && this.ignoredRuleViolationsInFlows.ignoredRuleViolationsInFlows.find(violation => {
-            if (violation && violation.flowname && violation.rulename) {
-              return (violation.flowname == scanResult.flow.label && violation.rulename == ruleResult.ruleLabel);
-            }
-          })) {
-            continue;
-          } else {
-            for (const result of ruleResult.results) {
-              lintResults.push(new Violation(
-                scanResult.flow.label[0],
-                ruleResult.ruleLabel,
-                ruleResult.ruleDescription,
-                // @ts-ignore
-                result.element? result.element : result
-              ));
-            }
+        if (ruleResult.details && ruleResult.details.length > 0) {
+          for (const result of ruleResult.details) {
+            lintResults.push(new Violation(
+              scanResult.flow.label[0],
+              ruleResult.ruleName,
+              ruleResult.ruleDescription,
+              {
+                "name": result.name,
+                "type": result.subtype,
+              }
+            ));
+          }
+        } else {
+          if (!ruleResult.details && ruleResult.occurs) {
+            lintResults.push(new Violation(
+              scanResult.flow.label[0],
+              ruleResult.ruleName,
+              ruleResult.ruleDescription
+            ));
           }
         }
       }
     }
     let totalFlows = scanResults.length;
-    let totalResults = lintResults.length;
-    const summary = { totalFlows, totalResults};
-    const errors = lintResults.slice(0, 5);
-    this.ux.logJson(totalResults > 0 ? {summary, errors} : {summary});
-    if (lintResults.length > 0) {
+    let results = lintResults.length;
+    const summary = {totalFlows, results};
+    const errors = lintResults;
+    this.ux.logJson(results > 0 ? {summary, errors} : {summary});
+
+    if (!this.flags.silent && lintResults.length > 0) {
       let labels: string[] = [];
       for (const lintResult of lintResults) {
-        if(!labels.includes(lintResult.flowlabel)){
-          labels.push(lintResult.flowlabel);
+        if (!labels.includes(lintResult.flowName)) {
+          labels.push(lintResult.flowName);
         }
       }
       throw new SfdxError(messages.getMessage('commandDescription'), 'results', labels, 1);
@@ -85,22 +96,27 @@ export default class scan extends SfdxCommand {
     return 0;
   }
 
-  private createIgnoreViolations(pathToIgnoreFile) {
+  private createScannerOptions(pathToIgnoreFile): ScannerOptions {
 
-    let foundPath;
-    if (fs.existsSync(pathToIgnoreFile)) {
-      foundPath = fs.readJsonSync(pathToIgnoreFile);
-    }
     try {
-      const ignoredFlows = foundPath['flowsToBeIgnored'];
-      this.ignoredFlowViolations = new IgnoredFlowViolations(ignoredFlows);
-      const ignoredRulesInFlows = foundPath['rulesToBeIgnoredInFlows'];
-      this.ignoredRuleViolationsInFlows = new IgnoredRuleViolationsInFlows(ignoredRulesInFlows);
+      const ignoreFile = fs.readJsonSync(pathToIgnoreFile);
+      let rules = ignoreFile['activeRules'];
+      let flowScanOverrides = [];
+      if (ignoreFile['overrides']) {
+        for (let override of ignoreFile['overrides']) {
+          let overrides = [];
+          if (override['results']) {
+            for (let result of override['results']) {
+              overrides.push(new Override(result.ruleName, result.result));
+            }
+            flowScanOverrides.push(new FlowScanOverrides(override.flowName, overrides));
+          }
+        }
+      }
+      return new ScannerOptions(rules, flowScanOverrides);
     } catch (e) {
 
     }
-
-    return;
   }
 
 }

@@ -1,6 +1,6 @@
 {
   "name": "lightning-flow-scanner-cli",
-  "version": "0.0.19",
+  "version": "0.0.21",
   "author": "Ruben",
   "bugs": "https://github.com/Force-Config-Control/lightning-flow-scanner-cli/issues",
   "dependencies": {
@@ -9,6 +9,7 @@
     "@oclif/errors": "^1",
     "@salesforce/command": "^2",
     "@salesforce/core": "^2",
+    "glob": "^7.1.7",
     "lightning-flow-scanner-core": "^1.0.1",
     "tslib": "^1",
     "xml2js": "^0.4.23"
