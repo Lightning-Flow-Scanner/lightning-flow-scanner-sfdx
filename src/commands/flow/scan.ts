@@ -71,12 +71,12 @@ export default class scan extends SfdxCommand {
       }
     }
     let totalFlows = scanResults.length;
-    let totalResults = lintResults.length;
-    const summary = {totalFlows, totalResults};
+    let results = lintResults.length;
+    const summary = {totalFlows, results};
     const errors = lintResults;
-    this.ux.logJson(totalResults > 0 ? {summary, errors} : {summary});
+    this.ux.logJson(results > 0 ? {summary, errors} : {summary});
 
-    // todo throw error flag
+    // todo flag throw error
     if (this.throwErrors && lintResults.length > 0) {
       let labels: string[] = [];
       for (const lintResult of lintResults) {
