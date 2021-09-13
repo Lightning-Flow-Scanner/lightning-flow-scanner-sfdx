@@ -10,33 +10,24 @@ lightning-flow-scanner-cli
 [![Downloads/week](https://img.shields.io/npm/dw/lightning-flow-scanner-cli.svg)](https://npmjs.org/package/lightning-flow-scanner-cli)
 [![License](https://img.shields.io/npm/l/lightning-flow-scanner-cli.svg)](https://github.com/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git/blob/master/package.json)
 
-<!-- toc -->
+## Installation
 
-<!-- tocstop -->
-<!-- install -->
-<!-- usage -->
+npm:
 ```sh-session
 $ npm install -g lightning-flow-scanner-cli
-$ sfdx COMMAND
-running command...
-$ sfdx (-v|--version|version)
-lightning-flow-scanner-cli/0.0.18 darwin-x64 node-v16.1.0
-$ sfdx --help [COMMAND]
-USAGE
-  $ sfdx COMMAND
-...
 ```
-<!-- usagestop -->
-<!-- commands -->
-* [`sfdx flow:scan [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-flowscan---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx flow:scan [--json] [--silent] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+sfdx:
+```sh-session
+sfdx plugins:install lightning-flow-scanner-cli
+```
+
+## Usage
 
 ```
-Fix the following flows:
 
 USAGE
-  $ sfdx flow:scan [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx flow:scan [--json][--silent]  [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
   --json                                                                            format output as json
@@ -48,8 +39,7 @@ OPTIONS
 
 ```
 
-
-## .flowscanignore
+## Configurations
 Use a .flowscanignore file to:
 
  - activeRules
@@ -83,8 +73,4 @@ Use a .flowscanignore file to:
 }
 ```
 
-
-
-
-_See code: [src/commands/flow/scan.ts](https://github.com/Force-Config-Control/lightning-flow-scanner-cli/blob/v0.0.18/src/commands/flow/scan.ts)_
-<!-- commandsstop -->
+See code: [src/commands/flow/scan.ts](https://github.com/Force-Config-Control/lightning-flow-scanner-cli/blob/v0.0.18/src/commands/flow/scan.ts)
