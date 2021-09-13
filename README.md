@@ -48,27 +48,38 @@ Use a .flowscanignore file to:
     
  - overrides
  
- specify results to ignore.
+ specify results to ignore. Specify by ruleName and result(if applicable), like shown in the example.
 
 ```
 {
   "activeRules": [
     "DMLStatementInLoop",
     "DuplicateDMLOperationsByNavigation",
+    "MissingFlowDescription",
     "HardcodedIds"
   ],
   "overrides": [
-      {
-          "flowName": "Create Property",
-          "results": [{
-              "ruleName" : "DuplicateDMLOperationsByNavigation",
-              "result":"error_creating_records"
-          },
-          {
-            "ruleName" : "DuplicateDMLOperationsByNavigation",
-            "result":"upload_picture"
-        }]
-      }
+    {
+      "flowName": "Create Property",
+      "results": [
+        {
+          "ruleName": "DuplicateDMLOperationsByNavigation",
+          "result": "error_creating_records"
+        },
+        {
+          "ruleName": "DuplicateDMLOperationsByNavigation",
+          "result": "upload_picture"
+        }
+      ]
+    },
+    {
+      "flowName": "mainflow",
+      "results": [
+        {
+          "ruleName": "MissingFlowDescription"
+        }
+      ]
+    }
   ]
 }
 ```
