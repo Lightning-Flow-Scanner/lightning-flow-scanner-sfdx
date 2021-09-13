@@ -10,6 +10,8 @@ lightning-flow-scanner-cli
 [![Downloads/week](https://img.shields.io/npm/dw/lightning-flow-scanner-cli.svg)](https://npmjs.org/package/lightning-flow-scanner-cli)
 [![License](https://img.shields.io/npm/l/lightning-flow-scanner-cli.svg)](https://github.com/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git/blob/master/package.json)
 
+![screenshot results(https://raw.githubusercontent.com/RubenHalman/Force-Flow-Control/master/docs/scanresults.png)](https://raw.githubusercontent.com/Force-Config-Control/lightning-flow-scanner-cli/master/.images/results.png)
+
 ## Installation
 
 npm:
@@ -48,27 +50,38 @@ Use a .flowscanignore file to:
     
  - overrides
  
- specify results to ignore.
+ specify results to ignore. Specify by ruleName and result(if applicable), like shown in the example.
 
 ```
 {
   "activeRules": [
     "DMLStatementInLoop",
     "DuplicateDMLOperationsByNavigation",
+    "MissingFlowDescription",
     "HardcodedIds"
   ],
   "overrides": [
-      {
-          "flowName": "Create Property",
-          "results": [{
-              "ruleName" : "DuplicateDMLOperationsByNavigation",
-              "result":"error_creating_records"
-          },
-          {
-            "ruleName" : "DuplicateDMLOperationsByNavigation",
-            "result":"upload_picture"
-        }]
-      }
+    {
+      "flowName": "Create Property",
+      "results": [
+        {
+          "ruleName": "DuplicateDMLOperationsByNavigation",
+          "result": "error_creating_records"
+        },
+        {
+          "ruleName": "DuplicateDMLOperationsByNavigation",
+          "result": "upload_picture"
+        }
+      ]
+    },
+    {
+      "flowName": "mainflow",
+      "results": [
+        {
+          "ruleName": "MissingFlowDescription"
+        }
+      ]
+    }
   ]
 }
 ```
