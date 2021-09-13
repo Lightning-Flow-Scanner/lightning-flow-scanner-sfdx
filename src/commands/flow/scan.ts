@@ -1,4 +1,4 @@
-import {SfdxCommand} from '@salesforce/command';
+import {SfdxCommand, flags} from '@salesforce/command';
 import {fs, Messages, SfdxError, SfdxProject} from '@salesforce/core';
 import {AnyJson} from '@salesforce/ts-types';
 import * as core from 'lightning-flow-scanner-core/out';
@@ -23,7 +23,14 @@ export default class scan extends SfdxCommand {
   protected static requiresUsername = false;
   protected static supportsDevhubUsername = false;
   protected static requiresProject = true;
-  private throwErrors: boolean = false;
+
+  protected static flagsConfig = {
+    help: flags.help({ char: 'h' }),
+    silent: flags.boolean({
+      char: 's',
+      description: messages.getMessage('noErrors')
+    })
+  };
 
   public async run(): Promise<AnyJson> {
 
@@ -76,8 +83,7 @@ export default class scan extends SfdxCommand {
     const errors = lintResults;
     this.ux.logJson(results > 0 ? {summary, errors} : {summary});
 
-    // todo flag throw error
-    if (this.throwErrors && lintResults.length > 0) {
+    if (!this.flags.silent && lintResults.length > 0) {
       let labels: string[] = [];
       for (const lintResult of lintResults) {
         if (!labels.includes(lintResult.flowName)) {

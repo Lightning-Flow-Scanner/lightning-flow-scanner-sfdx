@@ -1,4 +1,5 @@
 {
   "commandDescription": "Fix the following flows:",
-  "errorNoOrgResults": "No results found for the org '%s'."
+  "errorNoOrgResults": "No results found for the org '%s'.",
+  "noErrors": "Errors will be disabled"
 }
