@@ -8,7 +8,7 @@ import * as path from 'path';
 import {FindFlows} from '../../libs/FindFlows';
 import {ParseFlows} from '../../libs/ParseFlows';
 import {Violation} from '../../models/Violation';
-import {ScannerOptions} from "lightning-flow-scanner-core/out/main/models/ScannerOptions";
+import {ScannerOptions} from 'lightning-flow-scanner-core/out/main/models/ScannerOptions';
 import {Override} from "lightning-flow-scanner-core/out/main/models/Override";
 import {FlowScanOverrides} from "lightning-flow-scanner-core/out/main/models/FlowScanOverrides";
 
