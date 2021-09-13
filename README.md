@@ -1,5 +1,6 @@
-lightning-flow-scanner-cli
+Lightning Flow Scanner (sfdx plug-in)
 =====================
+### _Find and Fix bugs in Lightning Flows of your Salesforce Projects._
 
 [![Version](https://img.shields.io/npm/v/lightning-flow-scanner-cli.svg)](https://npmjs.org/package/lightning-flow-scanner-cli)
 [![CircleCI](https://circleci.com/gh/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git/tree/master.svg?style=shield)](https://circleci.com/gh/https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git/tree/master)
