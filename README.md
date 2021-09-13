@@ -39,7 +39,7 @@ OPTIONS
 ```
 
 ## Configurations
-Use a .flowscanignore file to:
+Use a _.flowscanignore_ file to:
 
  - activeRules
  
@@ -49,6 +49,7 @@ Use a .flowscanignore file to:
  
  specify results to ignore. Specify by ruleName and result(if applicable), like shown in the example.
 
+#### .flowscanignore
 ```
 {
   "activeRules": [
