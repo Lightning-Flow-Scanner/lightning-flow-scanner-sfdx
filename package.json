@@ -1,6 +1,6 @@
 {
   "name": "lightning-flow-scanner-cli",
-  "version": "0.0.19",
+  "version": "0.0.21",
   "author": "Ruben",
   "bugs": "https://github.com/Force-Config-Control/lightning-flow-scanner-cli/issues",
   "dependencies": {
