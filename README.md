@@ -17,7 +17,7 @@ $ npm install -g lightning-flow-scanner
 ```
 
 sfdx:
-```sh-session
+$ ```sh-session
 sfdx plugins:install lightning-flow-scanner
 ```
 
