@@ -2,7 +2,7 @@
   "name": "lightning-flow-scanner",
   "version": "0.0.1",
   "author": "Ruben",
-  "bugs": "https://github.com/Force-Config-Control/lightning-flow-scanner-cli/issues",
+  "bugs": "https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx/issues",
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
@@ -48,7 +48,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/Force-Config-Control/lightning-flow-scanner-cli/",
+  "homepage": "https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx/",
   "keywords": [
     "sfdx-plugin"
   ],
@@ -65,7 +65,7 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "https://github.com/Force-Config-Control/lightning-flow-scanner-cli.git",
+  "repository": "https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx.git",
   "scripts": {
     "lint": "tslint --project . --config tslint.json --format stylish",
     "postpack": "rm -f oclif.manifest.json",
