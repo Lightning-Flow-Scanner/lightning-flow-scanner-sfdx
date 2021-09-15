@@ -13,12 +13,12 @@ Lightning Flow Scanner (sfdx plug-in)
 
 npm:
 ```sh-session
-$ npm install -g lightning-flow-scanner-sfdx
+$ npm install -g lightning-flow-scanner
 ```
 
 sfdx:
 ```sh-session
-sfdx plugins:install lightning-flow-scanner-sfdx
+sfdx plugins:install lightning-flow-scanner
 ```
 
 ## Using the scanner:
