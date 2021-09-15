@@ -11,6 +11,8 @@ import {Violation} from '../../models/Violation';
 import {ScannerOptions} from 'lightning-flow-scanner-core/out/main/models/ScannerOptions';
 import {Override} from "lightning-flow-scanner-core/out/main/models/Override";
 import {FlowScanOverrides} from "lightning-flow-scanner-core/out/main/models/FlowScanOverrides";
+import * as chalk from "chalk";
+import { exec } from 'child_process';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -23,6 +25,9 @@ export default class scan extends SfdxCommand {
   protected static requiresUsername = false;
   protected static supportsDevhubUsername = false;
   protected static requiresProject = true;
+  protected static supportsUsername = true;
+
+  public rootPath;
 
   protected static flagsConfig = {
     help: flags.help({ char: 'h' }),
@@ -33,16 +38,40 @@ export default class scan extends SfdxCommand {
   };
 
   public async run(): Promise<AnyJson> {
+    this.rootPath = await SfdxProject.resolveProjectPath();
 
-    const aPath = await SfdxProject.resolveProjectPath();
-    const flowFiles = FindFlows(aPath);
+    // username provided
+    let errored = false;
+    if(this.flags.targetusername){
+      this.ux.startSpinner(chalk.yellowBright('Retrieving Metadata...'));
+      const retrieveCommand = `sfdx force:source:retrieve -m Flow -u"${
+        this.flags.targetusername
+      }"`;
+      // -r ./${tmpDir} -w 30 --json
+      try {
+        await exec(retrieveCommand, {
+          maxBuffer: 1000000 * 1024
+        });
+      } catch (exception) {
+        errored = true;
+        this.ux.errorJson(exception);
+        this.ux.stopSpinner(chalk.redBright('Retrieve Operation Failed.'));
+      }
+    }
+    if(errored){
+      throw new SfdxError(messages.getMessage('errorRetrievingMetadata'), '', [], 1);
+    } else {
+      this.ux.stopSpinner(
+        chalk.greenBright('Retrieve Completed ✔.')
+      );
+    }
 
-    const pathToIgnoreFile = path.join(aPath, '.flowscanignore');
+    const flowFiles = FindFlows(this.rootPath);
+    const pathToIgnoreFile = path.join(this.rootPath, '.flowscanignore');
     let ruleOptions;
     if (pathToIgnoreFile) {
       ruleOptions = this.createScannerOptions(pathToIgnoreFile);
     }
-
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
     let scanResults: ScanResult[];
     if (ruleOptions) {

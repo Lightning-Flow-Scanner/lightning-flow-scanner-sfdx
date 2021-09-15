@@ -9,7 +9,7 @@ Lightning Flow Scanner (sfdx plug-in)
 
 ![screenshot results(https://raw.githubusercontent.com/RubenHalman/Force-Flow-Control/master/docs/scanresults.png)](https://raw.githubusercontent.com/Force-Config-Control/lightning-flow-scanner-cli/master/.images/results.png)
 
-## Installation
+## Installation:
 
 npm:
 ```sh-session
@@ -21,24 +21,24 @@ sfdx:
 sfdx plugins:install lightning-flow-scanner-cli
 ```
 
-## Usage
+## Using the scanner:
 
 ```
-
 USAGE
-  $ sfdx flow:scan [--json][--silent]  [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx flow:scan [--json] [--targetusername] [--silent] [--loglevel]
 
 OPTIONS
   --json                                                                            format output as json
 
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level
 
-  --silent                                                                          will not throw errors
+  -s, --silent                                                                      won't throw errors if violations are found.
 
+  -u, --targetusername                                                              will retrieve metadata from an org before scan
+~~~~
 ```
 
-## Configurations
+## Optional configurations:
 Use a _.flowscanignore_ file to:
 
  - activeRules
@@ -49,7 +49,7 @@ Use a _.flowscanignore_ file to:
  
  specify results to ignore. Specify by ruleName and result(if applicable), like shown in the example.
 
-#### .flowscanignore
+#### Example .flowscanignore:
 ```
 {
   "activeRules": [
