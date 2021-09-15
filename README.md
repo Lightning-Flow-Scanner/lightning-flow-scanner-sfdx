@@ -35,7 +35,6 @@ OPTIONS
   -s, --silent                                                                      won't throw errors if violations are found.
 
   -u, --targetusername                                                              will retrieve metadata from an org before scan
-~~~~
 ```
 
 ## Optional configurations:
