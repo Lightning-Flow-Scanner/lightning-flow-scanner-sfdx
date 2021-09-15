@@ -16,7 +16,7 @@ import { exec } from 'child_process';
 
 Messages.importMessagesDirectory(__dirname);
 
-const messages = Messages.loadMessages('lightning-flow-scanner-cli', 'command');
+const messages = Messages.loadMessages('lightning-flow-scanner', 'command');
 
 export default class scan extends SfdxCommand {
 
