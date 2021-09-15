@@ -25,12 +25,12 @@ sfdx plugins:install lightning-flow-scanner-cli
 
 ```
 USAGE
-  $ sfdx flow:scan [--json] [--targetusername] [--silent] [--loglevel]
+  $ sfdx flow:scan [--json] [--loglevel <level>] [-s] [-u <targetusername>]
 
 OPTIONS
   --json                                                                            format output as json
 
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level
+  --loglevel=(trace|debug|info|warn|error|fatal)                                    [default: warn] logging level
 
   -s, --silent                                                                      won't throw errors if violations are found.
 
