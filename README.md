@@ -5,8 +5,6 @@ Lightning Flow Scanner (sfdx plug-in)
 [![Downloads/week](https://img.shields.io/npm/dw/lightning-flow-scanner-sfdx.svg)](https://npmjs.org/package/lightning-flow-scanner-sfdx)
 [![License](https://img.shields.io/npm/l/lightning-flow-scanner-sfdx.svg)](https://github.com/https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx.git/blob/master/package.json)
 
-### _Find and Fix bugs in Lightning Flows of your Salesforce Projects._
-
 ![screenshot results(https://raw.githubusercontent.com/RubenHalman/Force-Flow-Control/master/docs/scanresults.png)](https://raw.githubusercontent.com/Force-Config-Control/lightning-flow-scanner-sfdx/master/.images/results.png)
 
 ## Installation:
