@@ -2,5 +2,6 @@
   "commandDescription": "Fix the following flows:",
   "errorRetrievingMetadata": "An error occurred during metadata retrieval. Please check the connection.",
   "errorNoOrgResults": "No results found for the org '%s'.",
-  "noErrors": "Errors will be disabled"
+  "noErrors": "Errors will be disabled",
+  "directoryToScan": "Directory to scan for flows"
 }

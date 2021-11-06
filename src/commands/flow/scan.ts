@@ -34,6 +34,11 @@ export default class scan extends SfdxCommand {
     silent: flags.boolean({
       char: 's',
       description: messages.getMessage('noErrors')
+    }),
+    directory: flags.filepath({
+      char: 'd',
+      description: messages.getMessage('directoryToScan'),
+      required: false
     })
   };
 
@@ -66,7 +71,12 @@ export default class scan extends SfdxCommand {
       );
     }
 
-    const flowFiles = FindFlows(this.rootPath);
+    let flowFiles;
+    if(this.flags.directory){
+      flowFiles = FindFlows(this.flags.directory);
+    } else {
+      flowFiles = FindFlows(this.rootPath);
+    }
     const pathToIgnoreFile = path.join(this.rootPath, '.flowscanignore');
     let ruleOptions;
     if (pathToIgnoreFile) {
