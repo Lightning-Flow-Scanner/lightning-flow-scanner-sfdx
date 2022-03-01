@@ -2485,8 +2485,8 @@ levn@^0.4.1:
     type-check "~0.4.0"
 
 lightning-flow-scanner-core@^1.0.1:
-  version "1.0.51"
-  resolved "https://registry.yarnpkg.com/lightning-flow-scanner-core/-/lightning-flow-scanner-core-1.0.51.tgz#c9441dc0b8f5e54eccdea3b0928dfd2bc6fda92f"
+  version "1.0.52"
+  resolved "https://registry.yarnpkg.com/lightning-flow-scanner-core/-/lightning-flow-scanner-core-1.0.52.tgz#3fc4bf80459d2dd744b4a2b88798d85dedfe0eb1"
   dependencies:
     "@types/chai" "^4.2.21"
     chai "^4.3.4"
