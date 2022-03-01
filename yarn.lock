@@ -2485,8 +2485,8 @@ levn@^0.4.1:
     type-check "~0.4.0"
 
 lightning-flow-scanner-core@^1.0.1:
-  version "1.0.50"
-  resolved "https://registry.yarnpkg.com/lightning-flow-scanner-core/-/lightning-flow-scanner-core-1.0.50.tgz#9411a807f7a59a6c28c39514f4fdfccb627461a3"
+  version "1.0.51"
+  resolved "https://registry.yarnpkg.com/lightning-flow-scanner-core/-/lightning-flow-scanner-core-1.0.51.tgz#c9441dc0b8f5e54eccdea3b0928dfd2bc6fda92f"
   dependencies:
     "@types/chai" "^4.2.21"
     chai "^4.3.4"
@@ -4089,8 +4089,8 @@ typescript@^3:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
 
 typescript@^4.3.4:
-  version "4.5.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.5.tgz#d8c953832d28924a9e3d37c73d729c846c5896f3"
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.6.2.tgz#fe12d2727b708f4eef40f51598b3398baa9611d4"
 
 typescript@^4.3.5:
   version "4.3.5"
