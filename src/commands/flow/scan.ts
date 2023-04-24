@@ -39,6 +39,11 @@ export default class scan extends SfdxCommand {
       char: 'd',
       description: messages.getMessage('directoryToScan'),
       required: false
+    }),
+    sourcepath: flags.filepath({
+      char: 'p',
+      description: 'comma-separated list of source file paths to deploy',
+      required: false
     })
   };
 
@@ -72,9 +77,14 @@ export default class scan extends SfdxCommand {
     }
 
     let flowFiles;
+    if (this.flags.directory && this.flags.sourcepath){
+        throw new SfdxError('You can only specify one of either directory or sourcepath, not both.');
+    }
     if(this.flags.directory){
       flowFiles = FindFlows(this.flags.directory);
-    } else {
+    } else if(this.flags.sourcepath){
+      flowFiles = this.flags.sourcepath.split(',').filter( f => fs.existsSync(f));
+    }else {
       flowFiles = FindFlows(this.rootPath);
     }
     const pathToIgnoreFile = path.join(this.rootPath, '.flowscanignore');
