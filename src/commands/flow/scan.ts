@@ -42,7 +42,7 @@ export default class scan extends SfdxCommand {
     }),
     sourcepath: flags.filepath({
       char: 'p',
-      description: 'comma-separated list of source file paths to deploy',
+      description: 'comma-separated list of source flow paths to scan',
       required: false
     })
   };
