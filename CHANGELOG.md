@@ -16,5 +16,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - use fs-extra instead of sf plugin fs
   - Remove tslint (deprecated), replaced by eslint
   - Upgrade dependencies
+  - Add VsCode local debugging configuration
 
 <!-- Example : ## [1.0.0] - 2020-11-17 -->
