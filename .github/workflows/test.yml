@@ -28,7 +28,7 @@ jobs:
           node-version: 16
           registry-url: "https://registry.npmjs.org"
           # Defaults to the user or organization that owns the workflow file
-          scope: "nvuillam"
+          scope: "rubenhalman"
       - run: yarn
       - run: yarn prepack
       - run: yarn test
