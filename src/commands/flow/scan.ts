@@ -151,12 +151,12 @@ export default class scan extends SfdxCommand {
       `config/.${moduleName}.yaml`,
       `config/.${moduleName}.yml`,
       `.flowscanignore`];
-    const explorer = await cosmiconfig("flow-scanner", {
+    const explorer = cosmiconfig(moduleName, {
       searchPlaces,
     });
     if (forcedConfigFile) {
       // Forced config file name
-      this.userConfig = explorer.load(forcedConfigFile);
+      this.userConfig = await explorer.load(forcedConfigFile);
     }
     else {
       // Let cosmiconfig look for a config file
