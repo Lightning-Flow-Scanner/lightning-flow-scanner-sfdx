@@ -14,6 +14,6 @@ describe('flow:scan', () => {
     .stdout()
     .command(['flow:scan'])
     .it('runs flow:orscang', ctx => {
-      expect(ctx.stdout).to.contain('');
+      expect(ctx.stdout).to.contain('"summary"');
     });
 });
