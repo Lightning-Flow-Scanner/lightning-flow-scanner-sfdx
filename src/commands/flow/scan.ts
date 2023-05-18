@@ -156,7 +156,8 @@ export default class scan extends SfdxCommand {
     });
     if (forcedConfigFile) {
       // Forced config file name
-      this.userConfig = await explorer.load(forcedConfigFile);
+      const explorerLoadRes = await explorer.load(forcedConfigFile);
+      this.userConfig = explorerLoadRes?.config ?? {}
     }
     else {
       // Let cosmiconfig look for a config file
