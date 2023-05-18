@@ -2,7 +2,7 @@ import { SfdxCommand, flags } from '@salesforce/command';
 import { Messages, SfdxError, SfdxProject } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
 import * as core from 'lightning-flow-scanner-core/out';
-import * as fs from 'fs-extra';
+import * as fs from 'fs-extra'; 
 import { Flow } from 'lightning-flow-scanner-core/out/main/models/Flow';
 import { ScanResult } from 'lightning-flow-scanner-core/out/main/models/ScanResult';
 import { FindFlows } from '../../libs/FindFlows';

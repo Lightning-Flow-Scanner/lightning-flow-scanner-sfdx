@@ -12,5 +12,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - let <=> const
   - Split main method into smaller methods
   - use fs-extra instead of sf plugin fs
+- Upgrade dependencies
 
 <!-- Example : ## [1.0.0] - 2020-11-17 -->
