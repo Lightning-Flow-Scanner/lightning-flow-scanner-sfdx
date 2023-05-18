@@ -69,9 +69,8 @@
   },
   "repository": "https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx.git",
   "scripts": {
-    "lint": "tslint --project . --config tslint.json --format stylish",
+    "lint": "eslint",
     "postpack": "rm -f oclif.manifest.json",
-    "posttest": "tslint -p test -t stylish",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
     "prettier": "prettier --write '**/*.{js,json,md,ts,yaml,yml}'",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
