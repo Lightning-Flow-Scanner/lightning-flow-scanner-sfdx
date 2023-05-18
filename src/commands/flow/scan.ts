@@ -161,7 +161,7 @@ export default class scan extends SfdxCommand {
     else {
       // Let cosmiconfig look for a config file
       const explorerSearchRes = await explorer.search();
-      this.userConfig = explorerSearchRes.config ?? {}
+      this.userConfig = explorerSearchRes?.config ?? {}
     }
 
     // Build ScannerOptions from config file values
