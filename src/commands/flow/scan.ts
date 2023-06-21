@@ -94,12 +94,12 @@ export default class scan extends SfdxCommand {
     }
 
     // Build result
-    const lintResults: Violation[] = [];
+    const errors: Violation[] = [];
     for (const scanResult of scanResults) {
       for (const ruleResult of scanResult.ruleResults) {
         if (ruleResult.details && ruleResult.details.length > 0) {
           for (const result of ruleResult.details) {
-            lintResults.push(new Violation(
+            errors.push(new Violation(
               scanResult.flow.label[0],
               ruleResult.ruleName,
               ruleResult.ruleDescription,
@@ -111,7 +111,7 @@ export default class scan extends SfdxCommand {
           }
         } else {
           if (!ruleResult.details && ruleResult.occurs) {
-            lintResults.push(new Violation(
+            errors.push(new Violation(
               scanResult.flow.label[0],
               ruleResult.ruleName,
               ruleResult.ruleDescription
@@ -120,23 +120,20 @@ export default class scan extends SfdxCommand {
         }
       }
     }
-    const totalFlows = scanResults.length;
-    const results = lintResults.length;
-    const summary = { totalFlows, results };
-    const errors = lintResults;
-    this.ux.logJson(results > 0 ? { summary, errors } : { summary });
-
-    if (!this.flags.silent && lintResults.length > 0) {
+    const flows = scanResults.length;
+    const errornr = errors.length;
+    const message = "A total of " + errors.length + " errors have been found in " + flows + " flows"
+    const summary = { flows, "errors": errornr, message }
+    this.ux.log(summary.message);
+    if (!this.flags.silent && errors.length > 0) {
       const labels: string[] = [];
-      for (const lintResult of lintResults) {
-        if (!labels.includes(lintResult.flowName)) {
-          labels.push(lintResult.flowName);
-        }
+      for (const lintResult of errors) {
+        this.ux.log(
+        'The rule "' + lintResult.ruleName + '" has been violated in flow "' + lintResult.flowName + '" at node "' + lintResult.details.name + '" of type "' + lintResult.details.type +'". ' + lintResult.description
+        );
       }
-      throw new SfdxError(messages.getMessage('commandDescription'), 'results', labels, 1);
     }
-
-    return 0;
+    return {summary, errors};
   }
 
   // lightning flow scanner can be customized using a local config file .flow-scanner.yml

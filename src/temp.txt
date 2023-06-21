@@ -1,0 +1,17 @@
+
+// todo 1: empty project normal message#
+// 0 errors have been found in 0 flows
+
+// todo 2: empty project json
+// {
+//  "summary": {
+//      "errors": 0,
+//      "message": "0 errors have been found in 0 flows"
+//  }
+
+// todo 3: scan results normal message
+
+
+// todo 4: scan results json
+
+// documentation on path workings
