@@ -34,9 +34,9 @@ export default class scan extends SfdxCommand {
 
   protected static flagsConfig = {
     help: flags.help({ char: 'h' }),
-    silent: flags.boolean({
-      char: 's',
-      description: messages.getMessage('noErrors')
+    throwerrors: flags.boolean({
+      char: 'e',
+      description: messages.getMessage('throwErrors')
     }),
     directory: flags.filepath({
       char: 'd',
@@ -125,12 +125,15 @@ export default class scan extends SfdxCommand {
     const message = "A total of " + errors.length + " errors have been found in " + flows + " flows"
     const summary = { flows, "errors": errornr, message }
     this.ux.log(summary.message);
-    if (!this.flags.silent && errors.length > 0) {
-      const labels: string[] = [];
+    if (errors.length > 0) {
       for (const lintResult of errors) {
-        this.ux.log(
-        'The rule "' + lintResult.ruleName + '" has been violated in flow "' + lintResult.flowName + '" at node "' + lintResult.details.name + '" of type "' + lintResult.details.type +'". ' + lintResult.description
-        );
+        if(!this.flags.throwerrors){
+          this.ux.log(
+            'The rule "' + lintResult.ruleName + '" has been violated in flow "' + lintResult.flowName + '" at node "' + lintResult.details.name + '" of type "' + lintResult.details.type +'". ' + lintResult.description
+            );  
+        } else { 
+          throw new SfdxError('The rule "' + lintResult.ruleName + '" has been violated in flow "' + lintResult.flowName + '" at node "' + lintResult.details.name + '" of type "' + lintResult.details.type +'". ' + lintResult.description);
+        }
       }
     }
     return {summary, errors};
