@@ -19,7 +19,7 @@ $ sfdx plugins:install lightning-flow-scanner
 
 ```
 USAGE
-  $ sfdx flow:scan [--json] [--loglevel <level>] [-e] [-u <targetusername>]
+  $ sfdx flow:scan [-c <path>] [-d <directory>] [-e] [-p <path>][-u <targetusername>] [--json] [--loglevel <level>]
 
 OPTIONS
   -c, --config                                                                      provide a path to the configuration file.
