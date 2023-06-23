@@ -187,7 +187,6 @@ export default class scan extends SfdxCommand {
     this.ux.startSpinner(chalk.yellowBright('Retrieving Metadata...'));
     const retrieveCommand = `sfdx force:source:retrieve -m Flow -u "${this.flags.targetusername
       }"`;
-    // -r ./${tmpDir} -w 30 --json
     try {
       await exec(retrieveCommand, {
         maxBuffer: 1000000 * 1024

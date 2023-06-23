@@ -15,30 +15,30 @@ SFDX:
 $ sfdx plugins:install lightning-flow-scanner
 ```
 
-## Using the scanner:
+## Usage:
 
 ```
-USAGE
   $ sfdx flow:scan [-c <path>] [-d <directory>] [-e] [-p <path>][-u <targetusername>] [--json] [--loglevel <level>]
-
-OPTIONS
-  -c, --config                                                                      provide a path to the configuration file.
-
-  -d, --directory                                                                   provide a directory to scan for flows.
-
-  -e, --throwerrors                                                                 set scan to throw an error if a violation is found.
-
-  -p, --soucepath                                                                   provide a comma-separated list of source flow paths to scan
-
-  -u, --targetusername                                                              retrieve the latest metadata from the target before the scan.
-
-  --json                                                                            set output format as json.
-
-  --loglevel=(trace|debug|info|warn|error|fatal)                                    [default: warn] logging level.
-  
 ```
 
-## Optional configurations:
+### Options
+```
+  -c, --config <path>                                               provide a path to the configuration file.
+
+  -d, --directory <directory>                                       provide a directory to scan for flows.
+
+  -e, --throwerrors                                                 set scan to throw an error if a violation is found.
+
+  -p, --sourcepath <path>                                           provide a comma-separated list of source flow paths to scan.
+
+  -u, --targetusername <username>                                   retrieve the latest metadata from the target before the scan.
+
+  --json                                                            set output format as json.
+
+  --loglevel=(trace|debug|info|warn|error|fatal)                    [default: warn] logging level.
+```
+
+## Configuration file:
 Use a _.flowscanignore_ file to:
 
  - activeRules
