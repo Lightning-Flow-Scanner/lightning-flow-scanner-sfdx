@@ -5,12 +5,12 @@ Lightning Flow Scanner (sfdx plug-in)
 
 ## Installation:
 
-npm:
+NPM:
 ```sh-session
 $ npm install -g lightning-flow-scanner
 ```
 
-sfdx:
+SFDX:
 ```sh-session
 $ sfdx plugins:install lightning-flow-scanner
 ```
@@ -19,16 +19,23 @@ $ sfdx plugins:install lightning-flow-scanner
 
 ```
 USAGE
-  $ sfdx flow:scan [--json] [--loglevel <level>] [-s] [-u <targetusername>]
+  $ sfdx flow:scan [--json] [--loglevel <level>] [-e] [-u <targetusername>]
 
 OPTIONS
-  --json                                                                            format output as json
+  -c, --config                                                                      provide a path to the configuration file.
 
-  --loglevel=(trace|debug|info|warn|error|fatal)                                    [default: warn] logging level
+  -d, --directory                                                                   provide a directory to scan for flows.
 
-  -s, --silent                                                                      won't throw errors if violations are found.
+  -e, --throwerrors                                                                 set scan to throw an error if a violation is found.
 
-  -u, --targetusername                                                              will retrieve metadata from an org before scan
+  -p, --soucepath                                                                   provide a comma-separated list of source flow paths to scan
+
+  -u, --targetusername                                                              retrieve the latest metadata from the target before the scan.
+
+  --json                                                                            set output format as json.
+
+  --loglevel=(trace|debug|info|warn|error|fatal)                                    [default: warn] logging level.
+  
 ```
 
 ## Optional configurations:

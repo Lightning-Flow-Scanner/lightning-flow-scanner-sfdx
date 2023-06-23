@@ -33,7 +33,6 @@ export default class scan extends SfdxCommand {
   protected scannerOptions: ScannerOptions;
 
   protected static flagsConfig = {
-    help: flags.help({ char: 'h' }),
     throwerrors: flags.boolean({
       char: 'e',
       description: messages.getMessage('throwErrors')
@@ -66,8 +65,8 @@ export default class scan extends SfdxCommand {
     // Load user options
     await this.loadScannerOptions(this.flags.config);
 
-    // Retrieve flows from org if necessary
-    if (this.flags.retrieve) {
+    // Retrieve flows from org if target has been provided
+    if (this.flags.targetusername) {
       await this.retrieveFlowsFromOrg();
     }
 
