@@ -117,13 +117,13 @@ export default class scan extends SfdxCommand {
     }
     const flows = scanResults.length;
     const errornr = errors.length;
-    const message = "A total of " + errors.length + " errors have been found in " + flows + " flows"
+    const message = "A total of " + errors.length + " errors have been found in " + flows + " flows."
     const summary = { flows, "errors": errornr, message }
-    this.ux.log(summary.message);
+    this.ux.styledHeader(summary.message);
     if (errors.length > 0) {
       for (const lintResult of errors) {
         if(!this.flags.throwerrors){
-          this.ux.log(
+          this.ux.warn(
             'The rule "' + lintResult.ruleName + '" has been violated in flow "' + lintResult.flowName + '" at node "' + lintResult.details.name + '" of type "' + lintResult.details.type +'". ' + lintResult.description
             );  
         } else { 
