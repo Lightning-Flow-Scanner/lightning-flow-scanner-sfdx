@@ -25,17 +25,18 @@ $ sfdx plugins:install lightning-flow-scanner
 ```
   -c, --config <path>                                               provide a path to the configuration file.
 
-  -d, --directory <directory>                                       provide a directory to scan for flows.
+  -d, --directory <C:\..\force-app\main\default\flows>              provide a directory to scan.
 
   -e, --throwerrors                                                 set scan to throw an error if a violation is found.
 
-  -p, --sourcepath <path>                                           provide a comma-separated list of source flow paths to scan.
+  -p, --sourcepath <C:\..\flow1.flow, C:\..\flow2.flow>             provide a comma-separated list of flow paths to scan.
 
   -u, --targetusername <username>                                   retrieve the latest metadata from the target before the scan.
 
   --json                                                            set output format as json.
 
   --loglevel=(trace|debug|info|warn|error|fatal)                    [default: warn] logging level.
+
 ```
 
 ## Configuration file:

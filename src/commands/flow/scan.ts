@@ -25,10 +25,9 @@ export default class scan extends SfdxCommand {
 
   protected static requiresUsername = false;
   protected static supportsDevhubUsername = false;
-  protected static requiresProject = true;
+  protected static requiresProject = false;
   protected static supportsUsername = true;
 
-  public rootPath;
   protected userConfig;
   protected scannerOptions: ScannerOptions;
 
@@ -60,8 +59,6 @@ export default class scan extends SfdxCommand {
   };
 
   public async run(): Promise<AnyJson> {
-    this.rootPath = await SfdxProject.resolveProjectPath();
-
     // Load user options
     await this.loadScannerOptions(this.flags.config);
 
@@ -74,13 +71,12 @@ export default class scan extends SfdxCommand {
     let flowFiles;
     if (this.flags.directory && this.flags.sourcepath) {
       throw new SfdxError('You can only specify one of either directory or sourcepath, not both.');
-    }
-    if (this.flags.directory) {
+    } else if (this.flags.directory) {
       flowFiles = FindFlows(this.flags.directory);
     } else if (this.flags.sourcepath) {
       flowFiles = this.flags.sourcepath.split(',').filter(f => fs.existsSync(f));
     } else {
-      flowFiles = FindFlows(this.rootPath);
+      flowFiles = FindFlows(".");
     }
 
     // Perform scan
