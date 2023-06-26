@@ -63,7 +63,7 @@ export default class scan extends SfdxCommand {
         errors: number;
         message: string;
     };
-    errors: Violation[];
+    results: Violation[];
     }> 
     {
     // Load user options
@@ -138,7 +138,7 @@ export default class scan extends SfdxCommand {
         }
       }
     }
-    return {summary, errors};
+    return {summary, "results":errors};
   }
 
   // lightning flow scanner can be customized using a local config file .flow-scanner.yml
