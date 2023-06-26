@@ -39,50 +39,38 @@ $ sfdx plugins:install lightning-flow-scanner
 
 ```
 
-## Configuration file:
-Use a _.flowscanignore_ file to:
+### Configuration file:
+Create a _.flowscanignore_ file to:
+ - define the severity of rule violations. 
+ - specifying any exceptions to ignore in scan.
 
- - activeRules
- 
- select a limited set of rules to run.
-    
- - overrides
- 
- specify results to ignore. Specify by ruleName and result(if applicable), like shown in the example.
-
-#### Example .flowscanignore:
+#### Defining the severity of a rule
+Define the severity per rule as shown in the following example. If not provided the severity is 'error' by default.
 ```
 {
-  "activeRules": [
-    "DMLStatementInLoop",
-    "DuplicateDMLOperationsByNavigation",
-    "MissingFlowDescription",
-    "HardcodedIds"
-  ],
-  "overrides": [
+  "rules": [
     {
-      "flowName": "Create Property",
+      "ruleName": "MissingFlowDescription",
+      "severity": "warning"
+    }
+  ]
+}
+```
+
+#### Specifying an exception
+Specify by flow, ruleName and result(if applicable), as shown in the following example.
+```
+{
+  "exceptions": [
+    {
+      "flowName": "GetAccounts",
       "results": [
         {
-          "ruleName": "DuplicateDMLOperationsByNavigation",
-          "result": "error_creating_records"
-        },
-        {
-          "ruleName": "DuplicateDMLOperationsByNavigation",
-          "result": "upload_picture"
-        }
-      ]
-    },
-    {
-      "flowName": "mainflow",
-      "results": [
-        {
-          "ruleName": "MissingFlowDescription"
+          "ruleName": "UnusedVariables",
+          "result": "somecount"
         }
       ]
     }
   ]
 }
 ```
-
-See code: [src/commands/flow/scan.ts](https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx/blob/v0.0.18/src/commands/flow/scan.ts)

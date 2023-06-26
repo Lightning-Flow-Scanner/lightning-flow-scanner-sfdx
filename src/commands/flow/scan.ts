@@ -1,6 +1,5 @@
 import { SfdxCommand, flags } from '@salesforce/command';
 import { Messages, SfdxError, SfdxProject } from '@salesforce/core';
-import { AnyJson } from '@salesforce/ts-types';
 import * as core from 'lightning-flow-scanner-core/out';
 import * as fs from 'fs-extra'; 
 import { Flow } from 'lightning-flow-scanner-core/out/main/models/Flow';
@@ -58,7 +57,15 @@ export default class scan extends SfdxCommand {
     })
   };
 
-  public async run(): Promise<AnyJson> {
+  public async run(): Promise<{
+    summary: {
+        flows: number;
+        errors: number;
+        message: string;
+    };
+    errors: Violation[];
+    }> 
+    {
     // Load user options
     await this.loadScannerOptions(this.flags.config);
 
@@ -163,8 +170,8 @@ export default class scan extends SfdxCommand {
     // Build ScannerOptions from config file values
     const rules = this.userConfig['activeRules'];
     const flowScanOverrides = [];
-    if (this.userConfig['overrides']) {
-      for (const override of this.userConfig['overrides']) {
+    if (this.userConfig['exceptions']) {
+      for (const override of this.userConfig['exceptions']) {
         const overrides = [];
         if (override['results']) {
           for (const result of override['results']) {
