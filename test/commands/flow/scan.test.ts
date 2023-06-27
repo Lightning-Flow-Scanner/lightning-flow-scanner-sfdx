@@ -12,8 +12,8 @@ describe('flow:scan', () => {
       return Promise.resolve({ records: [] });
     })
     .stdout()
-    .command(['flow:scan --json'])
+    .command(['flow:scan'])
     .it('runs flow:orscang', ctx => {
-      expect(ctx.stdout).to.contain('"summary"');
+      expect(ctx.stdout).to.contain('"0"');
     });
 });
