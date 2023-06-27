@@ -12,7 +12,7 @@ describe('flow:scan', () => {
       return Promise.resolve({ records: [] });
     })
     .stdout()
-    .command(['flow:scan'])
+    .command(['flow:scan --json'])
     .it('runs flow:orscang', ctx => {
       expect(ctx.stdout).to.contain('"summary"');
     });
