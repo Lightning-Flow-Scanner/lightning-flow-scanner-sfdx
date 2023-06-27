@@ -40,9 +40,9 @@ $ sfdx plugins:install lightning-flow-scanner
 ```
 
 ### Configuration file:
-Create a _.flowscanignore_ file to:
+Create a _.Create a _.flow-scanner.json_ file to:
  - define the severity of rule violations. 
- - specifying any exceptions to ignore in scan.
+ - specify any exceptions to ignore in the scan.
 
 #### Defining the severity of a rule
 Define the severity per rule as shown in the following example. If not provided the severity is 'error' by default.
@@ -50,25 +50,22 @@ Define the severity per rule as shown in the following example. If not provided 
 {
   "rules": [
     {
-      "ruleName": "MissingFlowDescription",
-      "severity": "warning"
+      "MissingFlowDescription":{
+        "severity": "warning"
+      }
     }
   ]
 }
 ```
 
 #### Specifying an exception
-Specify by flow, ruleName and result(if applicable), as shown in the following example.
+Specify exceptions by flow, rule and result(s), as shown in the following example.
 ```
 {
   "exceptions": [
     {
-      "flowName": "GetAccounts",
-      "results": [
-        {
-          "ruleName": "UnusedVariables",
-          "result": "somecount"
-        }
+      "GetAccounts": [
+        {"UnusedVariables":["somecount"]}
       ]
     }
   ]
