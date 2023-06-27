@@ -1,5 +1,5 @@
 import { SfdxCommand, flags } from "@salesforce/command";
-import { Messages, SfdxError, SfdxProject } from "@salesforce/core";
+import { Messages, SfdxError } from "@salesforce/core";
 import * as core from "lightning-flow-scanner-core/out";
 import * as fs from "fs-extra";
 import { Flow } from "lightning-flow-scanner-core/out/main/models/Flow";
