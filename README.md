@@ -162,20 +162,24 @@ Here is an example of advanced configuration file:
 
 ```json
 {
-  "rules": [
-    {
-      "MissingFlowDescription":{
-        "severity": "warning"
-      }
-    }
-  ],
-  "exceptions": [
-    {
-      "GetAccounts": [
-        {"UnusedVariables":["somecount"]}
-      ]
-    }
-  ]
+    "rules": [
+        {
+            "HardcodedIds": {
+                "severity": "info"
+            }
+        }
+    ],
+    "exceptions": [
+        {
+            "GetAccounts": [
+                {
+                    "UnusedVariables": [
+                        "somecount"
+                    ]
+                }
+            ]
+        }
+    ]
 }
 ```
 
@@ -192,13 +196,13 @@ _Example_
 
 ```json
 {
-  "rules": [
-    {
-      "MissingFlowDescription":{
-        "severity": "warning"
-      }
-    }
-  ]
+    "rules": [
+        {
+            "MissingFlowDescription": {
+                "severity": "warning"
+            }
+        }
+    ]
 }
 ```
 
@@ -210,13 +214,17 @@ _Example_
 
 ```json
 {
-  "exceptions": [
-    {
-      "GetAccounts": [
-        {"UnusedVariables":["somecount"]}
-      ]
-    }
-  ]
+    "exceptions": [
+        {
+            "GetAccounts": [
+                {
+                    "UnusedVariables": [
+                        "somecount"
+                    ]
+                }
+            ]
+        }
+    ]
 }
 ```
 
