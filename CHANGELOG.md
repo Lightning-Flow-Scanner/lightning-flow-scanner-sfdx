@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased] (beta, main branch content)
 
 - Update documentation in README
+- Update human-readable output format
 
 ## [1.1.0] - 2023-07-03
 
