@@ -5,76 +5,73 @@ Lightning Flow Scanner (sfdx plug-in)
 
 ## Installation:
 
-npm:
+NPM:
 ```sh-session
 $ npm install -g lightning-flow-scanner
 ```
 
-sfdx:
+SFDX:
 ```sh-session
 $ sfdx plugins:install lightning-flow-scanner
 ```
 
-## Using the scanner:
+## Usage:
 
 ```
-USAGE
-  $ sfdx flow:scan [--json] [--loglevel <level>] [-s] [-u <targetusername>]
-
-OPTIONS
-  --json                                                                            format output as json
-
-  --loglevel=(trace|debug|info|warn|error|fatal)                                    [default: warn] logging level
-
-  -s, --silent                                                                      won't throw errors if violations are found.
-
-  -u, --targetusername                                                              will retrieve metadata from an org before scan
+  $ sfdx flow:scan [-c <path>] [-d <directory>] [-e] [-p <path>][-u <targetusername>] [--json] [--loglevel <level>]
 ```
 
-## Optional configurations:
-Use a _.flowscanignore_ file to:
+### Options
+```
+  -c, --config <path>                                               provide a path to the configuration file.
 
- - activeRules
- 
- select a limited set of rules to run.
-    
- - overrides
- 
- specify results to ignore. Specify by ruleName and result(if applicable), like shown in the example.
+  -d, --directory <C:\..\force-app\main\default\flows>              provide a directory to scan.
 
-#### Example .flowscanignore:
+  -e, --throwerrors                                                 set scan to throw an error if a violation is found.
+
+  -p, --sourcepath <C:\..\flow1.flow, C:\..\flow2.flow>             provide a comma-separated list of flow paths to scan.
+
+  -u, --targetusername <username>                                   retrieve the latest metadata from the target before the scan.
+
+  --json                                                            set output format as json.
+
+  --loglevel=(trace|debug|info|warn|error|fatal)                    [default: warn] logging level.
+
+```
+
+### Configuration file:
+Create a _.Create a _.flow-scanner.json_ file to:
+ - define the severity of rule violations. 
+ - specify any exceptions to ignore in the scan.
+
+#### Defining the severity of a rule
+Define the severity per rule as shown in the following example. If not provided the severity is 'error' by default.
 ```
 {
-  "activeRules": [
-    "DMLStatementInLoop",
-    "DuplicateDMLOperationsByNavigation",
-    "MissingFlowDescription",
-    "HardcodedIds"
-  ],
-  "overrides": [
+  "rules": [
     {
-      "flowName": "Create Property",
-      "results": [
-        {
-          "ruleName": "DuplicateDMLOperationsByNavigation",
-          "result": "error_creating_records"
-        },
-        {
-          "ruleName": "DuplicateDMLOperationsByNavigation",
-          "result": "upload_picture"
-        }
-      ]
-    },
+      "MissingFlowDescription":{
+        "severity": "warning"
+      }
+    }
+  ]
+}
+```
+
+#### Specifying an exception
+Specify exceptions by flow, rule and result(s), as shown in the following example.
+```
+{
+  "exceptions": [
     {
-      "flowName": "mainflow",
-      "results": [
-        {
-          "ruleName": "MissingFlowDescription"
-        }
+      "GetAccounts": [
+        {"UnusedVariables":["somecount"]}
       ]
     }
   ]
 }
 ```
 
-See code: [src/commands/flow/scan.ts](https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx/blob/v0.0.18/src/commands/flow/scan.ts)
+### Included Rules
+
+[Standard Ruleset](https://github.com/Force-Config-Control/lightning-flow-scanner-core)
