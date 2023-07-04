@@ -7,7 +7,6 @@ import { ScanResult } from "lightning-flow-scanner-core/out/main/models/ScanResu
 import { FindFlows } from "../../libs/FindFlows";
 import { ParseFlows } from "../../libs/ParseFlows";
 import { Violation } from "../../models/Violation";
-import { ScannerOptions } from "lightning-flow-scanner-core/out/main/models/ScannerOptions";
 import * as chalk from "chalk";
 import { exec } from "child_process";
 import { cosmiconfig } from "cosmiconfig";
@@ -25,7 +24,6 @@ export default class scan extends SfdxCommand {
   protected static supportsUsername = true;
 
   protected userConfig;
-  protected scannerOptions: ScannerOptions;
 
   protected static flagsConfig = {
     throwerrors: flags.boolean({
