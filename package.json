@@ -1,6 +1,6 @@
 {
   "name": "lightning-flow-scanner",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Ruben",
   "bugs": "https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx/issues",
   "dependencies": {
