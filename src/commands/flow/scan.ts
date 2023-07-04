@@ -7,7 +7,7 @@ import { ScanResult } from "lightning-flow-scanner-core/out/main/models/ScanResu
 import { FindFlows } from "../../libs/FindFlows";
 import { ParseFlows } from "../../libs/ParseFlows";
 import { Violation } from "../../models/Violation";
-import * as chalk from "chalk";
+import * as c from "chalk";
 import { exec } from "child_process";
 import { cosmiconfig } from "cosmiconfig";
 
@@ -26,10 +26,6 @@ export default class scan extends SfdxCommand {
   protected userConfig;
 
   protected static flagsConfig = {
-    throwerrors: flags.boolean({
-      char: "e",
-      description: messages.getMessage("throwErrors"),
-    }),
     directory: flags.filepath({
       char: "d",
       description: messages.getMessage("directoryToScan"),
@@ -53,6 +49,7 @@ export default class scan extends SfdxCommand {
   };
 
   public async run(): Promise<{
+    status: number,
     summary: {
       flows: number;
       errors: number;
@@ -60,6 +57,7 @@ export default class scan extends SfdxCommand {
     };
     results: Violation[];
   }> {
+    this.ux.startSpinner('Starting Flow Scanner');
     // Load user options
     await this.loadScannerOptions(this.flags.config);
 
@@ -71,6 +69,7 @@ export default class scan extends SfdxCommand {
     // List flows that will be scanned
     let flowFiles;
     if (this.flags.directory && this.flags.sourcepath) {
+      this.ux.stopSpinner("Error");
       throw new SfdxError(
         "You can only specify one of either directory or sourcepath, not both."
       );
@@ -83,15 +82,18 @@ export default class scan extends SfdxCommand {
     } else {
       flowFiles = FindFlows(".");
     }
+    this.ux.startSpinner(`Found ${flowFiles.length} flows to analyze`);
 
     // Perform scan
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
+    this.ux.startSpinner(`Parsed ${flowFiles.length} flows, processing analysis`);
     let scanResults: ScanResult[];
     if (this.userConfig && Object.keys(this.userConfig).length > 0) {
       scanResults = core.scan(parsedFlows, this.userConfig);
     } else {
       scanResults = core.scan(parsedFlows);
     }
+    this.ux.stopSpinner(`Completed analysis of ${flowFiles.length} flows`);
 
     // Build result
     const errors: Violation[] = [];
@@ -104,6 +106,7 @@ export default class scan extends SfdxCommand {
                 scanResult.flow.label[0],
                 ruleResult.ruleName,
                 ruleResult.ruleDescription,
+                'warning',
                 {
                   name: result.name,
                   type: result.subtype,
@@ -117,7 +120,8 @@ export default class scan extends SfdxCommand {
               new Violation(
                 scanResult.flow.label[0],
                 ruleResult.ruleName,
-                ruleResult.ruleDescription
+                ruleResult.ruleDescription,
+                'warning',
               )
             );
           }
@@ -134,29 +138,20 @@ export default class scan extends SfdxCommand {
       " flows.";
     const summary = { flows, errors: errornr, message };
     this.ux.styledHeader(summary.message);
+    let status = 0;
     if (errors.length > 0) {
+      status = 1;
       for (const lintResult of errors) {
-        if (!this.flags.throwerrors) {
-          // this.ux.warn(
-          //   'The rule "' + lintResult.ruleName + '" has been violated in flow "' + lintResult.flowName + '" at node "' + lintResult.details.name + '" of type "' + lintResult.details.type +'". ' + lintResult.description
-          //   );
-        } else {
-          throw new SfdxError(
-            'The rule "' +
-              lintResult.ruleName +
-              '" has been violated in flow "' +
-              lintResult.flowName +
-              '" at node "' +
-              lintResult.details.name +
-              '" of type "' +
-              lintResult.details.type +
-              '". ' +
-              lintResult.description
-          );
+        this.ux.log(`${c.yellow(lintResult.severity.toUpperCase()+ ' ' + c.bold(lintResult.ruleName))} on ${c.blue(c.bold(lintResult.flowName))}`);
+        if (lintResult.details) {
+          this.ux.log(c.italic(`Details: ${lintResult.details.name}, ${lintResult.details.type}`));
         }
+        this.ux.log(c.italic(lintResult.description))
+        this.ux.log('');
       }
     }
-    return { summary, results: errors };
+    // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
+    return { summary, status: status, results: errors };
   }
 
   // lightning flow scanner can be customized using a local config file .flow-scanner.yml
@@ -190,7 +185,7 @@ export default class scan extends SfdxCommand {
   // Use sfdx to retrieve flows from remote org
   private async retrieveFlowsFromOrg() {
     let errored = false;
-    this.ux.startSpinner(chalk.yellowBright("Retrieving Metadata..."));
+    this.ux.startSpinner(c.yellowBright("Retrieving Metadata..."));
     const retrieveCommand = `sfdx force:source:retrieve -m Flow -u "${this.flags.targetusername}"`;
     try {
       await exec(retrieveCommand, {
@@ -199,7 +194,7 @@ export default class scan extends SfdxCommand {
     } catch (exception) {
       errored = true;
       this.ux.errorJson(exception);
-      this.ux.stopSpinner(chalk.redBright("Retrieve Operation Failed."));
+      this.ux.stopSpinner(c.redBright("Retrieve Operation Failed."));
     }
     if (errored) {
       throw new SfdxError(
@@ -209,7 +204,7 @@ export default class scan extends SfdxCommand {
         1
       );
     } else {
-      this.ux.stopSpinner(chalk.greenBright("Retrieve Completed ✔."));
+      this.ux.stopSpinner(c.greenBright("Retrieve Completed ✔."));
     }
   }
 }
