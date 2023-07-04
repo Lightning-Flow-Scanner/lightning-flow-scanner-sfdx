@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased] (beta, main branch content)
 
+- Update documentation in README
+
+## [1.1.0] - 2023-07-03
+
 - Use [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig) to load configuration
 - Add a **--retrieve** argument in case user wants to retrieve flows from org before scanning
 - Add a testing GitHub action Workflow 
@@ -17,5 +21,3 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Remove tslint (deprecated), replaced by eslint
   - Upgrade dependencies
   - Add VsCode local debugging configuration
-
-<!-- Example : ## [1.0.0] - 2020-11-17 -->
