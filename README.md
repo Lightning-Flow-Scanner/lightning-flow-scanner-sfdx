@@ -190,7 +190,8 @@ Define the severity per rule as shown in the following example. If not provided 
 Available values for severity are:
 
 - `error`
-- `warning` (not blocking)
+- `warning`
+- `note`
 
 _Example_
 
