@@ -8,8 +8,6 @@ import { FindFlows } from "../../libs/FindFlows";
 import { ParseFlows } from "../../libs/ParseFlows";
 import { Violation } from "../../models/Violation";
 import { ScannerOptions } from "lightning-flow-scanner-core/out/main/models/ScannerOptions";
-import { Override } from "lightning-flow-scanner-core/out/main/models/Override";
-import { FlowScanOverrides } from "lightning-flow-scanner-core/out/main/models/FlowScanOverrides";
 import * as chalk from "chalk";
 import { exec } from "child_process";
 import { cosmiconfig } from "cosmiconfig";
@@ -91,8 +89,8 @@ export default class scan extends SfdxCommand {
     // Perform scan
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
     let scanResults: ScanResult[];
-    if (this.scannerOptions && Object.keys(this.scannerOptions).length > 0) {
-      scanResults = core.scan(parsedFlows, this.scannerOptions);
+    if (this.userConfig && Object.keys(this.userConfig).length > 0) {
+      scanResults = core.scan(parsedFlows, this.userConfig);
     } else {
       scanResults = core.scan(parsedFlows);
     }
@@ -189,37 +187,6 @@ export default class scan extends SfdxCommand {
       this.userConfig = explorerSearchRes?.config ?? {};
     }
 
-    // Build ScannerOptions from config file values
-    const rules = this.userConfig["rules"];
-    const flowScanOverrides = [];
-    if (this.userConfig["exceptions"]) {
-      const exceptions = this.userConfig["exceptions"];
-      exceptions.forEach((exception) => {
-        const exceptionKeys = Object.keys(exception);
-        if (exceptionKeys.length > 0) {
-          const innerObject = exception[exceptionKeys[0]][0];
-          const propertyKeys = Object.keys(innerObject);
-          const overrides = [];
-          if (propertyKeys.length > 0) {
-            const issues = innerObject[propertyKeys[0]];
-            for (const issue of issues) {
-              overrides.push(new Override(propertyKeys[0], issue));
-            }
-          }
-        flowScanOverrides.push(new FlowScanOverrides(exceptionKeys[0], overrides));
-        }
-      });
-    }
-    // todo replace rulenames with new core rule severity property
-    const rulenames = [];
-    for (const r in rules) {
-      const rulename = Object.keys(rules[r]);
-      rulenames.push(rulename);
-    }
-    this.scannerOptions = new ScannerOptions(
-      rulenames.length === 0 ? null : rulenames,
-      flowScanOverrides
-    );
   }
 
   // Use sfdx to retrieve flows from remote org
