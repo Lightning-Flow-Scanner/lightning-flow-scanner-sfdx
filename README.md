@@ -71,3 +71,7 @@ Specify exceptions by flow, rule and result(s), as shown in the following exampl
   ]
 }
 ```
+
+### Included Rules
+
+[Standard Ruleset](https://github.com/Force-Config-Control/lightning-flow-scanner-core)
