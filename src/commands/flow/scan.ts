@@ -141,13 +141,25 @@ export default class scan extends SfdxCommand {
     let status = 0;
     if (errors.length > 0) {
       status = 1;
-      for (const lintResult of errors) {
-        this.ux.log(`${c.yellow(lintResult.severity.toUpperCase()+ ' ' + c.bold(lintResult.ruleName))} on ${c.blue(c.bold(lintResult.flowName))}`);
-        if (lintResult.details) {
-          this.ux.log(c.italic(`Details: ${lintResult.details.name}, ${lintResult.details.type}`));
-        }
-        this.ux.log(c.italic(lintResult.description))
+      const lintResultsOrdered = {};
+      // Group issues by flow
+      for (const errorDtl of errors) {
+        lintResultsOrdered[errorDtl.flowName] = lintResultsOrdered[errorDtl.flowName] || [];
+        lintResultsOrdered[errorDtl.flowName].push(errorDtl);
+      }
+      // Display issues
+      for (const lintResultKey in lintResultsOrdered) {
+        const lintResultFlow = lintResultsOrdered[lintResultKey];
+        this.ux.log(`${c.blue(c.bold(lintResultKey))}`)
         this.ux.log('');
+        for (const lintResult of lintResultFlow) {
+          this.ux.log(`${c.yellow(lintResult.severity.toUpperCase() + ' ' + c.bold(lintResult.ruleName))}`);
+          if (lintResult.details) {
+            this.ux.log(c.italic(`Details: ${lintResult.details.name}, ${lintResult.details.type}`));
+          }
+          this.ux.log(c.italic(lintResult.description))
+          this.ux.log('');
+        }
       }
     }
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
