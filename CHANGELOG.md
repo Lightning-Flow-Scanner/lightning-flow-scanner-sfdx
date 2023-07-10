@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Update documentation in README
 - Update human-readable output format
+- Automate deployment of beta and release versions via Github Actions
 
 ## [1.1.0] - 2023-07-03
 
