@@ -17,6 +17,11 @@ const messages = Messages.loadMessages("lightning-flow-scanner", "command");
 
 export default class scan extends SfdxCommand {
   public static description = messages.getMessage("commandDescription");
+  public static examples: string[] = [
+    "sfdx flow:scan",
+    "sfdx flow:scan -c path/to/config.json",
+    "sfdx flow:scan -d path/to/flows/directory"
+  ]
 
   protected static requiresUsername = false;
   protected static supportsDevhubUsername = false;
@@ -51,7 +56,7 @@ export default class scan extends SfdxCommand {
   public async run(): Promise<{
     status: number,
     summary: {
-      flows: number;
+      flowsNumber: number;
       errors: number;
       message: string;
     };
@@ -128,16 +133,7 @@ export default class scan extends SfdxCommand {
         }
       }
     }
-    const flows = scanResults.length;
-    const errornr = errors.length;
-    const message =
-      "A total of " +
-      errors.length +
-      " errors have been found in " +
-      flows +
-      " flows.";
-    const summary = { flows, errors: errornr, message };
-    this.ux.styledHeader(summary.message);
+
     let status = 0;
     if (errors.length > 0) {
       status = 1;
@@ -150,18 +146,31 @@ export default class scan extends SfdxCommand {
       // Display issues
       for (const lintResultKey in lintResultsOrdered) {
         const lintResultFlow = lintResultsOrdered[lintResultKey];
-        this.ux.log(`${c.blue(c.bold(lintResultKey))}`)
+        this.ux.log(`== ${c.blue(c.bold(lintResultKey))} ==`)
         this.ux.log('');
         for (const lintResult of lintResultFlow) {
           this.ux.log(`${c.yellow(lintResult.severity.toUpperCase() + ' ' + c.bold(lintResult.ruleName))}`);
           if (lintResult.details) {
-            this.ux.log(c.italic(`Details: ${lintResult.details.name}, ${lintResult.details.type}`));
+            this.ux.log(c.italic(`Details: ${c.yellow(lintResult.details.name)}, ${c.yellow(lintResult.details.type)}`));
           }
           this.ux.log(c.italic(lintResult.description))
           this.ux.log('');
         }
+        this.ux.log('');
       }
     }
+    // Build summary message
+    const flowsNumber = scanResults.length;
+    const errornr = errors.length;
+    const message =
+      "A total of " +
+      c.bold(errors.length) +
+      " errors have been found in " +
+      c.bold(flowsNumber) +
+      " flows.";
+    const summary = { flowsNumber:flowsNumber, errors: errornr, message };
+    this.ux.styledHeader(summary.message);
+
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
     return { summary, status: status, results: errors };
   }
