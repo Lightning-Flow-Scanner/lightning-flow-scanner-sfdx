@@ -19,7 +19,9 @@ export default class scan extends SfdxCommand {
   public static description = messages.getMessage("commandDescription");
   public static examples: string[] = [
     "sfdx flow:scan",
+    "sfdx flow:scan --failon warning",
     "sfdx flow:scan -c path/to/config.json",
+    "sfdx flow:scan -c path/to/config.json --failon warning",
     "sfdx flow:scan -d path/to/flows/directory"
   ]
 
@@ -29,6 +31,7 @@ export default class scan extends SfdxCommand {
   protected static supportsUsername = true;
 
   protected userConfig;
+  protected failOn = "error";
 
   protected static flagsConfig = {
     directory: flags.filepath({
@@ -40,6 +43,12 @@ export default class scan extends SfdxCommand {
       char: "c",
       description: "Path to configuration file",
       required: false,
+    }),
+    failon: flags.enum({
+      char: "f",
+      description: "Thresold failure level (error, warning, note, or never) defining when the command return code will be 1",
+      options: ["error","warning","note","never"],
+      default: "error"
     }),
     retrieve: flags.boolean({
       char: "r",
@@ -62,6 +71,7 @@ export default class scan extends SfdxCommand {
     };
     results: Violation[];
   }> {
+    this.failOn = this.flags.failon || "error";
     this.ux.startSpinner('Starting Flow Scanner');
     // Load user options
     await this.loadScannerOptions(this.flags.config);
@@ -98,12 +108,17 @@ export default class scan extends SfdxCommand {
     } else {
       scanResults = core.scan(parsedFlows);
     }
+
+console.log(JSON.stringify(scanResults));
+
     this.ux.stopSpinner(`Completed analysis of ${flowFiles.length} flows`);
 
     // Build result
     const errors: Violation[] = [];
+    const errorLevelsNumber = {};
     for (const scanResult of scanResults) {
       for (const ruleResult of scanResult.ruleResults) {
+        errorLevelsNumber[ruleResult.severity] = (errorLevelsNumber[ruleResult.severity]|| 0) + 1
         if (ruleResult.details && ruleResult.details.length > 0) {
           for (const result of ruleResult.details) {
             errors.push(
@@ -111,7 +126,7 @@ export default class scan extends SfdxCommand {
                 scanResult.flow.label[0],
                 ruleResult.ruleName,
                 ruleResult.ruleDescription,
-                'warning',
+                ruleResult.severity,
                 {
                   name: result.name,
                   type: result.subtype,
@@ -126,17 +141,16 @@ export default class scan extends SfdxCommand {
                 scanResult.flow.label[0],
                 ruleResult.ruleName,
                 ruleResult.ruleDescription,
-                'warning',
+                ruleResult.severity,
               )
             );
+            
           }
         }
       }
     }
 
-    let status = 0;
     if (errors.length > 0) {
-      status = 1;
       const lintResultsOrdered = {};
       // Group issues by flow
       for (const errorDtl of errors) {
@@ -159,6 +173,29 @@ export default class scan extends SfdxCommand {
         this.ux.log('');
       }
     }
+
+    // Get status depending on found errors & warnings
+    let status = 0;
+    if (this.failOn === 'never') {
+      status = 0 ;
+    }
+    else {
+        if (this.failOn === "error" && (errorLevelsNumber["error"] || 0) > 0){
+          status = 1;
+        }
+        else if (this.failOn === 'warning' &&
+         ((errorLevelsNumber["error"] || 0) > 0) 
+         || ((errorLevelsNumber["warning"] || 0) > 0)) {
+          status = 1;
+        }
+        else if (this.failOn === 'note' &&
+         ((errorLevelsNumber["error"] || 0) > 0) 
+         || ((errorLevelsNumber["warning"] || 0) > 0)
+         || ((errorLevelsNumber["note"] || 0) > 0)) {
+          status = 1;
+        }
+    }
+
     // Build summary message
     const flowsNumber = scanResults.length;
     const errornr = errors.length;
@@ -168,7 +205,7 @@ export default class scan extends SfdxCommand {
       " errors have been found in " +
       c.bold(flowsNumber) +
       " flows.";
-    const summary = { flowsNumber:flowsNumber, errors: errornr, message };
+    const summary = { flowsNumber:flowsNumber, errors: errornr, message, errorLevelsDetails: errorLevelsNumber };
     this.ux.styledHeader(summary.message);
 
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
