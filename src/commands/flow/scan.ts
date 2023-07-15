@@ -97,19 +97,17 @@ export default class scan extends SfdxCommand {
     } else {
       flowFiles = FindFlows(".");
     }
-    this.ux.startSpinner(`Identified ${flowFiles.length} flows to scan`);
 
     // Perform scan
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
-    this.ux.startSpinner(`Parsed ${flowFiles.length} flows, processing analysis`);
+    this.ux.startSpinner(`Identified ${flowFiles.length} flows to scan`);
     let scanResults: ScanResult[];
     if (this.userConfig && Object.keys(this.userConfig).length > 0) {
       scanResults = core.scan(parsedFlows, this.userConfig);
     } else {
       scanResults = core.scan(parsedFlows);
     }
-
-    this.ux.stopSpinner(`Scan completed`);
+    this.ux.stopSpinner(`Scan complete`);
 
     // Build result
     const errors: Violation[] = [];
