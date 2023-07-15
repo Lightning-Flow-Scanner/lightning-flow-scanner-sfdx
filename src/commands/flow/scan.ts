@@ -72,7 +72,7 @@ export default class scan extends SfdxCommand {
     results: Violation[];
   }> {
     this.failOn = this.flags.failon || "error";
-    this.ux.startSpinner('Starting Flow Scanner');
+    this.ux.startSpinner('Loading Lightning Flow Scanner');
     // Load user options
     await this.loadScannerOptions(this.flags.config);
 
@@ -97,7 +97,7 @@ export default class scan extends SfdxCommand {
     } else {
       flowFiles = FindFlows(".");
     }
-    this.ux.startSpinner(`Found ${flowFiles.length} flows to analyze`);
+    this.ux.startSpinner(`Identified ${flowFiles.length} flows to scan`);
 
     // Perform scan
     const parsedFlows: Flow[] = await ParseFlows(flowFiles);
@@ -109,7 +109,7 @@ export default class scan extends SfdxCommand {
       scanResults = core.scan(parsedFlows);
     }
 
-    this.ux.stopSpinner(`Completed analysis of ${flowFiles.length} flows`);
+    this.ux.stopSpinner(`Scan completed`);
 
     // Build result
     const errors: Violation[] = [];
