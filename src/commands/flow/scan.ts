@@ -109,8 +109,6 @@ export default class scan extends SfdxCommand {
       scanResults = core.scan(parsedFlows);
     }
 
-console.log(JSON.stringify(scanResults));
-
     this.ux.stopSpinner(`Completed analysis of ${flowFiles.length} flows`);
 
     // Build result
