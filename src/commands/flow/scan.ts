@@ -137,9 +137,9 @@ export default class scan extends SfdxCommand {
     if (errors.length > 0) {
       for (const lintResult of errors) {
         if (!this.flags.throwerrors) {
-          // this.ux.warn(
-          //   'The rule "' + lintResult.ruleName + '" has been violated in flow "' + lintResult.flowName + '" at node "' + lintResult.details.name + '" of type "' + lintResult.details.type +'". ' + lintResult.description
-          //   );
+          this.ux.warn(
+            'The rule "' + lintResult.ruleName + '" has been violated in flow "' + lintResult.flowName + '" at node "' + lintResult.details.name + '" of type "' + lintResult.details.type +'". ' + lintResult.description
+            );
         } else {
           throw new SfdxError(
             'The rule "' +
