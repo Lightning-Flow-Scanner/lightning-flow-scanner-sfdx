@@ -50,7 +50,7 @@ $ npm install -g lightning-flow-scanner
 ## Usage
 
 ```
-  $ sfdx flow:scan [-c <path>] [-d <directory>] [-e] [-p <path>][-u <targetusername>] [--json] [--loglevel <level>]
+  $ sfdx flow:scan [options]
 ```
 
 ### Options
@@ -58,13 +58,13 @@ $ npm install -g lightning-flow-scanner
 ```
   -c, --config <path>                                               provide a path to the configuration file.
 
-  -d, --directory <C:\..\force-app\main\default\flows>              provide a directory to scan.
-
-  -e, --throwerrors                                                 set scan to throw an error if a violation is found.
+  -f, --failon                                                      Thresold failure level (error, warning, note, or never) defining when the command return code will be 1
 
   -p, --sourcepath <C:\..\flow1.flow, C:\..\flow2.flow>             provide a comma-separated list of flow paths to scan.
 
   -u, --targetusername <username>                                   retrieve the latest metadata from the target before the scan.
+
+  -d, --directory <C:\..\force-app\main\default\flows>              provide a directory to scan.
 
   --json                                                            set output format as json.
 
@@ -72,6 +72,13 @@ $ npm install -g lightning-flow-scanner
 
 ```
 
+### Examples
+
+`sfdx flow:scan`
+
+`sfdx flow:scan --json`
+
+`sfdx flow:scan --config path/to/.flow-scanner.json`
 
 ## Rules
 
@@ -228,4 +235,3 @@ _Example_
     ]
 }
 ```
-
