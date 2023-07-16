@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased] (beta, main branch content)
 
-Dear contributors, add your updates here :)
+- Markdown formatting
+- Add screenshot image at the head of the README
 
 ## [2.0.0] - 2023-07-16
 
