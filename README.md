@@ -1,4 +1,5 @@
-# Lightning Flow Scanner
+# Lightning Flow Scanner SFDX Plugin
+#### Identify potential issues and improvements in Salesforce Flows.
 
 [![Version](https://img.shields.io/npm/v/lightning-flow-scanner.svg)](https://npmjs.org/package/lightning-flow-scanner)
 [![Downloads/week](https://img.shields.io/npm/dw/lightning-flow-scanner.svg)](https://npmjs.org/package/lightning-flow-scanner)
@@ -7,15 +8,6 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/Force-Config-Control/lightning-flow-scanner-sfdx.svg)](https://gitHub.com/Force-Config-Control/lightning-flow-scanner-sfdx/graphs/contributors/)
 [![License](https://img.shields.io/npm/l/lightning-flow-scanner.svg)](https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx/blob/main/package.json)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-
-
-Salesforce **Flow Builder** is an great tool, allowing administrators to implement **amazing automations with no-code** !
-
-But as it allows to define **complex rules and algorithms**, if wrongly used it can **lead to critical issues** in production.
-
-That's when **Lightning Flow Scanner comes to the rescue** !
-
-Like PMD for Apex, **Flow scanner** will **analyze your flows** and **highlight their parts that do not follows the best practices**.
 
 ## Table of contents
 
@@ -102,9 +94,7 @@ ___
 
 ### Hardcoded Ids
 
-IDs are org-specific, so don’t hard-code IDs.
-
-Instead, pass them into variables when the flow starts. You can do so, for example, by using merge fields in URL parameters or by using a Get Records element.
+IDs are org-specific, so don’t hard-code IDs. Instead, pass them into variables when the flow starts. You can do so, for example, by using merge fields in URL parameters or by using a Get Records element.
 
 Configuration ID: `HardcodedIds` _([View source code](https://github.com/Force-Config-Control/lightning-flow-scanner-core/tree/master/src/main/rules/HardcodedIds.ts))_
 
@@ -112,9 +102,7 @@ ___
 
 ### Missing flow description
 
-Descriptions are useful for documentation purposes.
-
-It is recommended to provide information about where it is used and what it will do.
+Descriptions are useful for documentation purposes. It is recommended to provide information about where it is used and what it will do.
 
 Configuration ID: `MissingFlowDescription` _([View source code](https://github.com/Force-Config-Control/lightning-flow-scanner-core/tree/master/src/main/rules/MissingFlowDescription.ts))_
 
@@ -122,9 +110,7 @@ ___
 
 ### Missing error handlers
 
-Sometimes a flow doesn’t perform an operation that you configured it to do.
-
-By default, the flow shows an error message to the user and emails the admin who created the flow. However, you can control that behavior.
+Sometimes a flow doesn’t perform an operation that you configured it to do. By default, the flow shows an error message to the user and emails the admin who created the flow. However, you can control that behavior.
 
 Configuration ID: `MissingFaultPath` _([View source code](https://github.com/Force-Config-Control/lightning-flow-scanner-core/tree/master/src/main/rules/MissingFaultPath.ts))_
 
@@ -132,9 +118,7 @@ ___
 
 ### Missing null handlers
 
-If a Get Records operation does not find any data it will return null.
-
-Use a decision element on the operation result variable to validate that the result is not null.
+If a Get Records operation does not find any data it will return null. Use a decision element on the operation result variable to validate that the result is not null.
 
 Configuration ID: `MissingNullHandler` _([View source code](https://github.com/Force-Config-Control/lightning-flow-scanner-core/tree/master/src/main/rules/MissingNullHandler.ts))_
 
