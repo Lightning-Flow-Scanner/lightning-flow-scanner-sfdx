@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [2.1.0] - 2023-07-16
 
 - Fix npm package generation (please do not use 2.0.0 but 2.1.0)
+- Upgrade lightning-flow-scanner-core dependency to 2.5.0
 
 ## [2.0.0] - 2023-07-16
 
