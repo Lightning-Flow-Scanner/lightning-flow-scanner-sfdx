@@ -6,7 +6,7 @@
 - [Usage](#usage)
   - [Options](#options)
   - [Examples](#examples)
-- [Flow Rules](#rules)
+- [Rule overview](#rule-overview)
 - [Configuration](#configuration)
   - [Defining the severity per rule](#defining-the-severity-per-rule)
   - [Specifying an exception](#specifying-an-exception)
@@ -50,8 +50,20 @@ sfdx flow:scan --json
 ```sh-sessions
 sfdx flow:scan --config path/to/.flow-scanner.json
 ```
-## Flow Rules
-<!-- todo table -->
+## Rule overview
+| Rule       | Id | Description |
+|--------------|:-----:|-----------:|
+| **DML statements in a loop** |  DMLStatementInLoop | To avoid hitting Apex governor limits, we recommend grouping all of your database changes together at the end of the flow, whether those changes create, update, or delete records. |
+| **Duplicate DML operations** |  DuplicateDMLOperationsByNavigation | If the flow commits changes to the database or performs actions between two screens, don't let users navigate back between screen. Otherwise, the flow may perform duplicate database operations. |
+| **Hardcoded Ids** | HardcodedIds | IDs are org-specific, so don’t hard-code IDs. Instead, pass them into variables when the flow starts. You can do so, for example, by using merge fields in URL parameters or by using a Get Records element. |
+| **Missing flow description** |  MissingFlowDescription | Descriptions are useful for documentation purposes. It is recommended to provide information about where it is used and what it will do. |
+| **Missing error handlers** |  MissingFaultPath | Sometimes a flow doesn’t perform an operation that you configured it to do. By default, the flow shows an error message to the user and emails the admin who created the flow. However, you can control that behavior. |
+| **Missing null handlers**      |  MissingNullHandler | If a Get Records operation does not find any data it will return null. Use a decision element on the operation result variable to validate that the result is not null. |
+| **Unconnected elements** |  UnconnectedElements | Unconnected elements which are not being used by the Flow should be avoided to keep Flows efficient and maintainable. |
+| **Unused variables**      |  UnusedVariables | Unused variables which are not being used by the Flow should be avoided to keep Flow more efficient and maintainable. |
+
+*More information on the rules can be found in the [lfs-core module documentation](https://github.com/Force-Config-Control/lightning-flow-scanner-core).*
+
 ## Configuration
 Create a .flow-scanner.json file in order to configure:
  - The severity of violating any specific rule.
