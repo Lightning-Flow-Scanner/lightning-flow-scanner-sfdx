@@ -6,11 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased] (beta, main branch content)
 
+- Markdown formatting
+- Add screenshot image at the head of the README
+
+## [2.1.0] - 2023-07-16
+
+- Fix npm package generation (please do not use 2.0.0 but 2.1.0)
+- Upgrade lightning-flow-scanner-core dependency to 2.5.0
+
+## [2.0.0] - 2023-07-16
+
+- **BREAKING CHANGE**: `--throwerrors` argument is not available anymore and is replaced by `--failon`, that has more options
 - Update documentation in README
 - Update human-readable output format
   - Sort errors by flow
 - New argument **--failon** (error/warning/note): Makes return code 1 in case --failon severity is reached
-- Automate deployment of beta and release versions via Github Actions
 
 ## [1.1.0] - 2023-07-03
 
