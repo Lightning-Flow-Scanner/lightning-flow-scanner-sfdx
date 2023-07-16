@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Markdown formatting
 - Add screenshot image at the head of the README
+- Fix packaging
 
 ## [2.0.0] - 2023-07-16
 
