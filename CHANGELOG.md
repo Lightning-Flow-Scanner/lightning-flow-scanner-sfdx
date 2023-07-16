@@ -6,11 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased] (beta, main branch content)
 
+Dear contributors, add your updates here :)
+
+## [2.0.0] - 2023-07-16
+
+- **BREAKING CHANGE**: `--throwerrors` argument is not available anymore and is replaced by `--failon`, that has more options
 - Update documentation in README
 - Update human-readable output format
   - Sort errors by flow
 - New argument **--failon** (error/warning/note): Makes return code 1 in case --failon severity is reached
-- Automate deployment of beta and release versions via Github Actions
 
 ## [1.1.0] - 2023-07-03
 
