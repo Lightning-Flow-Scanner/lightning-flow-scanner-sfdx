@@ -81,29 +81,31 @@ _Note: if you prefer YAML format, you can create a `.flow-scanner.yml` file usin
 When the severity is not provided it will be `error` by default. Other available values for severity are `warning` and `note`. Define the severity per rule as shown in the following example. 
 ```json
 {
-    "rules": [
-        {
-            "MissingFlowDescription": {
-                "severity": "warning"
-            }
-        }
-    ]
+  "rules": {
+    "MissingFlowDescription": {
+      "severity": "warning"
+    },
+    "UnusedVariables": {
+      "severity": "error"
+    }
+  }
 }
 ```
 ### Specifying an exception
 Specifying exceptions can be done by flow, rule and result(s), as shown in the following example.
 ```json
 {
-    "exceptions": [
-        {
-            "GetAccounts": [
-                {
-                    "UnusedVariables": [
-                        "somecount"
-                    ]
-                }
-            ]
-        }
-    ]
+  "exceptions": {
+    "AssignTaskOwner": {
+      "UnusedVariables": [
+        "somecount"
+      ]
+    },
+    "GetAccounts":{
+      "UnusedVariables": [
+        "incvar"
+      ]
+    }
+  }
 }
 ```
