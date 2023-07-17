@@ -7,9 +7,7 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/Force-Config-Control/lightning-flow-scanner-sfdx.svg)](https://gitHub.com/Force-Config-Control/lightning-flow-scanner-sfdx/graphs/contributors/)
 [![License](https://img.shields.io/npm/l/lightning-flow-scanner.svg)](https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx/blob/main/package.json)
 
-**Flow-scanner identifies potential issues and improvements in Salesforce Flows**
-
-_Can be used locally or via CI/CD control jobs_
+__*Identify potential issues and improvements in Salesforce Flows*__
 
 ![FlowScan example](docs/images/flow-scan-example.jpg)
 
