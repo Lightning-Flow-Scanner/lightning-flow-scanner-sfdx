@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add screenshot image at the head of the README
 - Fix rules table alignment
 - Add banner at the top of the README
+- Add README intro phrase
 
 ## [2.1.0] - 2023-07-16
 

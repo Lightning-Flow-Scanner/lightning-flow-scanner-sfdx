@@ -8,7 +8,13 @@
 [![License](https://img.shields.io/npm/l/lightning-flow-scanner.svg)](https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx/blob/main/package.json)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-__*Identify potential issues and improvements in Salesforce Flows*__
+Salesforce **Flow Builder** is a great tool, allowing trailblazers to implement **amazing automations with no-code** !
+
+But as it allows to define **complex rules and algorithms**, if wrongly used it can **lead to critical issues in production**.
+
+That's when **Lightning Flow Scanner comes to the rescue** with its [set of rules](#rule-overview) !
+
+Like PMD for Apex, the Flow scanner will **analyze your flows** and **highlight their parts that do not follow the best practices**.
 
 ![FlowScan example](docs/images/flow-scan-example.jpg)
 
