@@ -12,6 +12,8 @@ __*Identify potential issues and improvements in Salesforce Flows*__
 
 ![FlowScan example](docs/images/flow-scan-example.jpg)
 
+**Also available as [VS Code Extension](https://github.com/Force-Config-Control/lightning-flow-scanner-vsce)*
+
 ## Table of contents
 
 - [Installation](#installation)
@@ -79,7 +81,7 @@ sfdx flow:scan --config path/to/.flow-scanner.json
 | Rule       | Id | Description |
 |--------------|:-----:|:-----------|
 | **DML statements in a loop** |  DMLStatementInLoop | To avoid hitting Apex governor limits, we recommend grouping all of your database changes together at the end of the flow, whether those changes create, update, or delete records. |
-| **Duplicate DML operations** |  DuplicateDMLOperationsByNavigation | If the flow commits changes to the database or performs actions between two screens, don't let users navigate back between screen. Otherwise, the flow may perform duplicate database operations. |
+| **Duplicate DML operations** |  DuplicateDMLOperations | If the flow commits changes to the database or performs actions between two screens, don't let users navigate back between screen. Otherwise, the flow may perform duplicate database operations. |
 | **Hardcoded Ids** | HardcodedIds | IDs are org-specific, so don’t hard-code IDs. Instead, pass them into variables when the flow starts. You can do so, for example, by using merge fields in URL parameters or by using a Get Records element. |
 | **Missing flow description** |  MissingFlowDescription | Descriptions are useful for documentation purposes. It is recommended to provide information about where it is used and what it will do. |
 | **Missing error handlers** |  MissingFaultPath | Sometimes a flow doesn’t perform an operation that you configured it to do. By default, the flow shows an error message to the user and emails the admin who created the flow. However, you can control that behavior. |
