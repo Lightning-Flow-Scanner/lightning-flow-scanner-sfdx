@@ -86,7 +86,7 @@ sfdx flow:scan --config path/to/.flow-scanner.json
 | **Duplicate DML operations** |  DuplicateDMLOperations | If the flow commits changes to the database or performs actions between two screens, don't let users navigate back between screen. Otherwise, the flow may perform duplicate database operations. |
 | **Hardcoded Ids** | HardcodedIds | IDs are org-specific, so don’t hard-code IDs. Instead, pass them into variables when the flow starts. You can do so, for example, by using merge fields in URL parameters or by using a Get Records element. |
 | **Flow naming conventions** |  FlowName | Readability of a flow is very important. Setting a naming convention for the Flow Name will improve the findability/searchability and overall consistency. It is recommended to at least provide a domain and a short description of the actions undertaken in the flow, in example Service_OrderFulfillment. |
-| **Missing flow description** |  MissingFlowDescription | Descriptions are useful for documentation purposes. It is recommended to provide information about where it is used and what it will do. |
+| **Missing flow description** |  FlowDescription | Descriptions are useful for documentation purposes. It is recommended to provide information about where it is used and what it will do. |
 | **Missing error handlers** |  MissingFaultPath | Sometimes a flow doesn’t perform an operation that you configured it to do. By default, the flow shows an error message to the user and emails the admin who created the flow. However, you can control that behavior. |
 | **Missing null handlers**      |  MissingNullHandler | If a Get Records operation does not find any data it will return null. Use a decision element on the operation result variable to validate that the result is not null. |
 | **Unconnected elements** |  UnconnectedElements | Unconnected elements which are not being used by the Flow should be avoided to keep Flows efficient and maintainable. |
@@ -120,7 +120,7 @@ When the severity is not provided it will be `error` by default. Other available
 ```json
 {
   "rules": {
-    "MissingFlowDescription": {
+    "FlowDescription": {
       "severity": "warning"
     },
     "UnusedVariables": {
