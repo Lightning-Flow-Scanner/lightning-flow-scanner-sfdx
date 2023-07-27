@@ -24,6 +24,7 @@ __*Identify potential issues and improvements in Salesforce Flows*__
 - [Configuration](#configuration)
   - [Defining the severity per rule](#defining-the-severity-per-rule)
   - [Specifying an exception](#specifying-an-exception)
+  - [Configuring an expression](#configuring-an-expression)
 
 ## Installation
 
@@ -80,9 +81,11 @@ sfdx flow:scan --config path/to/.flow-scanner.json
 
 | Rule       | Id | Description |
 |--------------|:-----:|:-----------|
+| **Old API version** |  APIVersion | Newer API components may cause older versions of Flows to start behaving incorrectly due to differences in the underlying mechanics. The Api Version has been available as an attribute on the Flow since API v50.0 and it is recommended to limit variation and to update them on a regular basis. |
 | **DML statements in a loop** |  DMLStatementInLoop | To avoid hitting Apex governor limits, we recommend grouping all of your database changes together at the end of the flow, whether those changes create, update, or delete records. |
 | **Duplicate DML operations** |  DuplicateDMLOperations | If the flow commits changes to the database or performs actions between two screens, don't let users navigate back between screen. Otherwise, the flow may perform duplicate database operations. |
 | **Hardcoded Ids** | HardcodedIds | IDs are org-specific, so don’t hard-code IDs. Instead, pass them into variables when the flow starts. You can do so, for example, by using merge fields in URL parameters or by using a Get Records element. |
+| **Flow naming conventions** |  FlowName | Readability of a flow is very important. Setting a naming convention for the Flow Name will improve the findability/searchability and overall consistency. It is recommended to at least provide a domain and a short description of the actions undertaken in the flow, in example Service_OrderFulfillment. |
 | **Missing flow description** |  MissingFlowDescription | Descriptions are useful for documentation purposes. It is recommended to provide information about where it is used and what it will do. |
 | **Missing error handlers** |  MissingFaultPath | Sometimes a flow doesn’t perform an operation that you configured it to do. By default, the flow shows an error message to the user and emails the admin who created the flow. However, you can control that behavior. |
 | **Missing null handlers**      |  MissingNullHandler | If a Get Records operation does not find any data it will return null. Use a decision element on the operation result variable to validate that the result is not null. |
@@ -142,6 +145,26 @@ Specifying exceptions can be done by flow, rule and result(s), as shown in the f
       "UnusedVariables": [
         "incvar"
       ]
+    }
+  }
+}
+```
+### Configuring an expression
+
+Some rules have additional attributes to configure, such as the expression, that will overwrite default values. These can be configured in the same way as severity as shown in the following example.
+
+```json
+{
+  "rules": {
+    "APIVersion":
+    {
+        "severity": "error",
+        "expression": "===58"
+    },
+    "FlowName":
+    {
+        "severity": "error",
+        "expression": "[A-Za-z0-9]"
     }
   }
 }

@@ -10,6 +10,8 @@ import { Violation } from "../../models/Violation";
 import * as c from "chalk";
 import { exec } from "child_process";
 import { cosmiconfig } from "cosmiconfig";
+import { FlowElement } from "lightning-flow-scanner-core/out/main/models/FlowElement";
+import { FlowVariable } from "lightning-flow-scanner-core/out/main/models/FlowVariable";
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -47,7 +49,7 @@ export default class scan extends SfdxCommand {
     failon: flags.enum({
       char: "f",
       description: "Thresold failure level (error, warning, note, or never) defining when the command return code will be 1",
-      options: ["error","warning","note","never"],
+      options: ["error", "warning", "note", "never"],
       default: "error"
     }),
     retrieve: flags.boolean({
@@ -114,22 +116,31 @@ export default class scan extends SfdxCommand {
     const errorLevelsNumber = {};
     for (const scanResult of scanResults) {
       for (const ruleResult of scanResult.ruleResults) {
-        errorLevelsNumber[ruleResult.severity] = (errorLevelsNumber[ruleResult.severity]|| 0) + 1
-        if (ruleResult.details && ruleResult.details.length > 0) {
+        errorLevelsNumber[ruleResult.severity] = (errorLevelsNumber[ruleResult.severity] || 0) + 1
+
+        if (ruleResult.type === 'pattern' && ruleResult.details && ruleResult.details.length > 0) {
           for (const result of ruleResult.details) {
-            errors.push(
-              new Violation(
-                scanResult.flow.label[0],
-                ruleResult.ruleName,
-                ruleResult.ruleDescription,
-                ruleResult.severity,
-                {
-                  name: result.name,
-                  type: result.subtype,
-                }
-              )
-            );
+            errors.push(new Violation(
+              scanResult.flow.label[0],
+              ruleResult.ruleName,
+              ruleResult.ruleDescription,
+              ruleResult.severity,
+              ruleResult.type,
+              {
+                name: (result as (FlowElement | FlowVariable)).name,
+                type: (result as (FlowElement | FlowVariable)).subtype,
+              }
+            ));
           }
+        } else if (ruleResult.type === 'flow' && ruleResult.details) {
+          errors.push(new Violation(
+            scanResult.flow.label[0],
+            ruleResult.ruleName,
+            ruleResult.ruleDescription,
+            ruleResult.severity,
+            ruleResult.type,
+            ruleResult.details
+          ))
         } else {
           if (!ruleResult.details && ruleResult.occurs) {
             errors.push(
@@ -138,9 +149,10 @@ export default class scan extends SfdxCommand {
                 ruleResult.ruleName,
                 ruleResult.ruleDescription,
                 ruleResult.severity,
+                ruleResult.type
               )
             );
-            
+
           }
         }
       }
@@ -160,8 +172,13 @@ export default class scan extends SfdxCommand {
         this.ux.log('');
         for (const lintResult of lintResultFlow) {
           this.ux.log(`${c.yellow(lintResult.severity.toUpperCase() + ' ' + c.bold(lintResult.ruleName))}`);
+
           if (lintResult.details) {
-            this.ux.log(c.italic(`Details: ${c.yellow(lintResult.details.name)}, ${c.yellow(lintResult.details.type)}`));
+            if (lintResult.type === 'pattern') {
+              this.ux.log(c.italic(`Details: ${c.yellow(lintResult.details.name)}, ${c.yellow(lintResult.details.type)}`));
+            } else {
+              this.ux.log(c.italic(`Details: ${c.yellow(lintResult.details)}, ${c.yellow(lintResult.ruleName)}`));
+            }
           }
           this.ux.log(c.italic(lintResult.description))
           this.ux.log('');
@@ -173,36 +190,42 @@ export default class scan extends SfdxCommand {
     // Get status depending on found errors & warnings
     let status = 0;
     if (this.failOn === 'never') {
-      status = 0 ;
+      status = 0;
     }
     else {
-        if (this.failOn === "error" && (errorLevelsNumber["error"] || 0) > 0){
-          status = 1;
-        }
-        else if (this.failOn === 'warning' &&
-         ((errorLevelsNumber["error"] || 0) > 0) 
-         || ((errorLevelsNumber["warning"] || 0) > 0)) {
-          status = 1;
-        }
-        else if (this.failOn === 'note' &&
-         ((errorLevelsNumber["error"] || 0) > 0) 
-         || ((errorLevelsNumber["warning"] || 0) > 0)
-         || ((errorLevelsNumber["note"] || 0) > 0)) {
-          status = 1;
-        }
+      if (this.failOn === "error" && (errorLevelsNumber["error"] || 0) > 0) {
+        status = 1;
+      }
+      else if (this.failOn === 'warning' &&
+        ((errorLevelsNumber["error"] || 0) > 0)
+        || ((errorLevelsNumber["warning"] || 0) > 0)) {
+        status = 1;
+      }
+      else if (this.failOn === 'note' &&
+        ((errorLevelsNumber["error"] || 0) > 0)
+        || ((errorLevelsNumber["warning"] || 0) > 0)
+        || ((errorLevelsNumber["note"] || 0) > 0)) {
+        status = 1;
+      }
     }
 
     // Build summary message
     const flowsNumber = scanResults.length;
     const errornr = errors.length;
+    const messageunformatted =
+    "A total of " +
+    errors.length +
+    " errors have been found in " +
+    flowsNumber +
+    " flows.";
     const message =
       "A total of " +
       c.bold(errors.length) +
       " errors have been found in " +
       c.bold(flowsNumber) +
       " flows.";
-    const summary = { flowsNumber:flowsNumber, errors: errornr, message, errorLevelsDetails: errorLevelsNumber };
-    this.ux.styledHeader(summary.message);
+    const summary = { flowsNumber: flowsNumber, errors: errornr, 'message' : messageunformatted, errorLevelsDetails: errorLevelsNumber };
+    this.ux.styledHeader(message);
 
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
     return { summary, status: status, results: errors };

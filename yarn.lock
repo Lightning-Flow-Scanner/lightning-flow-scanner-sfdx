@@ -507,6 +507,11 @@
   version "16.0.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.0.0.tgz#067a6c49dc7a5c2412a505628e26902ae967bf6f"
 
+"@types/node@^20.4.5":
+  version "20.4.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.4.5.tgz#9dc0a5cb1ccce4f7a731660935ab70b9c00a5d69"
+  integrity sha512-rt40Nk13II9JwQBdeYqmbn2Q6IVTA5uPhvSO+JVqdXw/6/4glI6oR9ezty/A9Hg5u7JH4OmYmuQ+XvjKm0Datg==
+
 "@types/sinon@*":
   version "10.0.2"
   resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-10.0.2.tgz#f360d2f189c0fd433d14aeb97b9d705d7e4cc0e4"
@@ -2619,12 +2624,13 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-lightning-flow-scanner-core@^2.5.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/lightning-flow-scanner-core/-/lightning-flow-scanner-core-2.6.0.tgz#b74d52c0fa2d84405a5d0917c5499e0654793644"
-  integrity sha512-ClXrBBwgo6+HDm3z1TEHUgk4XqQD/STnOgkmWAMQO7dzNg1e+L+kNFh0OuWaezVxqt0ca5ydmg21RfuubJibUA==
+lightning-flow-scanner-core@2.15.0:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/lightning-flow-scanner-core/-/lightning-flow-scanner-core-2.15.0.tgz#8af5cd58ce63f6bb2555b7b887a769fc8ad5c464"
+  integrity sha512-8mKACTwpHUTfkgCMeZm33K12ZdeFoR+3K+Pcm4xh8Zqh8Y0ekbU5v86GBORYrVvrOAb4liPc4pF+tVTHvZfNOw==
   dependencies:
     "@types/chai" "^4.2.21"
+    "@types/node" "^20.4.5"
     chai "^4.3.4"
     global "^4.4.0"
     logging "^3.3.0"
