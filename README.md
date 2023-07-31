@@ -102,12 +102,12 @@ Create a .flow-scanner.json file in order to configure:
 
 ```json
 {
-    "rules": [
+    "rules": {
         ...
-    ],
-    "exceptions": [
+    },
+    "exceptions": {
         ...
-    ]
+    }
 }
 ```
 
