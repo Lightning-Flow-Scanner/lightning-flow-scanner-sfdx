@@ -177,7 +177,7 @@ export default class scan extends SfdxCommand {
             if (lintResult.type === 'pattern') {
               this.ux.log(c.italic(`Details: ${c.yellow(lintResult.details.name)}, ${c.yellow(lintResult.details.type)}`));
             } else {
-              this.ux.log(c.italic(`Details: ${c.yellow(lintResult.details)}, ${c.yellow(lintResult.ruleName)}`));
+              this.ux.log(c.italic(`Details: ${c.yellow(lintResult.details)}`));
             }
           }
           this.ux.log(c.italic(lintResult.description))
