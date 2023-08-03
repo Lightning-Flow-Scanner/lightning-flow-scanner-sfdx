@@ -169,7 +169,10 @@ export default class scan extends SfdxCommand {
       for (const lintResultKey in lintResultsOrdered) {
         const lintResultFlow = lintResultsOrdered[lintResultKey];
         this.ux.log(`== ${c.blue(c.bold(lintResultKey))} ==`)
-        this.ux.log(`${c.blue(c.italic('Flow type: ' + scanResults.find(res => res.flow.name === lintResultKey).flow.type))}`)
+        const type = scanResults.find(res => res.flow.name === lintResultKey).flow.type;
+        if(type){
+          this.ux.log(`${c.blue(c.italic('Flow type: ' + type))}`)
+        }
         this.ux.log('');
         for (const lintResult of lintResultFlow) {
           this.ux.log(`${c.yellow(lintResult.severity.toUpperCase() + ' ' + c.bold(lintResult.ruleName))}`);
