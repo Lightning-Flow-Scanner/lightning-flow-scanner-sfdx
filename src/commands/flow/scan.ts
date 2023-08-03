@@ -169,8 +169,9 @@ export default class scan extends SfdxCommand {
       for (const lintResultKey in lintResultsOrdered) {
         const lintResultFlow = lintResultsOrdered[lintResultKey];
         this.ux.log(`== ${c.blue(c.bold(lintResultKey))} ==`)
-        const type = scanResults.find(res => res.flow.name === lintResultKey).flow.type;
-        if(type){
+        const res = scanResults.find(res => res.flow.label[0] === lintResultKey);
+        if(res){
+        const type = res.flow.type;
           this.ux.log(`${c.blue(c.italic('Flow type: ' + type))}`)
         }
         this.ux.log('');
@@ -234,8 +235,7 @@ export default class scan extends SfdxCommand {
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
     return { summary, status: status, results: errors };
   }
-
-  // lightning flow scanner can be customized using a local config file .flow-scanner.yml
+    // lightning flow scanner can be customized using a local config file .flow-scanner.yml
   private async loadScannerOptions(forcedConfigFile: string): Promise<void> {
     // Read config from file
     const moduleName = "flow-scanner";
