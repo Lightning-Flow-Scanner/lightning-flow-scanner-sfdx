@@ -118,7 +118,7 @@ export default class scan extends SfdxCommand {
       for (const ruleResult of scanResult.ruleResults) {
         errorLevelsNumber[ruleResult.severity] = (errorLevelsNumber[ruleResult.severity] || 0) + 1
 
-        if (ruleResult.type === 'pattern' && ruleResult.details && ruleResult.details.length > 0) {
+        if (ruleResult.type === 'pattern' && ruleResult.occurs && ruleResult.details && ruleResult.details.length > 0) {
           for (const result of ruleResult.details) {
             errors.push(new Violation(
               scanResult.flow.label[0],
@@ -132,7 +132,7 @@ export default class scan extends SfdxCommand {
               }
             ));
           }
-        } else if (ruleResult.type === 'flow' && ruleResult.details) {
+        } else if (ruleResult.type === 'flow' && ruleResult.occurs && ruleResult.details) {
           errors.push(new Violation(
             scanResult.flow.label[0],
             ruleResult.ruleName,
@@ -141,20 +141,7 @@ export default class scan extends SfdxCommand {
             ruleResult.type,
             ruleResult.details
           ))
-        } else {
-          if (!ruleResult.details && ruleResult.occurs) {
-            errors.push(
-              new Violation(
-                scanResult.flow.label[0],
-                ruleResult.ruleName,
-                ruleResult.ruleDescription,
-                ruleResult.severity,
-                ruleResult.type
-              )
-            );
-
-          }
-        }
+        } 
       }
     }
 
