@@ -65,6 +65,8 @@ sfdx flow:scan [options]
 ```
 ### Examples
 
+You can test the scanner by simply opening an existing project that contains flows and running the scan without any configurations or parameters. This way all the default rules are autmatically included in the scan. 
+
 ```sh-sessions
 sfdx flow:scan
 ```
