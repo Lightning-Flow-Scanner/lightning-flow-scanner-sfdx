@@ -2624,10 +2624,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-lightning-flow-scanner-core@^2.18.0:
-  version "2.18.0"
-  resolved "https://registry.yarnpkg.com/lightning-flow-scanner-core/-/lightning-flow-scanner-core-2.18.0.tgz#3c7426ed6d83d63e9b164b4dcb4ba31a63a53a82"
-  integrity sha512-pQqN0dLV7PwqVTIWUMnfabhDcWzgvBHlLqcsv18sBqEwZY8M94WXMOStCbhHHdycsToB3PaYy+axIrQn1o1B+A==
+lightning-flow-scanner-core@^2.21.0:
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/lightning-flow-scanner-core/-/lightning-flow-scanner-core-2.21.0.tgz#d8cdcd25ffd2c439e83815aa8bc19926eaf5606e"
+  integrity sha512-TwZJGQcgosaFyoAE57H4HU4SEYz+G09ugyVc1ZVuPelstC6VhKnCEx/pVF6IQJlZtjKCZMGLmcCk1Yz5Plm2Wg==
   dependencies:
     "@types/chai" "^4.2.21"
     "@types/node" "^20.4.5"
