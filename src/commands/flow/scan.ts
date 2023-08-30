@@ -220,6 +220,9 @@ export default class scan extends SfdxCommand {
     this.ux.styledHeader(message);
 
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
+    if (status > 0) {
+      process.exitCode = status;
+    }
     return { summary, status: status, results: errors };
   }
     // lightning flow scanner can be customized using a local config file .flow-scanner.yml
