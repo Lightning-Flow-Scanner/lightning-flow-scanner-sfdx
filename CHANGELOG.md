@@ -6,15 +6,80 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased] (beta, main branch content)
 
-- Markdown formatting
-- Add screenshot image at the head of the README
-- Fix rules table alignment
-- Add banner at the top of the README
+- Fix exit code that should be 1 according to --failon value [#71](https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx/issues/71)
+
+## [2.11.0] 2023-08
+
+Fixes:
+
+- [False positive 'FlowDescription' rule](https://github.com/Force-Config-Control/lightning-flow-scanner-core/issues/39)
+- [False positive 'MissingNullHandler' rule](https://github.com/Force-Config-Control/lightning-flow-scanner-core/issues/38)
+
+## [2.9.0] 2023-08
+
+- Bugfix folder scan & human output: some bugs have been fixed in 2.9 regarding including node modules in the scope of the scan and also the issues in the human output
+
+## [2.8.0] 2023-08
+
+New Rule: **Copy of API Name**
+
+Having multiple elements called Copy_X_Of_Element will decrease the readability of the Flow. If you copy and paste them, make sure to update the API name of the new copy.
+
+Configuration ID: CopyOf ([View source code](https://github.com/Force-Config-Control/lightning-flow-scanner-core/tree/master/src/main/rules/CopyOf.ts))
+
+## [2.5.0] 2023-07
+
+Introducing two new configurable rules!
+
+1. Old API Version 
+2. Flow Naming Convention
+
+### 1. Old API version
+
+Newer API components may cause older versions of Flows to start behaving incorrectly due to differences in the underlying mechanics. The Api Version has been available as an attribute on the Flow since API v50.0 and it is recommended to limit variation and to update them on a regular basis.
+
+Default Value: `>50.0`
+
+Configuration example:
+```
+APIVersion:
+    {
+        severity: 'error',
+        expression: '===58'
+    }
+```
+
+Configuration ID: `APIVersion` _([View source code](https://github.com/Force-Config-Control/lightning-flow-scanner-core/tree/master/src/main/rules/APIVersion.ts))_
+
+### 2. Flow naming conventions
+
+Readability of flow is very important. Agreeing on and following the same naming conventions will ease collaboration.
+
+Default Value: `[A-Za-z0-9]+_[A-Za-z0-9]+`
+
+Configuration example:
+```
+FlowName:
+    {
+        severity: 'error',
+        expression: '[A-Za-z0-9]'
+    }
+```
+
+Configuration ID: `FlowName` _([View source code](https://github.com/Force-Config-Control/lightning-flow-scanner-core/tree/master/src/main/rules/FlowName.ts))_
+
+## [2.3.0] - 2023-07
+
+- DuplicateDMLOperations now also returns false when the navigation of the screen after a DML has been hidden completely and not just the previous navigational button.
 
 ## [2.1.0] - 2023-07-16
 
 - Fix npm package generation (please do not use 2.0.0 but 2.1.0)
 - Upgrade lightning-flow-scanner-core dependency to 2.5.0
+- Markdown formatting
+- Add screenshot image at the head of the README
+- Fix rules table alignment
+- Add banner at the top of the README
 
 ## [2.0.0] - 2023-07-16
 
