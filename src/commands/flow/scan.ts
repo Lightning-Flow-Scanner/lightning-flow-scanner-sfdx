@@ -10,8 +10,8 @@ import { Violation } from "../../models/Violation";
 import * as c from "chalk";
 import { exec } from "child_process";
 import { cosmiconfig } from "cosmiconfig";
-import { FlowElement } from "lightning-flow-scanner-core/out/main/models/FlowElement";
-import { FlowVariable } from "lightning-flow-scanner-core/out/main/models/FlowVariable";
+import { ResultDetails } from "lightning-flow-scanner-core/out/main/models/ResultDetails";
+import { RuleResult } from "lightning-flow-scanner-core/out/main/models/RuleResult";
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -68,118 +68,92 @@ export default class scan extends SfdxCommand {
     status: number,
     summary: {
       flowsNumber: number;
-      errors: number;
+      results: number;
       message: string;
     };
     results: Violation[];
   }> {
     this.failOn = this.flags.failon || "error";
     this.ux.startSpinner('Loading Lightning Flow Scanner');
-    // Load user options
     await this.loadScannerOptions(this.flags.config);
-
-    // Retrieve flows from org if target has been provided
     if (this.flags.targetusername) {
       await this.retrieveFlowsFromOrg();
     }
-
-    // List flows that will be scanned
-    let flowFiles;
-    if (this.flags.directory && this.flags.sourcepath) {
-      this.ux.stopSpinner("Error");
-      throw new SfdxError(
-        "You can only specify one of either directory or sourcepath, not both."
-      );
-    } else if (this.flags.directory) {
-      flowFiles = FindFlows(this.flags.directory);
-    } else if (this.flags.sourcepath) {
-      flowFiles = this.flags.sourcepath
-        .split(",")
-        .filter((f) => fs.existsSync(f));
-    } else {
-      flowFiles = FindFlows(".");
-    }
-
-    // Perform scan
-    const parsedFlows: Flow[] = await ParseFlows(flowFiles);
+    const flowFiles = this.findFlows();
     this.ux.startSpinner(`Identified ${flowFiles.length} flows to scan`);
-    let scanResults: ScanResult[];
-    if (this.userConfig && Object.keys(this.userConfig).length > 0) {
-      scanResults = core.scan(parsedFlows, this.userConfig);
-    } else {
-      scanResults = core.scan(parsedFlows);
-    }
+    const parsedFlows: Flow[] = await ParseFlows(flowFiles);
+    const scanResults: ScanResult[] = (this.userConfig && Object.keys(this.userConfig).length > 0) ? core.scan(parsedFlows, this.userConfig) : core.scan(parsedFlows);
     this.ux.stopSpinner(`Scan complete`);
+    this.ux.log('');
 
-    // Build result
-    const errors: Violation[] = [];
-    const errorLevelsNumber = {};
-    for (const scanResult of scanResults) {
-      for (const ruleResult of scanResult.ruleResults) {
-        errorLevelsNumber[ruleResult.severity] = (errorLevelsNumber[ruleResult.severity] || 0) + 1
+    // Build results
+    const results = this.buildResults(scanResults);
 
-        if (ruleResult.type === 'pattern' && ruleResult.occurs && ruleResult.details && ruleResult.details.length > 0) {
-          for (const result of ruleResult.details) {
-            errors.push(new Violation(
-              scanResult.flow.label[0],
-              ruleResult.ruleName,
-              ruleResult.ruleDescription,
-              ruleResult.severity,
-              ruleResult.type,
-              {
-                name: (result as (FlowElement | FlowVariable)).name,
-                type: (result as (FlowElement | FlowVariable)).subtype,
-              }
-            ));
-          }
-        } else if (ruleResult.type === 'flow' && ruleResult.occurs && ruleResult.details) {
-          errors.push(new Violation(
-            scanResult.flow.label[0],
-            ruleResult.ruleName,
-            ruleResult.ruleDescription,
-            ruleResult.severity,
-            ruleResult.type,
-            ruleResult.details
-          ))
-        } 
+    if (results.length > 0) {
+      const resultsByFlow = {};
+      for (const result of results) {
+        resultsByFlow[result.flowName] = resultsByFlow[result.flowName] || [];
+        resultsByFlow[result.flowName].push(result);
       }
-    }
-
-    if (errors.length > 0) {
-      const lintResultsOrdered = {};
-      // Group issues by flow
-      for (const errorDtl of errors) {
-        lintResultsOrdered[errorDtl.flowName] = lintResultsOrdered[errorDtl.flowName] || [];
-        lintResultsOrdered[errorDtl.flowName].push(errorDtl);
-      }
-      // Display issues
-      for (const lintResultKey in lintResultsOrdered) {
-        const lintResultFlow = lintResultsOrdered[lintResultKey];
-        this.ux.log(`== ${c.blue(c.bold(lintResultKey))} ==`)
-        const res = scanResults.find(res => res.flow.label[0] === lintResultKey);
-        if(res){
-        const type = res.flow.type;
-          this.ux.log(`${c.blue(c.italic('Flow type: ' + type))}`)
-        }
+      for (const resultKey in resultsByFlow) {
+        const matchingScanResult = scanResults.find((res) => {
+          return res.flow.label[0] === resultKey
+        });
+        this.ux.styledHeader("Flow: " + c.yellow(resultKey) + " " + c.red("(" + resultsByFlow[resultKey].length + " results)"));
+        this.ux.log(c.italic('Type: ' + matchingScanResult.flow.type));
         this.ux.log('');
-        for (const lintResult of lintResultFlow) {
-          this.ux.log(`${c.yellow(lintResult.severity.toUpperCase() + ' ' + c.bold(lintResult.ruleName))}`);
-
-          if (lintResult.details) {
-            if (lintResult.type === 'pattern') {
-              this.ux.log(c.italic(`Details: ${c.yellow(lintResult.details.name)}, ${c.yellow(lintResult.details.type)}`));
-            } else {
-              this.ux.log(c.italic(`Details: ${c.yellow(lintResult.details)}`));
-            }
-          }
-          this.ux.log(c.italic(lintResult.description))
-          this.ux.log('');
-        }
+        // todo flow uri
+        this.ux.table(resultsByFlow[resultKey], ['rule', 'type', 'name']);
         this.ux.log('');
       }
     }
+    this.ux.styledHeader("Total: " +
+      c.red(results.length +
+      " Results") + " in " +
+      c.yellow(scanResults.length +
+      " Flows") + ".");
 
-    // Get status depending on found errors & warnings
+      // TODO CALL TO ACTION
+      this.ux.log('');
+      this.ux.log(c.bold(c.italic(c.yellowBright('Be a part of our mission to champion Best Practices and empower Flow Builders by starring us on GitHub:'))));
+      this.ux.log(c.italic(c.blueBright(c.underline("https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx"))));
+
+    const status = this.getStatus({});
+    // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
+    if (status > 0) {
+      process.exitCode = status;
+    }
+    const summary = {
+      flowsNumber: scanResults.length, 'results': results.length, 'message': "A total of " +
+      results.length +
+        " results have been found in " +
+        scanResults.length +
+        " flows.", errorLevelsDetails: {}
+    };
+    return { summary, status: status, results };
+  }
+
+  private findFlows (){
+        // List flows that will be scanned
+        let flowFiles;
+        if (this.flags.directory && this.flags.sourcepath) {
+          this.ux.stopSpinner("Error");
+          throw new SfdxError(
+            "You can only specify one of either directory or sourcepath, not both."
+          );
+        } else if (this.flags.directory) {
+          flowFiles = FindFlows(this.flags.directory);
+        } else if (this.flags.sourcepath) {
+          flowFiles = this.flags.sourcepath
+            .split(",")
+            .filter((f) => fs.existsSync(f));
+        } else {
+          flowFiles = FindFlows(".");
+        }
+        return flowFiles;
+  }
+
+  private getStatus(errorLevelsNumber) {
     let status = 0;
     if (this.failOn === 'never') {
       status = 0;
@@ -200,32 +174,36 @@ export default class scan extends SfdxCommand {
         status = 1;
       }
     }
-
-    // Build summary message
-    const flowsNumber = scanResults.length;
-    const errornr = errors.length;
-    const messageunformatted =
-    "A total of " +
-    errors.length +
-    " errors have been found in " +
-    flowsNumber +
-    " flows.";
-    const message =
-      "A total of " +
-      c.bold(errors.length) +
-      " errors have been found in " +
-      c.bold(flowsNumber) +
-      " flows.";
-    const summary = { flowsNumber: flowsNumber, errors: errornr, 'message' : messageunformatted, errorLevelsDetails: errorLevelsNumber };
-    this.ux.styledHeader(message);
-
-    // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
-    if (status > 0) {
-      process.exitCode = status;
-    }
-    return { summary, status: status, results: errors };
+    return status;
   }
-    // lightning flow scanner can be customized using a local config file .flow-scanner.yml
+
+  private buildResults(scanResults) {
+    const errors = [];
+    for (const scanResult of scanResults) {
+      const flowName = scanResult.flow.label[0];
+      const flowType = scanResult.flow.type[0];
+      for (const ruleResult of scanResult.ruleResults as RuleResult[]) {
+        const ruleDescription = ruleResult.ruleDefinition.description;
+        const rule = ruleResult.ruleDefinition.label;
+        if (ruleResult.occurs && ruleResult.details && ruleResult.details.length > 0) {
+          for (const result of (ruleResult.details as ResultDetails[])) {
+            const detailObj = Object.assign(
+              result,
+              {
+                ruleDescription,
+                rule,
+                flowName,
+                flowType
+              }
+            );
+            errors.push(detailObj);
+          }
+        }
+      }
+    }
+    return errors;
+  }
+
   private async loadScannerOptions(forcedConfigFile: string): Promise<void> {
     // Read config from file
     const moduleName = "flow-scanner";
@@ -253,7 +231,6 @@ export default class scan extends SfdxCommand {
 
   }
 
-  // Use sfdx to retrieve flows from remote org
   private async retrieveFlowsFromOrg() {
     let errored = false;
     this.ux.startSpinner(c.yellowBright("Retrieving Metadata..."));
