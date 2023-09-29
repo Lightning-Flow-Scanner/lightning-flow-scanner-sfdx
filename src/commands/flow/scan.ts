@@ -96,34 +96,25 @@ export default class scan extends SfdxCommand {
         resultsByFlow[result.flowName].push(result);
       }
       for (const resultKey in resultsByFlow) {
-        this.ux.log(`== ${c.bold(resultKey)} ${c.red("(" + resultsByFlow[resultKey].length + ")")} ==`);
         const matchingScanResult = scanResults.find((res) => {
           return res.flow.label[0] === resultKey
         });
-        this.ux.log(`${c.blue(c.italic('Type: ' + matchingScanResult.flow.type))}`)
+        this.ux.styledHeader("Flow: " + c.yellow(resultKey) + " " + c.red("(" + resultsByFlow[resultKey].length + " results)"));
+        this.ux.log(c.italic('Type: ' + matchingScanResult.flow.type));
         this.ux.log('');
-        const resultsByFlowAndRule = {};
-        for (const result of resultsByFlow[resultKey]) {
-          resultsByFlowAndRule[result.ruleName] = resultsByFlowAndRule[result.ruleName] || [];
-          resultsByFlowAndRule[result.ruleName].push(result);
-        }
-
-        for (const ruleKey in resultsByFlowAndRule) {
-          this.ux.log(`${c.yellow(c.bold(ruleKey))} ${c.red("(" + c.bold(resultsByFlowAndRule[ruleKey].length) + ")")}`);
-          // if (lintResult.details) {
-          //   this.ux.table(lintResult.details, ['name', 'type']);
-          // }
-        }
+        // todo flow uri
+        this.ux.table(resultsByFlow[resultKey], ['rule', 'type', 'name']);
         this.ux.log('');
       }
     }
-    this.ux.styledHeader("A total of " +
-      c.bold(results.length) +
-      " errors have been found in " +
-      c.bold(scanResults.length) +
-      " flows.");
+    this.ux.styledHeader("Total: " +
+      c.red(results.length +
+      " Results") + " in " +
+      c.yellow(scanResults.length +
+      " Flows") + ".");
 
       // TODO CALL TO ACTION
+      this.ux.log(c.italic(''));
       // await ux.url('sometext', 'https://google.com')
 
     const status = this.getStatus({});
@@ -192,14 +183,14 @@ export default class scan extends SfdxCommand {
       const flowType = scanResult.flow.type[0];
       for (const ruleResult of scanResult.ruleResults as RuleResult[]) {
         const ruleDescription = ruleResult.ruleDefinition.description;
-        const ruleName = ruleResult.ruleDefinition.label;
+        const rule = ruleResult.ruleDefinition.label;
         if (ruleResult.occurs && ruleResult.details && ruleResult.details.length > 0) {
           for (const result of (ruleResult.details as ResultDetails[])) {
             const detailObj = Object.assign(
               result,
               {
                 ruleDescription,
-                ruleName,
+                rule,
                 flowName,
                 flowType
               }
