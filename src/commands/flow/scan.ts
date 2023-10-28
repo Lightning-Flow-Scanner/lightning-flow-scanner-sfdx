@@ -2,6 +2,7 @@ import { SfdxCommand, flags } from "@salesforce/command";
 import { Messages, SfdxError } from "@salesforce/core";
 import * as core from "lightning-flow-scanner-core/out";
 import * as fs from "fs-extra";
+import * as path from "path";
 import { Flow } from "lightning-flow-scanner-core/out/main/models/Flow";
 import { ScanResult } from "lightning-flow-scanner-core/out/main/models/ScanResult";
 import { FindFlows } from "../../libs/FindFlows";
@@ -9,6 +10,7 @@ import { ParseFlows } from "../../libs/ParseFlows";
 import { Violation } from "../../models/Violation";
 import * as c from "chalk";
 import { exec } from "child_process";
+import * as Papa from "papaparse";
 import { cosmiconfig } from "cosmiconfig";
 import { ResultDetails } from "lightning-flow-scanner-core/out/main/models/ResultDetails";
 import { RuleResult } from "lightning-flow-scanner-core/out/main/models/RuleResult";
@@ -24,7 +26,9 @@ export default class scan extends SfdxCommand {
     "sfdx flow:scan --failon warning",
     "sfdx flow:scan -c path/to/config.json",
     "sfdx flow:scan -c path/to/config.json --failon warning",
-    "sfdx flow:scan -d path/to/flows/directory"
+    "sfdx flow:scan -d path/to/flows/directory",
+    "sfdx flow:scan --failon warning --output csv",
+    "sfdx flow:scan --failon warning --output csv --outputfile /tmp/scan-results.csv",
   ]
 
   protected static requiresUsername = false;
@@ -34,35 +38,54 @@ export default class scan extends SfdxCommand {
 
   protected userConfig;
   protected failOn = "error";
-  protected errorCounters: Map<string,number> = new Map<string,number>(); 
+  protected output = "console"
+  protected outputFile = path.join(process.cwd(), "report", "flow-scanner-results.csv");
+  protected errorCounters: Map<string, number> = new Map<string, number>();
 
   protected static flagsConfig = {
     directory: flags.filepath({
       char: "d",
       description: messages.getMessage("directoryToScan"),
       required: false,
+      name: "Scan Directory"
     }),
     config: flags.filepath({
       char: "c",
       description: "Path to configuration file",
       required: false,
+      name: "Config file"
     }),
     failon: flags.enum({
       char: "f",
       description: "Thresold failure level (error, warning, note, or never) defining when the command return code will be 1",
       options: ["error", "warning", "note", "never"],
-      default: "error"
+      default: "error",
+      name: "Fail on level"
+    }),
+    output: flags.enum({
+      char: "o",
+      description: "Output file",
+      options: ["console", "csv"],
+      default: "console",
+      name: "Output format"
+    }),
+    outputfile: flags.filepath({
+      char: "o",
+      description: "Output file",
+      default: path.join(process.cwd(), "report", "flow-scanner-results.csv"),
+      name: "Output format"
     }),
     retrieve: flags.boolean({
       char: "r",
       description: "Force retrieve Flows from org at the start of the command",
       default: false,
+      name: "retrieve"
     }),
     sourcepath: flags.filepath({
       char: "p",
       description: "comma-separated list of source flow paths to scan",
       required: false,
-    }),
+    })
   };
 
   public async run(): Promise<{
@@ -75,6 +98,8 @@ export default class scan extends SfdxCommand {
     results: Violation[];
   }> {
     this.failOn = this.flags.failon || "error";
+    this.output = this.flags.output || "console";
+    this.outputFile = this.flags.outputfile || path.join(process.cwd(), "report", "flow-scanner-results.csv");
     this.ux.startSpinner('Loading Lightning Flow Scanner');
     await this.loadScannerOptions(this.flags.config);
     if (this.flags.targetusername) {
@@ -90,34 +115,26 @@ export default class scan extends SfdxCommand {
     // Build results
     const results = this.buildResults(scanResults);
 
+    const resultsByFlow = {};
     if (results.length > 0) {
-      const resultsByFlow = {};
       for (const result of results) {
         resultsByFlow[result.flowName] = resultsByFlow[result.flowName] || [];
         resultsByFlow[result.flowName].push(result);
       }
-      for (const resultKey in resultsByFlow) {
-        const matchingScanResult = scanResults.find((res) => {
-          return res.flow.label[0] === resultKey
-        });
-        this.ux.styledHeader("Flow: " + c.yellow(resultKey) + " " + c.red("(" + resultsByFlow[resultKey].length + " results)"));
-        this.ux.log(c.italic('Type: ' + matchingScanResult.flow.type));
-        this.ux.log('');
-        // todo flow uri
-        this.ux.table(resultsByFlow[resultKey], ['rule', 'type', 'name']);
-        this.ux.log('');
-      }
     }
+
+    await this.outputResults(resultsByFlow, scanResults);
+
     this.ux.styledHeader("Total: " +
       c.red(results.length +
-      " Results") + " in " +
+        " Results") + " in " +
       c.yellow(scanResults.length +
-      " Flows") + ".");
+        " Flows") + ".");
 
-      // TODO CALL TO ACTION
-      this.ux.log('');
-      this.ux.log(c.bold(c.italic(c.yellowBright('Be a part of our mission to champion Best Practices and empower Flow Builders by starring us on GitHub:'))));
-      this.ux.log(c.italic(c.blueBright(c.underline("https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx"))));
+    // TODO CALL TO ACTION
+    this.ux.log('');
+    this.ux.log(c.bold(c.italic(c.yellowBright('Be a part of our mission to champion Best Practices and empower Flow Builders by starring us on GitHub:'))));
+    this.ux.log(c.italic(c.blueBright(c.underline("https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx"))));
 
     const status = this.getStatus();
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
@@ -126,7 +143,7 @@ export default class scan extends SfdxCommand {
     }
     const summary = {
       flowsNumber: scanResults.length, 'results': results.length, 'message': "A total of " +
-      results.length +
+        results.length +
         " results have been found in " +
         scanResults.length +
         " flows.", errorLevelsDetails: {}
@@ -134,24 +151,24 @@ export default class scan extends SfdxCommand {
     return { summary, status: status, results };
   }
 
-  private findFlows (){
-        // List flows that will be scanned
-        let flowFiles;
-        if (this.flags.directory && this.flags.sourcepath) {
-          this.ux.stopSpinner("Error");
-          throw new SfdxError(
-            "You can only specify one of either directory or sourcepath, not both."
-          );
-        } else if (this.flags.directory) {
-          flowFiles = FindFlows(this.flags.directory);
-        } else if (this.flags.sourcepath) {
-          flowFiles = this.flags.sourcepath
-            .split(",")
-            .filter((f) => fs.existsSync(f));
-        } else {
-          flowFiles = FindFlows(".");
-        }
-        return flowFiles;
+  private findFlows() {
+    // List flows that will be scanned
+    let flowFiles;
+    if (this.flags.directory && this.flags.sourcepath) {
+      this.ux.stopSpinner("Error");
+      throw new SfdxError(
+        "You can only specify one of either directory or sourcepath, not both."
+      );
+    } else if (this.flags.directory) {
+      flowFiles = FindFlows(this.flags.directory);
+    } else if (this.flags.sourcepath) {
+      flowFiles = this.flags.sourcepath
+        .split(",")
+        .filter((f) => fs.existsSync(f));
+    } else {
+      flowFiles = FindFlows(".");
+    }
+    return flowFiles;
   }
 
   private getStatus() {
@@ -233,6 +250,52 @@ export default class scan extends SfdxCommand {
       this.userConfig = explorerSearchRes?.config ?? {};
     }
 
+  }
+
+  private async outputResults(resultsByFlow, scanResults) {
+    // CSV
+    if (this.output === 'csv') {
+      const csvColumns = ["Flow API Name", "Rule Name", "Item", "Severity", "Rule description", "Rule Type", "Flow Type", "Flow Label"]
+      // Build CSV Data
+      const csvData = [];
+      for (const flowApiName of Object.keys(resultsByFlow)) {
+        const flowResults = resultsByFlow[flowApiName];
+        for (const flowResult of flowResults) {
+          const line = [flowApiName,
+            flowResult.rule,
+            flowResult.name,
+            flowResult.severity,
+            flowResult.ruleDescription,
+            flowResult.type,
+            flowResult.flowType,
+            flowResult.flowName
+          ];
+          csvData.push(line);
+        }
+      }
+      // Write CSV
+      const csvText = Papa.unparse({
+        "fields": csvColumns,
+        "data": csvData
+      });
+      await fs.ensureDir(path.dirname(this.outputFile));
+      await fs.writeFile(this.outputFile, csvText, "utf8");
+      this.ux.log(`Generated CSV output in ${this.outputFile}`)
+    }
+    // Console
+    else {
+      for (const resultKey in resultsByFlow) {
+        const matchingScanResult = scanResults.find((res) => {
+          return res.flow.label[0] === resultKey
+        });
+        this.ux.styledHeader("Flow: " + c.yellow(resultKey) + " " + c.red("(" + resultsByFlow[resultKey].length + " results)"));
+        this.ux.log(c.italic('Type: ' + matchingScanResult.flow.type));
+        this.ux.log('');
+        // todo flow uri
+        this.ux.table(resultsByFlow[resultKey], ['rule', 'type', 'name']);
+        this.ux.log('');
+      }
+    }
   }
 
   private async retrieveFlowsFromOrg() {
