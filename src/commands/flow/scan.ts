@@ -34,6 +34,7 @@ export default class scan extends SfdxCommand {
 
   protected userConfig;
   protected failOn = "error";
+  protected errorCounters: Map<string,number> = new Map<string,number>(); 
 
   protected static flagsConfig = {
     directory: flags.filepath({
@@ -118,7 +119,7 @@ export default class scan extends SfdxCommand {
       this.ux.log(c.bold(c.italic(c.yellowBright('Be a part of our mission to champion Best Practices and empower Flow Builders by starring us on GitHub:'))));
       this.ux.log(c.italic(c.blueBright(c.underline("https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx"))));
 
-    const status = this.getStatus({});
+    const status = this.getStatus();
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
     if (status > 0) {
       process.exitCode = status;
@@ -153,24 +154,24 @@ export default class scan extends SfdxCommand {
         return flowFiles;
   }
 
-  private getStatus(errorLevelsNumber) {
+  private getStatus() {
     let status = 0;
     if (this.failOn === 'never') {
       status = 0;
     }
     else {
-      if (this.failOn === "error" && (errorLevelsNumber["error"] || 0) > 0) {
+      if (this.failOn === "error" && (this.errorCounters["error"] || 0) > 0) {
         status = 1;
       }
       else if (this.failOn === 'warning' &&
-        ((errorLevelsNumber["error"] || 0) > 0)
-        || ((errorLevelsNumber["warning"] || 0) > 0)) {
+        ((this.errorCounters["error"] || 0) > 0)
+        || ((this.errorCounters["warning"] || 0) > 0)) {
         status = 1;
       }
       else if (this.failOn === 'note' &&
-        ((errorLevelsNumber["error"] || 0) > 0)
-        || ((errorLevelsNumber["warning"] || 0) > 0)
-        || ((errorLevelsNumber["note"] || 0) > 0)) {
+        ((this.errorCounters["error"] || 0) > 0)
+        || ((this.errorCounters["warning"] || 0) > 0)
+        || ((this.errorCounters["note"] || 0) > 0)) {
         status = 1;
       }
     }
@@ -186,6 +187,7 @@ export default class scan extends SfdxCommand {
         const ruleDescription = ruleResult.ruleDefinition.description;
         const rule = ruleResult.ruleDefinition.label;
         if (ruleResult.occurs && ruleResult.details && ruleResult.details.length > 0) {
+          const severity = ruleResult.severity || "error"
           for (const result of (ruleResult.details as ResultDetails[])) {
             const detailObj = Object.assign(
               result,
@@ -193,10 +195,12 @@ export default class scan extends SfdxCommand {
                 ruleDescription,
                 rule,
                 flowName,
-                flowType
+                flowType,
+                severity
               }
             );
             errors.push(detailObj);
+            this.errorCounters[severity] = (this.errorCounters[severity] || 0) + 1;
           }
         }
       }
