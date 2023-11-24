@@ -160,18 +160,18 @@ export default class scan extends SfdxCommand {
       status = 0;
     }
     else {
-      if (this.failOn === "error" && (this.errorCounters["error"] || 0) > 0) {
+      if (this.failOn === "error" && this.errorCounters["error"] > 0) {
         status = 1;
       }
-      else if (this.failOn === 'warning' &&
-        ((this.errorCounters["error"] || 0) > 0)
-        || ((this.errorCounters["warning"] || 0) > 0)) {
+      else if (this.failOn === 'warning' && (
+        this.errorCounters["error"]  > 0
+        || this.errorCounters["warning"]  > 0)) {
         status = 1;
       }
       else if (this.failOn === 'note' &&
-        ((this.errorCounters["error"] || 0) > 0)
-        || ((this.errorCounters["warning"] || 0) > 0)
-        || ((this.errorCounters["note"] || 0) > 0)) {
+        (this.errorCounters["error"] > 0
+        || this.errorCounters["warning"] > 0
+        || this.errorCounters["note"] > 0)) {
         status = 1;
       }
     }
