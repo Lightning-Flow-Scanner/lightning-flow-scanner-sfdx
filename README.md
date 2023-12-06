@@ -126,7 +126,7 @@ When the severity is not provided it will be `error` by default. Other available
     "FlowDescription": {
       "severity": "warning"
     },
-    "UnusedVariables": {
+    "UnusedVariable": {
       "severity": "error"
     }
   }
@@ -140,12 +140,12 @@ Specifying exceptions can be done by flow, rule and result(s), as shown in the f
 {
   "exceptions": {
     "AssignTaskOwner": {
-      "UnusedVariables": [
+      "UnusedVariable": [
         "somecount"
       ]
     },
     "GetAccounts":{
-      "UnusedVariables": [
+      "UnusedVariable": [
         "incvar"
       ]
     }
