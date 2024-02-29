@@ -3,7 +3,7 @@
     "moduleResolution": "node",
     "module": "commonjs",
     "target": "es2019",
-    "lib": ["es2019"],
+    "lib": ["es2020"],
     "alwaysStrict": true,
     "noUnusedLocals": true,
     "sourceMap": true,

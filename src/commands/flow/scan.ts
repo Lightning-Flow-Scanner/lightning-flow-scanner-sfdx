@@ -2,16 +2,12 @@ import { SfdxCommand, flags } from "@salesforce/command";
 import { Messages, SfdxError } from "@salesforce/core";
 import * as core from "lightning-flow-scanner-core/out";
 import * as fs from "fs-extra";
-import { Flow } from "lightning-flow-scanner-core/out/main/models/Flow";
-import { ScanResult } from "lightning-flow-scanner-core/out/main/models/ScanResult";
 import { FindFlows } from "../../libs/FindFlows";
 import { ParseFlows } from "../../libs/ParseFlows";
 import { Violation } from "../../models/Violation";
 import * as c from "chalk";
 import { exec } from "child_process";
 import { cosmiconfig } from "cosmiconfig";
-import { ResultDetails } from "lightning-flow-scanner-core/out/main/models/ResultDetails";
-import { RuleResult } from "lightning-flow-scanner-core/out/main/models/RuleResult";
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -82,8 +78,10 @@ export default class scan extends SfdxCommand {
     }
     const flowFiles = this.findFlows();
     this.ux.startSpinner(`Identified ${flowFiles.length} flows to scan`);
-    const parsedFlows: Flow[] = await ParseFlows(flowFiles);
-    const scanResults: ScanResult[] = (this.userConfig && Object.keys(this.userConfig).length > 0) ? core.scan(parsedFlows, this.userConfig) : core.scan(parsedFlows);
+    // to
+    // core.Flow
+    const parsedFlows: core.Flow[] = await ParseFlows(flowFiles);
+    const scanResults: core.ScanResult[] = (this.userConfig && Object.keys(this.userConfig).length > 0) ? core.scan(parsedFlows, this.userConfig) : core.scan(parsedFlows);
     this.ux.stopSpinner(`Scan complete`);
     this.ux.log('');
 
@@ -183,12 +181,12 @@ export default class scan extends SfdxCommand {
     for (const scanResult of scanResults) {
       const flowName = scanResult.flow.label[0];
       const flowType = scanResult.flow.type[0];
-      for (const ruleResult of scanResult.ruleResults as RuleResult[]) {
+      for (const ruleResult of scanResult.ruleResults as core.RuleResult[]) {
         const ruleDescription = ruleResult.ruleDefinition.description;
         const rule = ruleResult.ruleDefinition.label;
         if (ruleResult.occurs && ruleResult.details && ruleResult.details.length > 0) {
           const severity = ruleResult.severity || "error"
-          for (const result of (ruleResult.details as ResultDetails[])) {
+          for (const result of (ruleResult.details as core.ResultDetails[])) {
             const detailObj = Object.assign(
               result,
               {
@@ -226,11 +224,11 @@ export default class scan extends SfdxCommand {
     if (forcedConfigFile) {
       // Forced config file name
       const explorerLoadRes = await explorer.load(forcedConfigFile);
-      this.userConfig = explorerLoadRes?.config ?? {};
+      this.userConfig = explorerLoadRes?.config ?? undefined;
     } else {
       // Let cosmiconfig look for a config file
       const explorerSearchRes = await explorer.search();
-      this.userConfig = explorerSearchRes?.config ?? {};
+      this.userConfig = explorerSearchRes?.config ?? undefined;
     }
 
   }
