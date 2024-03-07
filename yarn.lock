@@ -794,11 +794,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:^20.4.5":
-  version: 20.11.23
-  resolution: "@types/node@npm:20.11.23"
+  version: 20.11.25
+  resolution: "@types/node@npm:20.11.25"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10c0/aec1bca6d6485a14835ad0f5d99fd6e8231b0d836b23c2b6f0826098370b938851979fd08f28f7430e993e85df661d7b5c4f846f1ce8702dc70543e16072791d
+  checksum: 10c0/3a65a0469309d503e572a3198d81c9248876236b1bcc0c9943e995cfa536df7ce9a9302638258984877420d1613167a8a82dbfb3a92197319fb79ebebf9abc83
   languageName: node
   linkType: hard
 
@@ -4197,9 +4197,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lightning-flow-scanner-core@npm:2.27":
-  version: 2.27.0
-  resolution: "lightning-flow-scanner-core@npm:2.27.0"
+"lightning-flow-scanner-core@npm:2.28":
+  version: 2.28.0
+  resolution: "lightning-flow-scanner-core@npm:2.28.0"
   dependencies:
     "@types/chai": "npm:^4.2.21"
     "@types/node": "npm:^20.4.5"
@@ -4210,7 +4210,7 @@ __metadata:
     ts-node: "npm:^10.2.1"
     tslint: "npm:^6.1.3"
     typescript: "npm:^4.3.4"
-  checksum: 10c0/e4d520d86398b1528fc3f5924a2026a7dac18c00c28996473b8550359349d25a58c54931589a51dca73a74bad3f3aa07272290101e9104a9b4f502b704a6b051
+  checksum: 10c0/68a37708167680e12e00f619dfdb4834080e3e251b23a0321b31622a131cceb56edf9f27c2d5cb77e95a2730dd9e0d6a7032cc9ee5b39186a5e1d533681170f4
   languageName: node
   linkType: hard
 
@@ -4243,7 +4243,7 @@ __metadata:
     fs-extra: "npm:^11.1.1"
     glob: "npm:^7.1.7"
     globby: "npm:^8"
-    lightning-flow-scanner-core: "npm:2.27"
+    lightning-flow-scanner-core: "npm:2.28"
     mocha: "npm:^10.2.0"
     nyc: "npm:^14"
     prettier: "npm:^2.3.2"
