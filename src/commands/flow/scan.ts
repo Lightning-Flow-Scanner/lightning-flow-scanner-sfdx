@@ -120,8 +120,8 @@ export default class scan extends SfdxCommand {
 
     // TODO CALL TO ACTION
     this.ux.log('');
-    this.ux.log(c.bold(c.italic(c.yellowBright('Be a part of our mission to champion Best Practices and empower Flow Builders by starring us on GitHub:'))));
-    this.ux.log(c.italic(c.blueBright(c.underline("https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx"))));
+    this.ux.log(c.bold(c.italic(c.yellowBright('Be a part of our mission to champion Best Practices in Salesforce Flows by starring us on GitHub:'))));
+    this.ux.log(c.italic(c.blueBright(c.underline("https://github.com/Lightning-Flow-Scanner"))));
 
     const status = this.getStatus();
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
