@@ -30,7 +30,7 @@ export default class scan extends SfdxCommand {
 
   protected userConfig;
   protected failOn = "error";
-  protected errorCounters: Map<string,number> = new Map<string,number>(); 
+  protected errorCounters: Map<string, number> = new Map<string, number>();
 
   protected static flagsConfig = {
     directory: flags.filepath({
@@ -102,20 +102,26 @@ export default class scan extends SfdxCommand {
         this.ux.log(c.italic('Type: ' + matchingScanResult.flow.type));
         this.ux.log('');
         // todo flow uri
-        this.ux.table(resultsByFlow[resultKey], ['rule', 'type', 'name']);
+        this.ux.table(resultsByFlow[resultKey], ['rule', 'type', 'name', 'severity']);
         this.ux.log('');
       }
     }
     this.ux.styledHeader("Total: " +
       c.red(results.length +
-      " Results") + " in " +
+        " Results") + " in " +
       c.yellow(scanResults.length +
-      " Flows") + ".");
+        " Flows") + ".");
 
-      // TODO CALL TO ACTION
-      this.ux.log('');
-      this.ux.log(c.bold(c.italic(c.yellowBright('Be a part of our mission to champion Best Practices and empower Flow Builders by starring us on GitHub:'))));
-      this.ux.log(c.italic(c.blueBright(c.underline("https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx"))));
+    // Display number of errors by severity
+    for (const severity of ["error","warning","note"]) {
+      const severityCounter = this.errorCounters[severity] || 0;
+      this.ux.log(`- ${severity}: ${severityCounter}`);
+    }    
+
+    // TODO CALL TO ACTION
+    this.ux.log('');
+    this.ux.log(c.bold(c.italic(c.yellowBright('Be a part of our mission to champion Best Practices and empower Flow Builders by starring us on GitHub:'))));
+    this.ux.log(c.italic(c.blueBright(c.underline("https://github.com/Force-Config-Control/lightning-flow-scanner-sfdx"))));
 
     const status = this.getStatus();
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
@@ -124,7 +130,7 @@ export default class scan extends SfdxCommand {
     }
     const summary = {
       flowsNumber: scanResults.length, 'results': results.length, 'message': "A total of " +
-      results.length +
+        results.length +
         " results have been found in " +
         scanResults.length +
         " flows.", errorLevelsDetails: {}
@@ -132,24 +138,24 @@ export default class scan extends SfdxCommand {
     return { summary, status: status, results };
   }
 
-  private findFlows (){
-        // List flows that will be scanned
-        let flowFiles;
-        if (this.flags.directory && this.flags.sourcepath) {
-          this.ux.stopSpinner("Error");
-          throw new SfdxError(
-            "You can only specify one of either directory or sourcepath, not both."
-          );
-        } else if (this.flags.directory) {
-          flowFiles = FindFlows(this.flags.directory);
-        } else if (this.flags.sourcepath) {
-          flowFiles = this.flags.sourcepath
-            .split(",")
-            .filter((f) => fs.existsSync(f));
-        } else {
-          flowFiles = FindFlows(".");
-        }
-        return flowFiles;
+  private findFlows() {
+    // List flows that will be scanned
+    let flowFiles;
+    if (this.flags.directory && this.flags.sourcepath) {
+      this.ux.stopSpinner("Error");
+      throw new SfdxError(
+        "You can only specify one of either directory or sourcepath, not both."
+      );
+    } else if (this.flags.directory) {
+      flowFiles = FindFlows(this.flags.directory);
+    } else if (this.flags.sourcepath) {
+      flowFiles = this.flags.sourcepath
+        .split(",")
+        .filter((f) => fs.existsSync(f));
+    } else {
+      flowFiles = FindFlows(".");
+    }
+    return flowFiles;
   }
 
   private getStatus() {
@@ -162,14 +168,14 @@ export default class scan extends SfdxCommand {
         status = 1;
       }
       else if (this.failOn === 'warning' && (
-        this.errorCounters["error"]  > 0
-        || this.errorCounters["warning"]  > 0)) {
+        this.errorCounters["error"] > 0
+        || this.errorCounters["warning"] > 0)) {
         status = 1;
       }
       else if (this.failOn === 'note' &&
         (this.errorCounters["error"] > 0
-        || this.errorCounters["warning"] > 0
-        || this.errorCounters["note"] > 0)) {
+          || this.errorCounters["warning"] > 0
+          || this.errorCounters["note"] > 0)) {
         status = 1;
       }
     }
