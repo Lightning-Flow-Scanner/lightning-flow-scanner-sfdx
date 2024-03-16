@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased] (beta, main branch content)
 
 - Fix wrong exit code which has to be related to --failon option (default: `error`)
+- Display severity in human format results
 
 ## [2.12.0] 2023-08-29
 
