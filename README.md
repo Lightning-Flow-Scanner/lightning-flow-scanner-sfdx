@@ -95,7 +95,7 @@ sfdx flow:scan --config path/to/.flow-scanner.json
 | **Unconnected Element** |  Unconnected elements which are not being used by the Flow should be avoided to keep Flows efficient and maintainable. |
 | **Unused Variable**      |  To maintain the efficiency and manageability of your Flow, it's advisable to avoid including unconnected variables that are not in use. |
 
-**More information on the rules can be found in the [lfs-core module documentation](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-core).**
+**More information on the rules can be found in the [default ruleset documentation](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-core/blob/master/docs/defaultrules.md).**
 
 ## Configuration
 
@@ -187,5 +187,6 @@ To load custom rules using the Lightning Flow Scanner Core, you can utilize the 
         }
     }
 }
+```
 
 For more details and examples on custom rules, refer to our [Custom Rule Creation Guide](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-core/tree/master/docs/customruleguide.md)
