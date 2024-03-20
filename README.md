@@ -100,7 +100,9 @@ sfdx flow:scan --config path/to/.flow-scanner.json
 ## Configuration
 
 Create a .flow-scanner.json file in order to configure:
+ - The ruleset to be executed.
  - The severity of violating any specific rule.
+ - Custom expressions or rule implementations.
  - Any known exceptions that should be ignored during scanning.
 
 ```json
@@ -172,3 +174,18 @@ Some rules have additional attributes to configure, such as the expression, that
   }
 }
 ```
+
+### Loading Custom Rules
+
+To load custom rules using the Lightning Flow Scanner Core, you can utilize the `path` attribute within the rules section of your configurations. This attribute allows you to specify the path to your custom rule class, enabling seamless integration of organization-specific rule definitions into the scanner's ruleset.
+
+```json
+{
+    "rules": {
+        "<RuleName>": {
+            "path": "<snippet>"
+        }
+    }
+}
+
+For more details and examples on custom rules, refer to our [Custom Rule Creation Guide](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-core/tree/master/docs/customruleguide.md)
