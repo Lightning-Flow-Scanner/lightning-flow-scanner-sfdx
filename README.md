@@ -183,7 +183,7 @@ To load custom rules using the Lightning Flow Scanner Core, you can utilize the 
 {
     "rules": {
         "<RuleName>": {
-            "path": "<snippet>"
+            "path": "<yourtypescriptfilepath>"
         }
     }
 }
