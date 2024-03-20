@@ -715,9 +715,9 @@ __metadata:
   linkType: hard
 
 "@types/chai@npm:^4.2.21":
-  version: 4.3.12
-  resolution: "@types/chai@npm:4.3.12"
-  checksum: 10c0/e5d952726d7f053812579962b07d0e4965c160c6a90bf466580e639cd3a1f1d30da1abbfe782383538a043a07908f9dfb823fa9065b37752a5f27d62234f44d5
+  version: 4.3.14
+  resolution: "@types/chai@npm:4.3.14"
+  checksum: 10c0/7712594c1e457cb99c7227d0fe1afcbb900bbd1369494ec2d2b0d79a383057a09ab13d23d7b300287394b99995a8c017aa55e6b9a369b77910bc10310ba504af
   languageName: node
   linkType: hard
 
@@ -794,11 +794,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:^20.4.5":
-  version: 20.11.25
-  resolution: "@types/node@npm:20.11.25"
+  version: 20.11.30
+  resolution: "@types/node@npm:20.11.30"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10c0/3a65a0469309d503e572a3198d81c9248876236b1bcc0c9943e995cfa536df7ce9a9302638258984877420d1613167a8a82dbfb3a92197319fb79ebebf9abc83
+  checksum: 10c0/867cfaf969c6d8850d8d7304e7ab739898a50ecb1395b61ff2335644f5f48d7a46fbc4a14cee967aed65ec134b61a746edae70d1f32f11321ccf29165e3bc4e6
   languageName: node
   linkType: hard
 
@@ -4197,9 +4197,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lightning-flow-scanner-core@npm:2.28":
-  version: 2.28.0
-  resolution: "lightning-flow-scanner-core@npm:2.28.0"
+"lightning-flow-scanner-core@npm:2.30":
+  version: 2.30.0
+  resolution: "lightning-flow-scanner-core@npm:2.30.0"
   dependencies:
     "@types/chai": "npm:^4.2.21"
     "@types/node": "npm:^20.4.5"
@@ -4210,7 +4210,7 @@ __metadata:
     ts-node: "npm:^10.2.1"
     tslint: "npm:^6.1.3"
     typescript: "npm:^4.3.4"
-  checksum: 10c0/68a37708167680e12e00f619dfdb4834080e3e251b23a0321b31622a131cceb56edf9f27c2d5cb77e95a2730dd9e0d6a7032cc9ee5b39186a5e1d533681170f4
+  checksum: 10c0/8d00782023645a7d26707364c5a08d3588393cffdae38fe901b1e9939944af3c4a52dbe876965319cbede2d3c1a6024fff2c7215ed67c0579981cc80cf129313
   languageName: node
   linkType: hard
 
@@ -4243,7 +4243,7 @@ __metadata:
     fs-extra: "npm:^11.1.1"
     glob: "npm:^7.1.7"
     globby: "npm:^8"
-    lightning-flow-scanner-core: "npm:2.28"
+    lightning-flow-scanner-core: "npm:2.30"
     mocha: "npm:^10.2.0"
     nyc: "npm:^14"
     prettier: "npm:^2.3.2"
