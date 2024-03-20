@@ -20,7 +20,7 @@ __*Identify potential issues and improvements in Salesforce Flows*__
 - [Usage](#usage)
   - [Options](#options)
   - [Examples](#examples)
-- [Rule overview](#rule-overview)
+- [Default Ruleset](#default-ruleset)
 - [Configuration](#configuration)
   - [Defining the severity per rule](#defining-the-severity-per-rule)
   - [Specifying an exception](#specifying-an-exception)
@@ -79,7 +79,7 @@ sfdx flow:scan --json
 sfdx flow:scan --config path/to/.flow-scanner.json
 ```
 
-## Rule overview
+## Default Ruleset
 | Rule       | Description |
 |--------------|:-----------|
 | **Outdated API Version** | Introducing newer API components may lead to unexpected issues with older versions of Flows, as they might not align with the underlying mechanics. Starting from API version 50.0, the 'Api Version' attribute has been readily available on the Flow Object. To ensure smooth operation and reduce discrepancies between API versions, it is strongly advised to regularly update and maintain them. |
