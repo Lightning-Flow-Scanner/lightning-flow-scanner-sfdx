@@ -177,7 +177,7 @@ Some rules have additional attributes to configure, such as the expression, that
 
 ### Loading Custom Rules
 
-To load custom rules using the Lightning Flow Scanner Core, you can utilize the `path` attribute within the rules section of your configurations. This attribute allows you to specify the path to your custom rule class, enabling seamless integration of organization-specific rule definitions into the scanner's ruleset.
+To load custom rules using the Lightning Flow Scanner Core, you can utilize the `path` attribute within the rules section of your configurations. This attribute allows you to specify the path to your custom rule class, enabling seamless integration of organization-specific rule definitions into the scanner's ruleset. 
 
 ```json
 {
@@ -188,5 +188,5 @@ To load custom rules using the Lightning Flow Scanner Core, you can utilize the 
     }
 }
 ```
-
+Custom Rules can either leverage our Flow compiler or be completely customized typescript functions.
 For more details and examples on custom rules, refer to our [Custom Rule Creation Guide](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-core/tree/master/docs/customruleguide.md)
