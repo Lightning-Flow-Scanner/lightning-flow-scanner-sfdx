@@ -25,6 +25,8 @@ __*Identify potential issues and improvements in Salesforce Flows*__
   - [Defining the severity per rule](#defining-the-severity-per-rule)
   - [Specifying an exception](#specifying-an-exception)
   - [Configuring an expression](#configuring-an-expression)
+  - [Loading Custom Rules](#loading-custom-rules)
+- [Development Setup](#development-setup)
 
 ## Installation
 
@@ -190,3 +192,27 @@ To load custom rules using the Lightning Flow Scanner Core, you can utilize the 
 ```
 Custom Rules can either leverage our Flow compiler or be completely customized typescript functions.
 For more details and examples on custom rules, refer to our [Custom Rule Creation Guide](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-core/tree/master/docs/customruleguide.md)
+
+## Development Setup
+
+### Preparing for Changes
+
+1. **Clone Project**: Clone the Lightning Flow Scanner SFDX plugin project from the repository.
+2. **Install Dependencies**: Run `yarn install` to install the necessary dependencies.
+3. **Optional: Make changes**: Make the required changes in the code. For example, if you want to downgrade the core module, you can use the following commands:
+   - Remove the existing core module: `yarn remove lightning-flow-scanner-core`
+   - Add a specific version of the core module: `yarn add lightning-flow-scanner-core@2.27`
+4. **Prepack**: Execute `yarn prepack` to build the plugin locally and prepare for packaging.
+5. **Link Plugin**: Link the plugin to your Salesforce DX environment using `sfdx plugins link .`.
+
+### Debugging the Plugin
+
+1. **Run Plugin**: In the terminal of your example flow project (or any other project intended for scanning), run the following command to start the plugin with debugging enabled:
+
+```bash
+NODE_OPTIONS=--inspect-brk /path/to/lightning-flow-scanner-sfdx/bin/run flow:scan
+```
+
+2. **Attach Debugger**: Open your local Salesforce DX project in Visual Studio Code, set desired breakpoints, and attach the debugger to the remote session.
+
+For more detailed information, you can refer to the [wiki](https://github.com/salesforcecli/cli/wiki) of the Salesforce CLI repository.
