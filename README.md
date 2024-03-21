@@ -5,7 +5,6 @@
 [![Downloads/total](https://img.shields.io/npm/dt/lightning-flow-scanner.svg)](https://npmjs.org/package/lightning-flow-scanner)
 [![Downloads/week](https://img.shields.io/npm/dw/lightning-flow-scanner.svg)](https://npmjs.org/package/lightning-flow-scanner)
 [![GitHub contributors](https://img.shields.io/github/contributors/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx.svg)](https://gitHub.com/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx/graphs/contributors/)
-[![License](https://img.shields.io/npm/l/lightning-flow-scanner.svg)](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx/blob/main/package.json)
 
 __*Identify potential issues and improvements in Salesforce Flows*__
 
