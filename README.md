@@ -197,8 +197,8 @@ For more details and examples on custom rules, refer to our [Custom Rule Creatio
 ### Preparing for Changes
 
 1. **Clone Project**: Clone the Lightning Flow Scanner SFDX plugin project from the repository.
-2. **Install Dependencies**: Run `yarn install` to install the necessary dependencies.
-3. **Optional: Make changes**: Make the required changes in the code. For example, if you want to downgrade the core module, you can use the following commands:
+2. **Install Dependencies**: Open the directory and run `npm install` or `yarn install` in the terminal to install the necessary dependencies.
+3. **Optional: Make changes**: For example, if you want to downgrade the core module using yarn, you can use the following commands:
    - Remove the existing core module: `yarn remove lightning-flow-scanner-core`
    - Add a specific version of the core module: `yarn add lightning-flow-scanner-core@2.27`
 4. **Prepack**: Execute `yarn prepack` to build the plugin locally and prepare for packaging.
