@@ -1,15 +1,8 @@
 [![Lightning Flow Scanner Banner](docs/images/banner.png)](https://github.com/Lightning-Flow-Scanner)
 
-[![Version](https://img.shields.io/npm/v/lightning-flow-scanner.svg)](https://npmjs.org/package/lightning-flow-scanner)
-[![GitHub stars](https://img.shields.io/github/stars/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx)](https://GitHub.com/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx/stargazers/)
-[![GitHub contributors](https://img.shields.io/github/contributors/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx.svg)](https://gitHub.com/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx/graphs/contributors/)
-[![Downloads/total](https://img.shields.io/npm/dt/lightning-flow-scanner.svg)](https://npmjs.org/package/lightning-flow-scanner)
-[![Downloads/week](https://img.shields.io/npm/dw/lightning-flow-scanner.svg)](https://npmjs.org/package/lightning-flow-scanner)
-
-
 __*Identify potential issues and improvements in Salesforce Flows*__
 
-![FlowScan example](docs/images/flow-scan-example.jpg)
+![FlowScan example](docs/images/demo.png)
 
 **Also available as [VS Code Extension](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-vsce)*
 
@@ -198,13 +191,23 @@ For more details and examples on custom rules, refer to our [Custom Rule Creatio
 
 1. **Clone Project**: Clone the Lightning Flow Scanner SFDX plugin project from the repository.
 2. **Install Dependencies**: Open the directory and run `npm install` or `yarn install` in the terminal to install the necessary dependencies.
-3. **Optional: Make changes**: For example, if you want to downgrade the core module using yarn, you can use the following commands:
-   - Remove the existing core module: `yarn remove lightning-flow-scanner-core`
-   - Add a specific version of the core module: `yarn add lightning-flow-scanner-core@2.27`
-4. **Prepack**: Execute `yarn prepack` to build the plugin locally and prepare for packaging.
+3. **Optional: Make changes**: For example, if you want to upgrade the core module using npm, you can use the  command: `npm update lightning-flow-scanner-core`
+4. **Prepack**: Execute `npm run prepack` to build the plugin locally and prepare for packaging.
 5. **Link Plugin**: Link the plugin to your Salesforce DX environment using `sfdx plugins link .`.
 
 ### Debugging the Plugin
+
+1. **Linking Core Module**: You may need to clone and link the `lightning-flow-scanner-core` locally to your project. This step is necessary if you're making changes to the core module and want those changes reflected in the plugin. You can link the core module by navigating to its directory and running:
+
+```bash
+npm link
+```
+
+Then, navigate to the sfdx plugin directory and run:
+
+```bash
+npm link lightning-flow-scanner-core
+```
 
 1. **Run Plugin**: In the terminal of your example flow project (or any other project intended for scanning), run the following command to start the plugin with debugging enabled:
 
