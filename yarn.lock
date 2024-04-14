@@ -807,11 +807,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=4.0, @types/node@npm:^20.12.4":
-  version: 20.12.4
-  resolution: "@types/node@npm:20.12.4"
+  version: 20.12.7
+  resolution: "@types/node@npm:20.12.7"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10c0/9b142fcd839a48c348d6b9acfc753dfa4b3fb1f3e23ed67e8952bee9b2dfdaffdddfbcf0e4701557b88631591a5f9968433910027532ef847759f8682e27ffe7
+  checksum: 10c0/dce80d63a3b91892b321af823d624995c61e39c6a223cc0ac481a44d337640cc46931d33efb3beeed75f5c85c3bda1d97cef4c5cd4ec333caf5dee59cff6eca0
   languageName: node
   linkType: hard
 
@@ -4165,12 +4165,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lightning-flow-scanner-core@npm:3.5.0":
-  version: 3.5.0
-  resolution: "lightning-flow-scanner-core@npm:3.5.0"
+"lightning-flow-scanner-core@npm:3.9.0":
+  version: 3.9.0
+  resolution: "lightning-flow-scanner-core@npm:3.9.0"
   dependencies:
     path-browserify: "npm:^1.0.1"
-  checksum: 10c0/6a364146e67e469cf3f9034a9d949613bb7bfa91c8a2163a5cbfe277733a7c9777d7fd9dbe7bc77c49576894b5deb3828f5942fc0274d859b7a80caea6151416
+  checksum: 10c0/7803b383848fc37697ef44d541a321ca115ed895efd57bb452c77ea6bff34a63da2b0665774e3b6b97bb654ba65a724529cd634ccf629329ca4d2939c0987797
   languageName: node
   linkType: hard
 
@@ -4204,7 +4204,7 @@ __metadata:
     fs-extra: "npm:^11.1.1"
     glob: "npm:^7.1.7"
     globby: "npm:^8"
-    lightning-flow-scanner-core: "npm:3.5.0"
+    lightning-flow-scanner-core: "npm:3.9.0"
     mocha: "npm:^10.2.0"
     nyc: "npm:^14"
     prettier: "npm:^2.3.2"
@@ -6120,12 +6120,12 @@ __metadata:
   linkType: hard
 
 "socks@npm:^2.7.1":
-  version: 2.8.1
-  resolution: "socks@npm:2.8.1"
+  version: 2.8.3
+  resolution: "socks@npm:2.8.3"
   dependencies:
     ip-address: "npm:^9.0.5"
     smart-buffer: "npm:^4.2.0"
-  checksum: 10c0/ac77b515c260473cc7c4452f09b20939e22510ce3ae48385c516d1d5784374d5cc75be3cb18ff66cc985a7f4f2ef8fef84e984c5ec70aad58355ed59241f40a8
+  checksum: 10c0/d54a52bf9325165770b674a67241143a3d8b4e4c8884560c4e0e078aace2a728dffc7f70150660f51b85797c4e1a3b82f9b7aa25e0a0ceae1a243365da5c51a7
   languageName: node
   linkType: hard
 
