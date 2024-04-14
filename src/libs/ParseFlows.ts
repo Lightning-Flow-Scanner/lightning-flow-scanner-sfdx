@@ -12,12 +12,6 @@ export async function ParseFlows(selectedUris: any) {
       parsedFlows.push(new core.Flow(
         {
           'path': uri,
-          interviewLabel: parsedContent.Flow.interviewLabel,
-          label: parsedContent.Flow.label,
-          processMetadataValues: parsedContent.Flow.processMetadataValues,
-          processType: parsedContent.Flow.processType,
-          start: parsedContent.Flow.start,
-          status: parsedContent.Flow.status,
           xmldata: parsedContent
         }));
     } catch (e) {
