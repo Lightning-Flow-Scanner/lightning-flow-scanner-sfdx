@@ -11,3 +11,4 @@ node_modules
 .yarn/**
 coverage/**
 .yarn/install-state.gz
+oclif.manifest.json
