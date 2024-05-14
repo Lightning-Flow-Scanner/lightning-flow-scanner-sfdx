@@ -3,7 +3,6 @@ import { Messages, SfdxError } from "@salesforce/core";
 import * as core from "lightning-flow-scanner-core/out";
 import * as fs from "fs-extra";
 import { FindFlows } from "../../libs/FindFlows";
-import { ParseFlows } from "../../libs/ParseFlows";
 import { Violation } from "../../models/Violation";
 import * as c from "chalk";
 import { exec } from "child_process";
@@ -80,7 +79,8 @@ export default class scan extends SfdxCommand {
     this.ux.startSpinner(`Identified ${flowFiles.length} flows to scan`);
     // to
     // core.Flow
-    const parsedFlows: core.Flow[] = await ParseFlows(flowFiles);
+    const parsedFlows = await core.parse(flowFiles);
+
     const scanResults: core.ScanResult[] = (this.userConfig && Object.keys(this.userConfig).length > 0) ? core.scan(parsedFlows, this.userConfig) : core.scan(parsedFlows);
     this.ux.stopSpinner(`Scan complete`);
     this.ux.log('');
