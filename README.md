@@ -1,7 +1,7 @@
 [![Lightning Flow Scanner Banner](docs/images/banner.png)](https://github.com/Lightning-Flow-Scanner)
-__*Analyze Salesforce Flows for optimization and ensure adherence to Industry Best Practices.*__
+__*Pinpoint deviations from Industry Best Practices in Salesforce Flows, ensuring standards of business automation excellence*__
 
-![FlowScan example](docs/images/demo.png)
+![FlowScan example](docs/images/sfdxgif.gif)
 
 **Also available as [VS Code Extension](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-vsce)*
 
