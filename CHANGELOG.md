@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Fix wrong exit code which has to be related to --failon option (default: `error`)
 - Display severity in human format results
+- Automate Releases via GitHub Actions
+  - From `master` branch: **beta**
+  - From `alpha` branch: **alpha**
+  - When a GitHub release is created: Git tag selected for the release.
+- Run tests during Pull Request checks
 
 ## [2.12.0] 2023-08-29
 

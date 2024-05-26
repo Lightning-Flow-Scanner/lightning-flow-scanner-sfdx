@@ -1,0 +1,37 @@
+---
+#
+# Documentation:
+# https://help.github.com/en/articles/workflow-syntax-for-github-actions
+#
+
+#######################################
+# Start the job on all push to master #
+#######################################
+name: "Test"
+on:
+  push: # Comment this line to trigger action only on pull-requests (not recommended if you don't pay for GH Actions)
+  pull_request:
+    branches: [master, main]
+
+###############
+# Set the Job #
+###############
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: "https://registry.npmjs.org"
+          # Defaults to the user or organization that owns the workflow file
+          scope: "nvuillam"
+      - run: yarn
+      - run: yarn prepack
+      - run: yarn test
+#      - name: Submitting code coverage to codecov
+#        run: |
+#          ./node_modules/.bin/nyc report --reporter text-lcov > coverage.lcov
+#          curl -s https://codecov.io/bash | bash
