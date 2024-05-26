@@ -28,10 +28,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           # Defaults to the user or organization that owns the workflow file
           scope: "nvuillam"
-      - run: yarn
-      - run: yarn prepack
-      - run: yarn test
-#      - name: Submitting code coverage to codecov
-#        run: |
-#          ./node_modules/.bin/nyc report --reporter text-lcov > coverage.lcov
-#          curl -s https://codecov.io/bash | bash
+      - name: Install dependencies and link
+        run: npm ci && npm link
+      - name: Run tests
+        run: npm run test
