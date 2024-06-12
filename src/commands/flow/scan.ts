@@ -96,7 +96,7 @@ export default class scan extends SfdxCommand {
       }
       for (const resultKey in resultsByFlow) {
         const matchingScanResult = scanResults.find((res) => {
-          return res.flow.label[0] === resultKey
+          return res.flow.label === resultKey
         });
         this.ux.styledHeader("Flow: " + c.yellow(resultKey) + " " + c.red("(" + resultsByFlow[resultKey].length + " results)"));
         this.ux.log(c.italic('Type: ' + matchingScanResult.flow.type));
@@ -116,7 +116,7 @@ export default class scan extends SfdxCommand {
     for (const severity of ["error","warning","note"]) {
       const severityCounter = this.errorCounters[severity] || 0;
       this.ux.log(`- ${severity}: ${severityCounter}`);
-    }    
+    }
 
     // TODO CALL TO ACTION
     this.ux.log('');
@@ -185,7 +185,7 @@ export default class scan extends SfdxCommand {
   private buildResults(scanResults) {
     const errors = [];
     for (const scanResult of scanResults) {
-      const flowName = scanResult.flow.label[0];
+      const flowName = scanResult.flow.label;
       const flowType = scanResult.flow.type[0];
       for (const ruleResult of scanResult.ruleResults as core.RuleResult[]) {
         const ruleDescription = ruleResult.ruleDefinition.description;
