@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "es6",
+      "resolveJsonModule": true,
+      "outDir": "out",
+      "lib": [
+        "es2020.string",
+        "es6"
+      ],
+      "experimentalDecorators": true,
+      "sourceMap": true,
+      "rootDir": "src",
+      "strict": false, /* enable all strict type-checking options */
+      "baseUrl": ".",
+      "declaration": true,
+      "esModuleInterop": true
+    },
+    "exclude": [
+      "node_modules",
+      "tests/**/*.test.ts"
+    ]
+  }
