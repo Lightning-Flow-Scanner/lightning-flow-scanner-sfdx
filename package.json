@@ -37,7 +37,7 @@
     "mocha": "^10.2.0",
     "nyc": "^14",
     "prettier": "^2.3.2",
-    "ts-node": "10.7.0",
+    "ts-node": "^10.9.0",
     "tslint": "^5",
     "typescript": "^4.3.5"
   },
@@ -73,7 +73,7 @@
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
     "prettier": "prettier --write '**/*.{js,json,md,ts,yaml,yml}'",
-    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "test": "TS_NODE_PROJECT=tsconfig.cjs.json mocha -r ts-node/register test/**/*.test.ts",
     "version": "oclif-dev readme && git add README.md"
   }
 }
