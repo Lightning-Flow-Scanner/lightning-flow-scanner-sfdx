@@ -23,6 +23,6 @@ jobs:
       - name: Install dependencies and link
         run: npm ci && npm link
       - name: Build
-        run: npm run pre-pack
+        run: npm run prepack
       - name: Run tests
         run: npm run test
