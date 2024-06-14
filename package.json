@@ -73,7 +73,9 @@
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
     "prettier": "prettier --write '**/*.{js,json,md,ts,yaml,yml}'",
-    "test": "TS_NODE_PROJECT=tsconfig.json mocha -r ts-node/register test/**/*.test.ts",
+    "test": "nyc npm run test:unit",
+    "pretest:unit": "npm run prepack",
+    "test:unit": "TS_NODE_PROJECT=tsconfig.json mocha -r ts-node/register test/**/*.test.ts",
     "version": "oclif-dev readme && git add README.md"
   }
 }
