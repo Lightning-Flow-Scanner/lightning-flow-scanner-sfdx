@@ -50,7 +50,7 @@
             npm ci
         - name: Semantic Release Dependency
           run: |
-            npm install -g semantic-release https://github.com/oclif/semantic-release/archive/refs/tags/v3.1.5.tar.gz
+            npm install -g semantic-release https://github.com/oclif/semantic-release/archive/refs/tags/v3.1.5.tar.gz @semantic-release/git
         - name: Publish Beta
           env:
             GITHUB_TOKEN: ${{ secrets.TOKENX }}
