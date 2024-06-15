@@ -1,34 +1,26 @@
----
-#
-# Documentation:
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
-#
+name: Test
 
-#######################################
-# Start the job on all push to master #
-#######################################
-name: "Test"
-on:
-  push: # Comment this line to trigger action only on pull-requests (not recommended if you don't pay for GH Actions)
-  pull_request:
-    branches: [master, main]
+on: [pull_request]
 
-###############
-# Set the Job #
-###############
+permissions: read-all
+
+concurrency:
+  group: ${{ github.ref_name }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v3
-      # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v3
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Install node
+        uses: actions/setup-node@v4.0.2
         with:
-          node-version: 18
-          registry-url: "https://registry.npmjs.org"
-          # Defaults to the user or organization that owns the workflow file
-          scope: "nvuillam"
-      - name: Install dependencies and link
-        run: npm ci && npm link
+          node-version: 20.x
+      - name: Install dependencies
+        run: npm ci
       - name: Run tests
         run: npm run test
