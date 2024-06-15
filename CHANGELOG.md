@@ -1,3 +1,10 @@
+## [2.26.1](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx/compare/v2.26.0...v2.26.1) (2024-06-15)
+
+
+### Bug Fixes
+
+* release configurations and extension on workflow ([6dc4dd2](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx/commit/6dc4dd204f42e32c0c70590a0d7fd9d7c42d49af))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
