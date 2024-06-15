@@ -1,48 +1,59 @@
 ---
-#
-# Documentation:
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
-#
-
-#######################################
-# Start the job on all push to master #
-#######################################
-name: "Build & Deploy - BETA"
-on:
-  push:
-    branches:
-      - "main"
-      - "master"
-
-permissions: read-all
-
-concurrency:
-  group: ${{ github.ref_name }}-${{ github.workflow }}
-  cancel-in-progress: true
-
-###############
-# Set the Job #
-###############
-jobs:
-  deploy:
-    name: Deploy beta
-    runs-on: ubuntu-latest
-    permissions: read-all
-    environment:
-      name: beta
-    steps:
-      - uses: actions/checkout@v3
-      # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          registry-url: "https://registry.npmjs.org"
-          always-auth: true
-          # Defaults to the user or organization that owns the workflow file
-          scope: "rubenhalman"
-      - run: yarn
-      - run: yarn config set version-git-tag false && tsc -b
-      - run: BETAID=$(date '+%Y%m%d%H%M') && yarn version --prepatch --preid="beta$BETAID"
-      - run: yarn config set network-timeout 300000 && yarn publish --tag beta
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  #
+  # Documentation:
+  # https://help.github.com/en/articles/workflow-syntax-for-github-actions
+  #
+  
+  #######################################
+  # Start the job on all push to master #
+  #######################################
+  name: 'Build & Deploy - Beta'
+  on:
+    push:
+      branches:
+        - master
+  
+  permissions: read-all
+  
+  concurrency:
+    group: ${{ github.ref_name }}-${{ github.workflow }}
+    cancel-in-progress: true
+  
+  ###############
+  # Set the Job #
+  ###############
+  jobs:
+  
+    # Deploy to NPM
+    deploy_to_npm:
+      name: Deploy to NPM (beta)
+      runs-on: ubuntu-latest
+      permissions:
+        contents: write # to be able to publish a GitHub release
+        issues: write # to be able to comment on released issues
+        pull-requests: write # to be able to comment on released pull requests
+        id-token: write 
+      environment:
+        name: beta
+      steps:
+        - uses: actions/checkout@v4
+          with: 
+            fetch-depth: 0
+            persist-credentials: false
+        - uses: actions/setup-node@v4.0.2
+          with:
+            node-version: 20.x
+            registry-url: https://registry.npmjs.org
+            scope: rubenhalman
+        - name: Install Dependencies
+          run: |
+            npm ci
+        - name: Semantic Release Dependency
+          run: |
+            npm install -g semantic-release https://github.com/oclif/semantic-release/archive/refs/tags/v3.1.5.tar.gz
+        - name: Publish Beta
+          env:
+            GITHUB_TOKEN: ${{ secrets.TOKENX }}
+            NPM_TOKEN: ${{ secrets.NPM_TOKENX }}
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKENX }}
+          run: semantic-release -e @oclif/semantic-release
