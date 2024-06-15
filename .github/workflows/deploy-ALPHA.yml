@@ -38,7 +38,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           always-auth: true
           # Defaults to the user or organization that owns the workflow file
-          scope: "rubenhalman"
+          scope: rubenhalman
       - run: yarn
       - run: yarn config set version-git-tag false && tsc -b
       - run: ALPHAID=$(date '+%Y%m%d%H%M') && yarn version --prepatch --preid="alpha$ALPHAID"
