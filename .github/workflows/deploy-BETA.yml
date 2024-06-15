@@ -56,4 +56,4 @@
             GITHUB_TOKEN: ${{ secrets.TOKENX }}
             NPM_TOKEN: ${{ secrets.NPM_TOKENX }}
             NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKENX }}
-          run: semantic-release -e @oclif/semantic-release
+          run: semantic-release -e @oclif/semantic-release ./release.config.mjs
