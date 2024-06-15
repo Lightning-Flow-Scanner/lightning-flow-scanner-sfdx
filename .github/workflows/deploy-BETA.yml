@@ -51,7 +51,7 @@
         - name: Semantic Release Dependency
           run: |
             npm install -g semantic-release https://github.com/oclif/semantic-release/archive/refs/tags/v3.1.5.tar.gz
-            cd releaseconfig
+            cd semantic-release
             npm install
         - name: Publish Beta
           env:
