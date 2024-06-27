@@ -1,5 +1,5 @@
-import {Parser} from 'xml2js';
-import * as core from "lightning-flow-scanner-core/out";
+import { Parser } from 'xml2js';
+import * as core from "lightning-flow-scanner-core/out/index.js";
 
 export class XMLParser{
 

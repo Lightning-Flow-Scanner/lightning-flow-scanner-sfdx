@@ -1,18 +1,28 @@
-import { SfdxCommand, flags } from "@salesforce/command";
-import { Messages, SfdxError } from "@salesforce/core";
-import * as core from "lightning-flow-scanner-core/out";
+import { SfCommand, Flags } from "@salesforce/sf-plugins-core";
+import { Messages, SfError } from "@salesforce/core";
+import * as core from "lightning-flow-scanner-core/out/index.js";
 import * as fs from "fs-extra";
-import { FindFlows } from "../../libs/FindFlows";
-import { Violation } from "../../models/Violation";
-import * as c from "chalk";
+import { FindFlows } from "../../libs/FindFlows.js";
+import { Violation } from "../../models/Violation.js";
+import chalk from "chalk";
 import { exec } from "child_process";
 import { cosmiconfig } from "cosmiconfig";
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
 const messages = Messages.loadMessages("lightning-flow-scanner", "command");
 
-export default class scan extends SfdxCommand {
+export type ScanResult = {
+  status: number;
+  summary: {
+    flowsNumber: number;
+    results: number;
+    message: string;
+  };
+  results: Violation[];
+}
+
+export default class Scan extends SfCommand<ScanResult> {
   public static description = messages.getMessage("commandDescription");
   public static examples: string[] = [
     "sfdx flow:scan",
@@ -24,66 +34,65 @@ export default class scan extends SfdxCommand {
 
   protected static requiresUsername = false;
   protected static supportsDevhubUsername = false;
-  protected static requiresProject = false;
+  public static requiresProject = false;
   protected static supportsUsername = true;
 
   protected userConfig;
   protected failOn = "error";
   protected errorCounters: Map<string, number> = new Map<string, number>();
 
-  protected static flagsConfig = {
-    directory: flags.filepath({
+  public static readonly flags = {
+    directory: Flags.directory({
       char: "d",
       description: messages.getMessage("directoryToScan"),
       required: false,
+      exists: true,
     }),
-    config: flags.filepath({
+    config: Flags.file({
       char: "c",
       description: "Path to configuration file",
       required: false,
     }),
-    failon: flags.enum({
+    failon: Flags.option({
       char: "f",
-      description: "Thresold failure level (error, warning, note, or never) defining when the command return code will be 1",
-      options: ["error", "warning", "note", "never"],
+      description: "Threshold failure level (error, warning, note, or never) defining when the command return code will be 1",
+      options: ["error", "warning", "note", "never"] as const,
       default: "error"
-    }),
-    retrieve: flags.boolean({
+    })(),
+    retrieve: Flags.boolean({
       char: "r",
       description: "Force retrieve Flows from org at the start of the command",
       default: false,
     }),
-    sourcepath: flags.filepath({
+    sourcepath: Flags.directory({
       char: "p",
-      description: "comma-separated list of source flow paths to scan",
+      description: "Comma-separated list of source flow paths to scan",
       required: false,
     }),
+    targetusername: Flags.string({
+      char: 'u',
+      description: 'Retrieve the latest metadata from the target before the scan.',
+      required: false,
+    })
   };
 
-  public async run(): Promise<{
-    status: number,
-    summary: {
-      flowsNumber: number;
-      results: number;
-      message: string;
-    };
-    results: Violation[];
-  }> {
-    this.failOn = this.flags.failon || "error";
-    this.ux.startSpinner('Loading Lightning Flow Scanner');
-    await this.loadScannerOptions(this.flags.config);
-    if (this.flags.targetusername) {
-      await this.retrieveFlowsFromOrg();
+  public async run(): Promise<ScanResult> {
+    const { flags } = await this.parse(Scan);
+    this.failOn = flags.failon || "error";
+    this.spinner.start('Loading Lightning Flow Scanner');
+    await this.loadScannerOptions(flags.config);
+    if (flags.targetusername) {
+      await this.retrieveFlowsFromOrg(flags.targetusername);
     }
-    const flowFiles = this.findFlows();
-    this.ux.startSpinner(`Identified ${flowFiles.length} flows to scan`);
+    const flowFiles = this.findFlows(flags.directory, flags.sourcepath);
+    this.spinner.start(`Identified ${flowFiles.length} flows to scan`);
     // to
     // core.Flow
     const parsedFlows = await core.parse(flowFiles);
 
     const scanResults: core.ScanResult[] = (this.userConfig && Object.keys(this.userConfig).length > 0) ? core.scan(parsedFlows, this.userConfig) : core.scan(parsedFlows);
-    this.ux.stopSpinner(`Scan complete`);
-    this.ux.log('');
+    this.spinner.stop(`Scan complete`);
+    this.log('');
 
     // Build results
     const results = this.buildResults(scanResults);
@@ -98,30 +107,36 @@ export default class scan extends SfdxCommand {
         const matchingScanResult = scanResults.find((res) => {
           return res.flow.label === resultKey
         });
-        this.ux.styledHeader("Flow: " + c.yellow(resultKey) + " " + c.red("(" + resultsByFlow[resultKey].length + " results)"));
-        this.ux.log(c.italic('Type: ' + matchingScanResult.flow.type));
-        this.ux.log('');
+        this.styledHeader("Flow: " + chalk.yellow(resultKey) + " " + chalk.red("(" + resultsByFlow[resultKey].length + " results)"));
+        this.log(chalk.italic('Type: ' + matchingScanResult.flow.type));
+        this.log('');
         // todo flow uri
-        this.ux.table(resultsByFlow[resultKey], ['rule', 'type', 'name', 'severity']);
-        this.ux.log('');
+        //this.table(resultsByFlow[resultKey], ['rule', 'type', 'name', 'severity']);
+        this.table(resultsByFlow[resultKey], {
+          rule:     { header: 'RULE' },
+          type:     { header: 'TYPE' },
+          name:     { header: 'NAME' },
+          severity: { header: 'SEVERITY' }
+        })
+        this.log('');
       }
     }
-    this.ux.styledHeader("Total: " +
-      c.red(results.length +
+    this.styledHeader("Total: " +
+      chalk.red(results.length +
         " Results") + " in " +
-      c.yellow(scanResults.length +
+      chalk.yellow(scanResults.length +
         " Flows") + ".");
 
     // Display number of errors by severity
     for (const severity of ["error","warning","note"]) {
       const severityCounter = this.errorCounters[severity] || 0;
-      this.ux.log(`- ${severity}: ${severityCounter}`);
+      this.log(`- ${severity}: ${severityCounter}`);
     }
 
     // TODO CALL TO ACTION
-    this.ux.log('');
-    this.ux.log(c.bold(c.italic(c.yellowBright('Be a part of our mission to champion Best Practices by starring us on GitHub:'))));
-    this.ux.log(c.italic(c.blueBright(c.underline("https://github.com/Lightning-Flow-Scanner"))));
+    this.log('');
+    this.log(chalk.bold(chalk.italic(chalk.yellowBright('Be a part of our mission to champion Best Practices by starring us on GitHub:'))));
+    this.log(chalk.italic(chalk.blueBright(chalk.underline("https://github.com/Lightning-Flow-Scanner"))));
 
     const status = this.getStatus();
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
@@ -138,18 +153,18 @@ export default class scan extends SfdxCommand {
     return { summary, status: status, results };
   }
 
-  private findFlows() {
+  private findFlows(directory: string, sourcepath: string) {
     // List flows that will be scanned
     let flowFiles;
-    if (this.flags.directory && this.flags.sourcepath) {
-      this.ux.stopSpinner("Error");
-      throw new SfdxError(
+    if (directory && sourcepath) {
+      this.spinner.stop("Error");
+      throw new SfError(
         "You can only specify one of either directory or sourcepath, not both."
       );
-    } else if (this.flags.directory) {
-      flowFiles = FindFlows(this.flags.directory);
-    } else if (this.flags.sourcepath) {
-      flowFiles = this.flags.sourcepath
+    } else if (directory) {
+      flowFiles = FindFlows(directory);
+    } else if (sourcepath) {
+      flowFiles = sourcepath
         .split(",")
         .filter((f) => fs.existsSync(f));
     } else {
@@ -239,28 +254,28 @@ export default class scan extends SfdxCommand {
 
   }
 
-  private async retrieveFlowsFromOrg() {
+  private async retrieveFlowsFromOrg(targetusername: string) {
     let errored = false;
-    this.ux.startSpinner(c.yellowBright("Retrieving Metadata..."));
-    const retrieveCommand = `sfdx force:source:retrieve -m Flow -u "${this.flags.targetusername}"`;
+    this.spinner.start(chalk.yellowBright("Retrieving Metadata..."));
+    const retrieveCommand = `sfdx force:source:retrieve -m Flow -u "${targetusername}"`;
     try {
       await exec(retrieveCommand, {
         maxBuffer: 1000000 * 1024,
       });
     } catch (exception) {
       errored = true;
-      this.ux.errorJson(exception);
-      this.ux.stopSpinner(c.redBright("Retrieve Operation Failed."));
+      this.toErrorJson(exception);
+      this.spinner.stop(chalk.redBright("Retrieve Operation Failed."));
     }
     if (errored) {
-      throw new SfdxError(
+      throw new SfError(
         messages.getMessage("errorRetrievingMetadata"),
         "",
         [],
         1
       );
     } else {
-      this.ux.stopSpinner(c.greenBright("Retrieve Completed ✔."));
+      this.spinner.stop(chalk.greenBright("Retrieve Completed ✔."));
     }
   }
 }

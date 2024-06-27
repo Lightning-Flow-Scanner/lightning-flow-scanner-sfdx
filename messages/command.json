@@ -1,5 +1,5 @@
 {
-  "commandDescription": "Try to resolve the errors in the following flows:",
+  "commandDescription": "Find and fix potential bugs in Salesforce flows.",
   "errorRetrievingMetadata": "An error occurred during metadata retrieval. Please check the connection.",
   "errorNoOrgResults": "No results found for the org '%s'.",
   "throwErrors": "Errors will be thrown in case a violation is identified",
