@@ -69,7 +69,7 @@
   "scripts": {
     "lint": "eslint",
     "postpack": "rm -f oclif.manifest.json",
-    "prepack": "rm -rf lib && tsc -b && cp -r test/xmlfiles lib/test/xmlfiles && oclif manifest && oclif readme",
+    "prepack": "rm -rf lib && tsc -b && oclif manifest && oclif readme",
     "prettier": "prettier --write '**/*.{js,json,md,ts,yaml,yml}'",
     "test": "nyc npm run test:unit",
     "pretest:unit": "npm run prepack",
