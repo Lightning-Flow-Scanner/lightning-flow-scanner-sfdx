@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+      day: 'monday'
+    versioning-strategy: 'increase'
+    pull-request-branch-name:
+      separator: '-'
+    commit-message:
+      prefix: fix(deps)
