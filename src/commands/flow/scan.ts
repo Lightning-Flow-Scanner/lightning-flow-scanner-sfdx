@@ -73,6 +73,7 @@ export default class Scan extends SfCommand<ScanResult> {
       char: 'u',
       description: 'Retrieve the latest metadata from the target before the scan.',
       required: false,
+      charAliases: ['o']
     })
   };
 
