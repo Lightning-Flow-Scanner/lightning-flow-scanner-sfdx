@@ -36,7 +36,7 @@
     "oclif": "^4.13.10",
     "prettier": "^3.3.2",
     "ts-node": "^10.9.2",
-    "tslint": "^5",
+    "tslint": "^6",
     "typescript": "^5.5.2"
   },
   "engines": {
