@@ -136,7 +136,7 @@ export default class Scan extends SfCommand<ScanResult> {
 
     // TODO CALL TO ACTION
     this.log('');
-    this.log(chalk.bold(chalk.italic(chalk.yellowBright('Be a part of our mission to champion Best Practices by starring us on GitHub:'))));
+    this.log(chalk.bold(chalk.italic(chalk.yellowBright('Be a part of our mission to champion Flow Best Practices by starring us on GitHub:'))));
     this.log(chalk.italic(chalk.blueBright(chalk.underline("https://github.com/Lightning-Flow-Scanner"))));
 
     const status = this.getStatus();
