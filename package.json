@@ -30,7 +30,7 @@
     "chai": "^5",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "globby": "^14.0.1",
+    "globby": "^14.0.2",
     "mocha": "^10.5.2",
     "nyc": "^17",
     "oclif": "^4.13.12",
