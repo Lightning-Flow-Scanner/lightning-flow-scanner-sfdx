@@ -1,7 +1,7 @@
 import { SfCommand, Flags } from "@salesforce/sf-plugins-core";
 import { Messages, SfError } from "@salesforce/core";
 import * as core from "lightning-flow-scanner-core/out/index.js";
-import * as fs from "fs-extra";
+import * as fse from "fs-extra";
 import { FindFlows } from "../../libs/FindFlows.js";
 import { Violation } from "../../models/Violation.js";
 import chalk from "chalk";
@@ -167,7 +167,7 @@ export default class Scan extends SfCommand<ScanResult> {
     } else if (sourcepath) {
       flowFiles = sourcepath
         .split(",")
-        .filter((f) => fs.existsSync(f));
+        .filter((f) => fse.exists(f));
     } else {
       flowFiles = FindFlows(".");
     }
