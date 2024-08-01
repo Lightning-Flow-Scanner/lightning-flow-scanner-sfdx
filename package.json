@@ -4,7 +4,7 @@
   "bugs": "https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx/issues",
   "dependencies": {
     "@oclif/core": "^4.0.12",
-    "@salesforce/core": "^8.1.2",
+    "@salesforce/core": "^8.2.8",
     "@salesforce/sf-plugins-core": "^11.1.7",
     "chalk": "^5.3.0",
     "cosmiconfig": "^9.0.0",
