@@ -12,7 +12,6 @@
       "port": 9229,
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "${workspaceFolder}",
-      "stopOnEntry": false,
       "skipFiles": ["<node_internals>/**"]
     },
     {
