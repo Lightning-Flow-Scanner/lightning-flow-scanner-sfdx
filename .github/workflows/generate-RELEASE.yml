@@ -1,0 +1,54 @@
+---
+#
+# Documentation:
+# https://help.github.com/en/articles/workflow-syntax-for-github-actions
+#
+
+#######################################
+# Start the job on all push to master #
+#######################################
+name: Generate a Release
+on:
+  workflow_dispatch:
+
+###############
+# Set the Job #
+###############
+jobs:
+  # Deploy to NPM
+  deploy_to_npm:
+    name: Generate a Release Version and Commit to Repo
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PATX }}
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 20.x
+          registry-url: https://registry.npmjs.org
+          scope: rubenhalman
+      - name: Generate New Release Number
+        id: generate-release-number
+        run: |
+          npm install -g semver
+          export OLD_VER=$(semver --coerce $(cat package.json | jq .version))
+          export NEW_VER=$(semver --coerce $(cat package.json | jq .version) --increment minor)
+          echo "NEW_VER=$(echo $NEW_VER)" >> "$GITHUB_OUTPUT"
+      - name: Install dependencies
+        run: |
+          export NEW_VER=${{ steps.generate-release-number.outputs.NEW_VER }}
+          jq --arg NEW_VER "$NEW_VER" '.version = $NEW_VER' package.json > tmp.json
+          rm package.json
+          mv tmp.json package.json
+          npm install
+          git config --global user.name ${{ vars.USER_NAME }}
+          git config --global user.email ${{ vars.USER_EMAIL }}
+          git add .
+          git commit -m "chore(release): ${{ steps.generate-release-number.outputs.NEW_VER }} [skip ci]" --no-verify
+          git push origin master
+          git tag v${{ steps.generate-release-number.outputs.NEW_VER }}
+          git push --tags
