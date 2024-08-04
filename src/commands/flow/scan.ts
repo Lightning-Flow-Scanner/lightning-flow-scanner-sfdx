@@ -1,6 +1,6 @@
 import { SfCommand, Flags } from "@salesforce/sf-plugins-core";
 import { Messages, SfError } from "@salesforce/core";
-import * as core from "lightning-flow-scanner-core/out/index.js";
+import * as core from "lightning-flow-scanner-core";
 import * as fse from "fs-extra";
 import { FindFlows } from "../../libs/FindFlows.js";
 import { Violation } from "../../models/Violation.js";
@@ -20,7 +20,7 @@ export type ScanResult = {
     message: string;
   };
   results: Violation[];
-}
+};
 
 export default class Scan extends SfCommand<ScanResult> {
   public static description = messages.getMessage("commandDescription");
@@ -29,8 +29,8 @@ export default class Scan extends SfCommand<ScanResult> {
     "sfdx flow:scan --failon warning",
     "sfdx flow:scan -c path/to/config.json",
     "sfdx flow:scan -c path/to/config.json --failon warning",
-    "sfdx flow:scan -d path/to/flows/directory"
-  ]
+    "sfdx flow:scan -d path/to/flows/directory",
+  ];
 
   protected static requiresUsername = false;
   protected static supportsDevhubUsername = false;
@@ -55,9 +55,10 @@ export default class Scan extends SfCommand<ScanResult> {
     }),
     failon: Flags.option({
       char: "f",
-      description: "Threshold failure level (error, warning, note, or never) defining when the command return code will be 1",
+      description:
+        "Threshold failure level (error, warning, note, or never) defining when the command return code will be 1",
       options: ["error", "warning", "note", "never"] as const,
-      default: "error"
+      default: "error",
     })(),
     retrieve: Flags.boolean({
       char: "r",
@@ -70,17 +71,18 @@ export default class Scan extends SfCommand<ScanResult> {
       required: false,
     }),
     targetusername: Flags.string({
-      char: 'u',
-      description: 'Retrieve the latest metadata from the target before the scan.',
+      char: "u",
+      description:
+        "Retrieve the latest metadata from the target before the scan.",
       required: false,
-      charAliases: ['o']
-    })
+      charAliases: ["o"],
+    }),
   };
 
   public async run(): Promise<ScanResult> {
     const { flags } = await this.parse(Scan);
     this.failOn = flags.failon || "error";
-    this.spinner.start('Loading Lightning Flow Scanner');
+    this.spinner.start("Loading Lightning Flow Scanner");
     await this.loadScannerOptions(flags.config);
     if (flags.targetusername) {
       await this.retrieveFlowsFromOrg(flags.targetusername);
@@ -91,9 +93,12 @@ export default class Scan extends SfCommand<ScanResult> {
     // core.Flow
     const parsedFlows = await core.parse(flowFiles);
 
-    const scanResults: core.ScanResult[] = (this.userConfig && Object.keys(this.userConfig).length > 0) ? core.scan(parsedFlows, this.userConfig) : core.scan(parsedFlows);
+    const scanResults: core.ScanResult[] =
+      this.userConfig && Object.keys(this.userConfig).length > 0
+        ? core.scan(parsedFlows, this.userConfig)
+        : core.scan(parsedFlows);
     this.spinner.stop(`Scan complete`);
-    this.log('');
+    this.log("");
 
     // Build results
     const results = this.buildResults(scanResults);
@@ -106,38 +111,59 @@ export default class Scan extends SfCommand<ScanResult> {
       }
       for (const resultKey in resultsByFlow) {
         const matchingScanResult = scanResults.find((res) => {
-          return res.flow.label === resultKey
+          return res.flow.label === resultKey;
         });
-        this.styledHeader("Flow: " + chalk.yellow(resultKey) + " " + chalk.red("(" + resultsByFlow[resultKey].length + " results)"));
-        this.log(chalk.italic('Type: ' + matchingScanResult.flow.type));
-        this.log('');
+        this.styledHeader(
+          "Flow: " +
+            chalk.yellow(resultKey) +
+            " " +
+            chalk.red("(" + resultsByFlow[resultKey].length + " results)"),
+        );
+        this.log(chalk.italic("Type: " + matchingScanResult.flow.type));
+        this.log("");
         // todo flow uri
         //this.table(resultsByFlow[resultKey], ['rule', 'type', 'name', 'severity']);
         this.table(resultsByFlow[resultKey], {
-          rule:     { header: 'RULE' },
-          type:     { header: 'TYPE' },
-          name:     { header: 'NAME' },
-          severity: { header: 'SEVERITY' }
-        })
-        this.log('');
+          rule: { header: "RULE" },
+          type: { header: "TYPE" },
+          name: { header: "NAME" },
+          severity: { header: "SEVERITY" },
+        });
+        this.log("");
       }
     }
-    this.styledHeader("Total: " +
-      chalk.red(results.length +
-        " Results") + " in " +
-      chalk.yellow(scanResults.length +
-        " Flows") + ".");
+    this.styledHeader(
+      "Total: " +
+        chalk.red(results.length + " Results") +
+        " in " +
+        chalk.yellow(scanResults.length + " Flows") +
+        ".",
+    );
 
     // Display number of errors by severity
-    for (const severity of ["error","warning","note"]) {
+    for (const severity of ["error", "warning", "note"]) {
       const severityCounter = this.errorCounters[severity] || 0;
       this.log(`- ${severity}: ${severityCounter}`);
     }
 
     // TODO CALL TO ACTION
-    this.log('');
-    this.log(chalk.bold(chalk.italic(chalk.yellowBright('Be a part of our mission to champion Flow Best Practices by starring us on GitHub:'))));
-    this.log(chalk.italic(chalk.blueBright(chalk.underline("https://github.com/Lightning-Flow-Scanner"))));
+    this.log("");
+    this.log(
+      chalk.bold(
+        chalk.italic(
+          chalk.yellowBright(
+            "Be a part of our mission to champion Flow Best Practices by starring us on GitHub:",
+          ),
+        ),
+      ),
+    );
+    this.log(
+      chalk.italic(
+        chalk.blueBright(
+          chalk.underline("https://github.com/Lightning-Flow-Scanner"),
+        ),
+      ),
+    );
 
     const status = this.getStatus();
     // Set status code = 1 if there are errors, that will make cli exit with code 1 when not in --json mode
@@ -145,11 +171,15 @@ export default class Scan extends SfCommand<ScanResult> {
       process.exitCode = status;
     }
     const summary = {
-      flowsNumber: scanResults.length, 'results': results.length, 'message': "A total of " +
+      flowsNumber: scanResults.length,
+      results: results.length,
+      message:
+        "A total of " +
         results.length +
         " results have been found in " +
         scanResults.length +
-        " flows.", errorLevelsDetails: {}
+        " flows.",
+      errorLevelsDetails: {},
     };
     return { summary, status: status, results };
   }
@@ -160,14 +190,12 @@ export default class Scan extends SfCommand<ScanResult> {
     if (directory && sourcepath) {
       this.spinner.stop("Error");
       throw new SfError(
-        "You can only specify one of either directory or sourcepath, not both."
+        "You can only specify one of either directory or sourcepath, not both.",
       );
     } else if (directory) {
       flowFiles = FindFlows(directory);
     } else if (sourcepath) {
-      flowFiles = sourcepath
-        .split(",")
-        .filter((f) => fse.exists(f));
+      flowFiles = sourcepath.split(",").filter((f) => fse.exists(f));
     } else {
       flowFiles = FindFlows(".");
     }
@@ -176,22 +204,22 @@ export default class Scan extends SfCommand<ScanResult> {
 
   private getStatus() {
     let status = 0;
-    if (this.failOn === 'never') {
+    if (this.failOn === "never") {
       status = 0;
-    }
-    else {
+    } else {
       if (this.failOn === "error" && this.errorCounters["error"] > 0) {
         status = 1;
-      }
-      else if (this.failOn === 'warning' && (
-        this.errorCounters["error"] > 0
-        || this.errorCounters["warning"] > 0)) {
+      } else if (
+        this.failOn === "warning" &&
+        (this.errorCounters["error"] > 0 || this.errorCounters["warning"] > 0)
+      ) {
         status = 1;
-      }
-      else if (this.failOn === 'note' &&
-        (this.errorCounters["error"] > 0
-          || this.errorCounters["warning"] > 0
-          || this.errorCounters["note"] > 0)) {
+      } else if (
+        this.failOn === "note" &&
+        (this.errorCounters["error"] > 0 ||
+          this.errorCounters["warning"] > 0 ||
+          this.errorCounters["note"] > 0)
+      ) {
         status = 1;
       }
     }
@@ -206,21 +234,23 @@ export default class Scan extends SfCommand<ScanResult> {
       for (const ruleResult of scanResult.ruleResults as core.RuleResult[]) {
         const ruleDescription = ruleResult.ruleDefinition.description;
         const rule = ruleResult.ruleDefinition.label;
-        if (ruleResult.occurs && ruleResult.details && ruleResult.details.length > 0) {
-          const severity = ruleResult.severity || "error"
-          for (const result of (ruleResult.details as core.ResultDetails[])) {
-            const detailObj = Object.assign(
-              result,
-              {
-                ruleDescription,
-                rule,
-                flowName,
-                flowType,
-                severity
-              }
-            );
+        if (
+          ruleResult.occurs &&
+          ruleResult.details &&
+          ruleResult.details.length > 0
+        ) {
+          const severity = ruleResult.severity || "error";
+          for (const result of ruleResult.details as core.ResultDetails[]) {
+            const detailObj = Object.assign(result, {
+              ruleDescription,
+              rule,
+              flowName,
+              flowType,
+              severity,
+            });
             errors.push(detailObj);
-            this.errorCounters[severity] = (this.errorCounters[severity] || 0) + 1;
+            this.errorCounters[severity] =
+              (this.errorCounters[severity] || 0) + 1;
           }
         }
       }
@@ -252,7 +282,6 @@ export default class Scan extends SfCommand<ScanResult> {
       const explorerSearchRes = await explorer.search();
       this.userConfig = explorerSearchRes?.config ?? undefined;
     }
-
   }
 
   private async retrieveFlowsFromOrg(targetusername: string) {
@@ -273,7 +302,7 @@ export default class Scan extends SfCommand<ScanResult> {
         messages.getMessage("errorRetrievingMetadata"),
         "",
         [],
-        1
+        1,
       );
     } else {
       this.spinner.stop(chalk.greenBright("Retrieve Completed ✔."));
