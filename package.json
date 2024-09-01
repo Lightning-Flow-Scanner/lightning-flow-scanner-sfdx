@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@oclif/plugin-help": "^6.2.8",
-    "@oclif/test": "^4.0.8",
+    "@oclif/test": "^4.0.9",
     "@salesforce/dev-config": "^4.3.1",
     "@salesforce/ts-sinon": "^1.4.24",
     "@sinonjs/fake-timers": "^12.0.0",
