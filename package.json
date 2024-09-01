@@ -15,7 +15,7 @@
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
-    "@oclif/plugin-help": "^6.2.8",
+    "@oclif/plugin-help": "^6.2.10",
     "@oclif/test": "^4.0.8",
     "@salesforce/dev-config": "^4.3.1",
     "@salesforce/ts-sinon": "^1.4.24",
