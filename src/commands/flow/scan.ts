@@ -25,11 +25,11 @@ export type ScanResult = {
 export default class Scan extends SfCommand<ScanResult> {
   public static description = messages.getMessage("commandDescription");
   public static examples: string[] = [
-    "sfdx flow:scan",
-    "sfdx flow:scan --failon warning",
-    "sfdx flow:scan -c path/to/config.json",
-    "sfdx flow:scan -c path/to/config.json --failon warning",
-    "sfdx flow:scan -d path/to/flows/directory",
+    "sf flow scan",
+    "sf flow scan --failon warning",
+    "sf flow scan -c path/to/config.json",
+    "sf flow scan -c path/to/config.json --failon warning",
+    "sf flow scan -d path/to/flows/directory",
   ];
 
   protected static requiresUsername = false;
@@ -97,6 +97,8 @@ export default class Scan extends SfCommand<ScanResult> {
       this.userConfig && Object.keys(this.userConfig).length > 0
         ? core.scan(parsedFlows, this.userConfig)
         : core.scan(parsedFlows);
+
+    this.debug("scan results", ...scanResults);
     this.spinner.stop(`Scan complete`);
     this.log("");
 
@@ -123,11 +125,9 @@ export default class Scan extends SfCommand<ScanResult> {
         this.log("");
         // todo flow uri
         //this.table(resultsByFlow[resultKey], ['rule', 'type', 'name', 'severity']);
-        this.table(resultsByFlow[resultKey], {
-          rule: { header: "RULE" },
-          type: { header: "TYPE" },
-          name: { header: "NAME" },
-          severity: { header: "SEVERITY" },
+        this.table({
+          data: resultsByFlow[resultKey],
+          columns: ["rule", "type", "name", "severity"],
         });
         this.log("");
       }
@@ -287,7 +287,7 @@ export default class Scan extends SfCommand<ScanResult> {
   private async retrieveFlowsFromOrg(targetusername: string) {
     let errored = false;
     this.spinner.start(chalk.yellowBright("Retrieving Metadata..."));
-    const retrieveCommand = `sfdx force:source:retrieve -m Flow -u "${targetusername}"`;
+    const retrieveCommand = `sf project retrieve start -m Flow -o "${targetusername}"`;
     try {
       await exec(retrieveCommand, {
         maxBuffer: 1000000 * 1024,
