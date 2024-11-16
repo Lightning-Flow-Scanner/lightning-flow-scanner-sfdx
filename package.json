@@ -10,12 +10,12 @@
     "cosmiconfig": "^9.0.0",
     "fs-extra": "^11.2.0",
     "glob": "^11.0.0",
-    "lightning-flow-scanner-core": "4.7.0",
+    "lightning-flow-scanner-core": "4.8.0",
     "tslib": "^2",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
-    "@oclif/plugin-help": "^6.2.16",
+    "@oclif/plugin-help": "^6.2.17",
     "@oclif/test": "^4.1.0",
     "@salesforce/dev-config": "^4.3.1",
     "@salesforce/ts-sinon": "^1.4.29",
