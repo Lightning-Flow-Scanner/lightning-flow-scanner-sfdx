@@ -25,11 +25,11 @@ export type ScanResult = {
 export default class Scan extends SfCommand<ScanResult> {
   public static description = messages.getMessage("commandDescription");
   public static examples: string[] = [
-    "sfdx flow:scan",
-    "sfdx flow:scan --failon warning",
-    "sfdx flow:scan -c path/to/config.json",
-    "sfdx flow:scan -c path/to/config.json --failon warning",
-    "sfdx flow:scan -d path/to/flows/directory",
+    "sf flow scan",
+    "sf flow scan --failon warning",
+    "sf flow scan -c path/to/config.json",
+    "sf flow scan -c path/to/config.json --failon warning",
+    "sf flow scan -d path/to/flows/directory",
   ];
 
   protected static requiresUsername = false;
@@ -97,6 +97,8 @@ export default class Scan extends SfCommand<ScanResult> {
       this.userConfig && Object.keys(this.userConfig).length > 0
         ? core.scan(parsedFlows, this.userConfig)
         : core.scan(parsedFlows);
+
+    this.debug("scan results", ...scanResults);
     this.spinner.stop(`Scan complete`);
     this.log("");
 
