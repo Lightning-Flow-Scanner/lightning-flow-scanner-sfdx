@@ -123,11 +123,9 @@ export default class Scan extends SfCommand<ScanResult> {
         this.log("");
         // todo flow uri
         //this.table(resultsByFlow[resultKey], ['rule', 'type', 'name', 'severity']);
-        this.table(resultsByFlow[resultKey], {
-          rule: { header: "RULE" },
-          type: { header: "TYPE" },
-          name: { header: "NAME" },
-          severity: { header: "SEVERITY" },
+        this.table({
+          data: resultsByFlow[resultKey],
+          columns: ["rule", "type", "name", "severity"],
         });
         this.log("");
       }
@@ -287,7 +285,7 @@ export default class Scan extends SfCommand<ScanResult> {
   private async retrieveFlowsFromOrg(targetusername: string) {
     let errored = false;
     this.spinner.start(chalk.yellowBright("Retrieving Metadata..."));
-    const retrieveCommand = `sfdx force:source:retrieve -m Flow -u "${targetusername}"`;
+    const retrieveCommand = `sf project retrieve start -m Flow -o "${targetusername}"`;
     try {
       await exec(retrieveCommand, {
         maxBuffer: 1000000 * 1024,
