@@ -5,6 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch via NPM",
+      "request": "launch",
+      "runtimeArgs": [
+        "run",
+        "test:unit"
+      ],
+      "runtimeExecutable": "npm",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    },
+    {
       "type": "node",
       "request": "attach",
       "name": "Attach to Remote",
@@ -28,7 +41,7 @@
       "sourceMaps": true,
       "smartStep": true,
       "internalConsoleOptions": "openOnSessionStart",
-      "preLaunchTask": "Compile"
+      "preLaunchTask": "npm: pretest:unit"
     },
     {
       "type": "node",
@@ -43,7 +56,7 @@
       "sourceMaps": true,
       "smartStep": true,
       "internalConsoleOptions": "openOnSessionStart",
-      "preLaunchTask": "Compile"
+      "preLaunchTask": "npm: pretest:unit"
     }
   ]
 }
