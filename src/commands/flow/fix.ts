@@ -64,6 +64,6 @@ export default class FlowFix extends SfCommand<ScanResult> {
       summary: {
         message: `Fixed ${outMessage}`,
       },
-    } as {} as ScanResult;
+    } as ScanResult;
   }
 }
