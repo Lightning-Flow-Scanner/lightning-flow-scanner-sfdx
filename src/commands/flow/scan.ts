@@ -2,25 +2,16 @@ import { SfCommand, Flags } from "@salesforce/sf-plugins-core";
 import { Messages, SfError } from "@salesforce/core";
 import * as core from "lightning-flow-scanner-core";
 import * as fse from "fs-extra";
-import { FindFlows } from "../../libs/FindFlows.js";
-import { Violation } from "../../models/Violation.js";
 import chalk from "chalk";
 import { exec } from "child_process";
-import { cosmiconfig } from "cosmiconfig";
+
+import { loadScannerOptions } from "../../libs/ScannerConfig.js";
+import { FindFlows } from "../../libs/FindFlows.js";
+import { ScanResult } from "../../models/ScanResult.js";
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
 const messages = Messages.loadMessages("lightning-flow-scanner", "command");
-
-export type ScanResult = {
-  status: number;
-  summary: {
-    flowsNumber: number;
-    results: number;
-    message: string;
-  };
-  results: Violation[];
-};
 
 export default class Scan extends SfCommand<ScanResult> {
   public static description = messages.getMessage("commandDescription");
@@ -83,7 +74,7 @@ export default class Scan extends SfCommand<ScanResult> {
     const { flags } = await this.parse(Scan);
     this.failOn = flags.failon || "error";
     this.spinner.start("Loading Lightning Flow Scanner");
-    await this.loadScannerOptions(flags.config);
+    this.userConfig = await loadScannerOptions(flags.config);
     if (flags.targetusername) {
       await this.retrieveFlowsFromOrg(flags.targetusername);
     }
@@ -256,32 +247,6 @@ export default class Scan extends SfCommand<ScanResult> {
       }
     }
     return errors;
-  }
-
-  private async loadScannerOptions(forcedConfigFile: string): Promise<void> {
-    // Read config from file
-    const moduleName = "flow-scanner";
-    const searchPlaces = [
-      "package.json",
-      `.${moduleName}.yaml`,
-      `.${moduleName}.yml`,
-      `.${moduleName}.json`,
-      `config/.${moduleName}.yaml`,
-      `config/.${moduleName}.yml`,
-      `.flow-scanner`,
-    ];
-    const explorer = cosmiconfig(moduleName, {
-      searchPlaces,
-    });
-    if (forcedConfigFile) {
-      // Forced config file name
-      const explorerLoadRes = await explorer.load(forcedConfigFile);
-      this.userConfig = explorerLoadRes?.config ?? undefined;
-    } else {
-      // Let cosmiconfig look for a config file
-      const explorerSearchRes = await explorer.search();
-      this.userConfig = explorerSearchRes?.config ?? undefined;
-    }
   }
 
   private async retrieveFlowsFromOrg(targetusername: string) {
