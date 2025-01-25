@@ -6,7 +6,6 @@ import {
 } from "lightning-flow-scanner-core";
 import { IRulesConfig } from "lightning-flow-scanner-core/main/interfaces/IRulesConfig.js";
 import { writeFileSync } from "node:fs";
-import { create } from "xmlbuilder2";
 
 import { FindFlows } from "./FindFlows.js";
 
@@ -45,25 +44,8 @@ export default class CoreFixService {
 
     // fix
     const fixFlow: ScanResults[] = fix(scanResults);
-
-    // temp fix for namespaces
-
-    const flowXmlNamespace = "http://soap.sforce.com/2006/04/metadata";
-
     fixFlow.forEach((fixedObject) => {
-      const doc = create(
-        {
-          encoding: "UTF-8",
-          keepNullAttributes: true,
-          keepNullNodes: true,
-        },
-        { Flow: fixedObject.flow.xmldata },
-      )
-        .root()
-        .att("xmlns", flowXmlNamespace);
-
-      const fileToWrite = doc.end({ prettyPrint: true });
-      writeFileSync(fixedObject.flow.fsPath, fileToWrite);
+      writeFileSync(fixedObject.flow.fsPath, fixedObject.flow.toXMLString());
     });
 
     return fixFlow.map((fixedOut) => fixedOut.flow.fsPath);
