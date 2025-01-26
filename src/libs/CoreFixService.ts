@@ -4,7 +4,7 @@ import {
   scan,
   ScanResult as ScanResults,
 } from "lightning-flow-scanner-core";
-import { IRulesConfig } from "lightning-flow-scanner-core/main/interfaces/IRulesConfig.js";
+import IRulesConfig from "lightning-flow-scanner-core/main/interfaces/IRulesConfig.js";
 import { writeFileSync } from "node:fs";
 
 import { FindFlows } from "./FindFlows.js";
