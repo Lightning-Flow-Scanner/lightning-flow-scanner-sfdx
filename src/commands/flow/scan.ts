@@ -1,13 +1,20 @@
 import { SfCommand, Flags } from "@salesforce/sf-plugins-core";
 import { Messages, SfError } from "@salesforce/core";
-import * as core from "lightning-flow-scanner-core";
-import * as fse from "fs-extra";
 import chalk from "chalk";
 import { exec } from "child_process";
 
 import { loadScannerOptions } from "../../libs/ScannerConfig.js";
 import { FindFlows } from "../../libs/FindFlows.js";
 import { ScanResult } from "../../models/ScanResult.js";
+
+import {
+  parse,
+  ParsedFlow,
+  scan,
+  RuleResult,
+  ResultDetails,
+  ScanResult as scanResults,
+} from "lightning-flow-scanner-core";
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
@@ -21,6 +28,7 @@ export default class Scan extends SfCommand<ScanResult> {
     "sf flow scan -c path/to/config.json",
     "sf flow scan -c path/to/config.json --failon warning",
     "sf flow scan -d path/to/flows/directory",
+    "sf flow scan -p path/to/single/file.flow-meta.xml",
   ];
 
   protected static requiresUsername = false;
@@ -56,10 +64,13 @@ export default class Scan extends SfCommand<ScanResult> {
       description: "Force retrieve Flows from org at the start of the command",
       default: false,
     }),
-    sourcepath: Flags.directory({
+    sourcepath: Flags.file({
       char: "p",
       description: "Comma-separated list of source flow paths to scan",
       required: false,
+      aliases: ["files"],
+      multiple: true,
+      exists: true,
     }),
     targetusername: Flags.string({
       char: "u",
@@ -82,14 +93,15 @@ export default class Scan extends SfCommand<ScanResult> {
     this.spinner.start(`Identified ${flowFiles.length} flows to scan`);
     // to
     // core.Flow
-    const parsedFlows = await core.parse(flowFiles);
+    const parsedFlows: ParsedFlow[] = await parse(flowFiles);
+    this.debug(`parsed flows ${parsedFlows.length}`, ...parsedFlows);
 
-    const scanResults: core.ScanResult[] =
+    const scanResults: scanResults[] =
       this.userConfig && Object.keys(this.userConfig).length > 0
-        ? core.scan(parsedFlows, this.userConfig)
-        : core.scan(parsedFlows);
+        ? scan(parsedFlows, this.userConfig)
+        : scan(parsedFlows);
 
-    this.debug("scan results", ...scanResults);
+    this.debug(`scan results: ${scanResults.length}`, ...scanResults);
     this.spinner.stop(`Scan complete`);
     this.log("");
 
@@ -175,7 +187,7 @@ export default class Scan extends SfCommand<ScanResult> {
     return { summary, status: status, results };
   }
 
-  private findFlows(directory: string, sourcepath: string) {
+  private findFlows(directory: string, sourcepath: string[]) {
     // List flows that will be scanned
     let flowFiles;
     if (directory && sourcepath) {
@@ -186,7 +198,7 @@ export default class Scan extends SfCommand<ScanResult> {
     } else if (directory) {
       flowFiles = FindFlows(directory);
     } else if (sourcepath) {
-      flowFiles = sourcepath.split(",").filter((f) => fse.exists(f));
+      flowFiles = sourcepath;
     } else {
       flowFiles = FindFlows(".");
     }
@@ -222,7 +234,7 @@ export default class Scan extends SfCommand<ScanResult> {
     for (const scanResult of scanResults) {
       const flowName = scanResult.flow.label;
       const flowType = scanResult.flow.type[0];
-      for (const ruleResult of scanResult.ruleResults as core.RuleResult[]) {
+      for (const ruleResult of scanResult.ruleResults as RuleResult[]) {
         const ruleDescription = ruleResult.ruleDefinition.description;
         const rule = ruleResult.ruleDefinition.label;
         if (
@@ -231,7 +243,7 @@ export default class Scan extends SfCommand<ScanResult> {
           ruleResult.details.length > 0
         ) {
           const severity = ruleResult.severity || "error";
-          for (const result of ruleResult.details as core.ResultDetails[]) {
+          for (const result of ruleResult.details as ResultDetails[]) {
             const detailObj = Object.assign(result, {
               ruleDescription,
               rule,

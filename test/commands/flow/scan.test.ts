@@ -18,7 +18,12 @@ describe("flow:scan", () => {
     let output: ScanResult;
     try {
       const output = await new Scan(
-        ["--directory", "test/", "--sourcepath", "test/"],
+        [
+          "--directory",
+          "test/",
+          "--sourcepath",
+          "test/commands/flow/scan.test.ts",
+        ],
         config,
       ).run();
       console.log(output);
