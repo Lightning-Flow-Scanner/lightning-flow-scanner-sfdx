@@ -28,9 +28,9 @@ export default class FlowFix extends SfCommand<ScanResult> {
       char: "d",
       multiple: true,
       description: commandMessages.getMessage("flagsDirsDescription"),
-      exclusive: ["file"],
+      exclusive: ["files"],
     }),
-    file: Flags.file({
+    files: Flags.file({
       exists: true,
       multiple: true,
       description: commandMessages.getMessage("flagsFilesDescription"),
@@ -41,8 +41,8 @@ export default class FlowFix extends SfCommand<ScanResult> {
 
   public async run(): Promise<ScanResult> {
     const { flags } = await this.parse(FlowFix);
-    const { dir, file, rules } = flags;
-    if (!dir && !file) {
+    const { dir, files, rules } = flags;
+    if (!dir && !files) {
       throw new SfError(
         commandMessages.getMessage("errorMutuallyExclusiveRequired"),
       );
@@ -52,11 +52,11 @@ export default class FlowFix extends SfCommand<ScanResult> {
       stdout: true,
     });
 
-    const fixService = new CoreFixService(dir, file, rules);
+    const fixService = new CoreFixService(dir, files, rules);
 
     const outMessage = (await fixService.fix()).join(", ");
 
-    console.log(`test`, outMessage);
+    this.debug(`test`, outMessage);
 
     this.spinner.stop(`Fix Complete.. Fixed ${outMessage}`);
 

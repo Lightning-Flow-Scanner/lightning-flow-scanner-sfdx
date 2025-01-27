@@ -1,13 +1,12 @@
-import {
-  fix,
-  parse,
-  scan,
-  ScanResult as ScanResults,
-} from "lightning-flow-scanner-core";
 import { IRulesConfig } from "lightning-flow-scanner-core/main/internals/internals.js";
 import { writeFileSync } from "node:fs";
 
 import { FindFlows } from "./FindFlows.js";
+
+import pkg from "lightning-flow-scanner-core";
+const { fix: fixFlows, parse: parseFlows, scan: scanFlows } = pkg;
+
+import type { ScanResult as FlowScanResults } from "lightning-flow-scanner-core";
 
 export default class CoreFixService {
   public constructor(
@@ -24,7 +23,7 @@ export default class CoreFixService {
     } else {
       flowFiles = this.findFlowsByPath(this.file);
     }
-    const parsedFlows = await parse(flowFiles);
+    const parsedFlows = await parseFlows(flowFiles);
 
     // make on the fly rule
     const flatRules = this.rules
@@ -40,10 +39,10 @@ export default class CoreFixService {
       ) as IRulesConfig;
 
     // scan
-    const scanResults: ScanResults[] = scan(parsedFlows, flatRules);
+    const scanResults: FlowScanResults[] = scanFlows(parsedFlows, flatRules);
 
     // fix
-    const fixFlow: ScanResults[] = fix(scanResults);
+    const fixFlow: FlowScanResults[] = fixFlows(scanResults);
     fixFlow.forEach((fixedObject) => {
       writeFileSync(fixedObject.flow.fsPath, fixedObject.flow.toXMLString());
     });
