@@ -7,15 +7,13 @@ import { loadScannerOptions } from "../../libs/ScannerConfig.js";
 import { FindFlows } from "../../libs/FindFlows.js";
 import { ScanResult } from "../../models/ScanResult.js";
 
-import {
-  parse,
-  scan,
+import pkg, {
+  ScanResult as ScanResults,
   RuleResult,
   ResultDetails,
-  ScanResult as scanResults,
 } from "lightning-flow-scanner-core";
-
-import { ParsedFlow } from "lightning-flow-scanner-core/main/models/ParsedFlow.js";
+const { parse: parseFlows, scan: scanFlows } = pkg;
+import type { ParsedFlow } from "lightning-flow-scanner-core/main/models/ParsedFlow.js";
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
@@ -94,13 +92,13 @@ export default class Scan extends SfCommand<ScanResult> {
     this.spinner.start(`Identified ${flowFiles.length} flows to scan`);
     // to
     // core.Flow
-    const parsedFlows: ParsedFlow[] = await parse(flowFiles);
+    const parsedFlows: ParsedFlow[] = await parseFlows(flowFiles);
     this.debug(`parsed flows ${parsedFlows.length}`, ...parsedFlows);
 
-    const scanResults: scanResults[] =
+    const scanResults: ScanResults[] =
       this.userConfig && Object.keys(this.userConfig).length > 0
-        ? scan(parsedFlows, this.userConfig)
-        : scan(parsedFlows);
+        ? scanFlows(parsedFlows, this.userConfig)
+        : scanFlows(parsedFlows);
 
     this.debug(`scan results: ${scanResults.length}`, ...scanResults);
     this.spinner.stop(`Scan complete`);
