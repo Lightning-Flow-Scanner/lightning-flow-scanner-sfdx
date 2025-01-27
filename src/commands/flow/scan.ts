@@ -9,12 +9,13 @@ import { ScanResult } from "../../models/ScanResult.js";
 
 import {
   parse,
-  ParsedFlow,
   scan,
   RuleResult,
   ResultDetails,
   ScanResult as scanResults,
 } from "lightning-flow-scanner-core";
+
+import { ParsedFlow } from "lightning-flow-scanner-core/main/models/ParsedFlow.js";
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 

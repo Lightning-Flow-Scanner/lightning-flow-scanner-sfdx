@@ -9,7 +9,7 @@
     "chalk": "^5.4.1",
     "cosmiconfig": "^9.0.0",
     "glob": "^11.0.1",
-    "lightning-flow-scanner-core": "^4.13.0"
+    "lightning-flow-scanner-core": "^4.14.0"
   },
   "devDependencies": {
     "@oclif/plugin-help": "^6.2.23",
@@ -31,7 +31,7 @@
     "globby": "^14.0.2",
     "mocha": "^11.1.0",
     "nyc": "^17",
-    "oclif": "^4.17.17",
+    "oclif": "^4.17.19",
     "prettier": "^3.4.2",
     "sinon": "^19.0.2",
     "ts-node": "^10.9.2",
