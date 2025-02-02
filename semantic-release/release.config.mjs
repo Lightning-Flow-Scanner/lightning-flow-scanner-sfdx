@@ -26,6 +26,7 @@ export default {
         ],
       },
     ],
+    ["@semantic-release/npm", { tarballDir: "dist" }],
     [
       "@semantic-release/git",
       {

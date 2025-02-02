@@ -49,7 +49,7 @@ jobs:
           npm ci
       - name: Semantic Release Dependency
         run: |
-          npm install -g semantic-release
+          npm install -g @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/npm conventional-changelog-conventionalcommits semantic-release
       - name: Publish Beta
         env:
           GITHUB_TOKEN: ${{ secrets.TOKENX }}
