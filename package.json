@@ -1,6 +1,6 @@
 {
   "name": "lightning-flow-scanner",
-  "version": "2.44.1",
+  "version": "2.45.0",
   "bugs": "https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx/issues",
   "dependencies": {
     "@oclif/core": "^4.2.5",
