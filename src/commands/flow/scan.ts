@@ -8,13 +8,14 @@ import { loadScannerOptions } from "../../libs/ScannerConfig.js";
 import { FindFlows } from "../../libs/FindFlows.js";
 import { ScanResult } from "../../models/ScanResult.js";
 
-import pkg, {
+import {
   ScanResult as ScanResults,
   RuleResult,
   ResultDetails,
+  parse as parseFlows,
+  scan as scanFlows,
+  ParsedFlow,
 } from "lightning-flow-scanner-core";
-const { parse: parseFlows, scan: scanFlows } = pkg;
-import type { ParsedFlow } from "lightning-flow-scanner-core/main/models/ParsedFlow.js";
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
@@ -28,7 +29,7 @@ export default class Scan extends SfCommand<ScanResult> {
     "sf flow scan -c path/to/config.json",
     "sf flow scan -c path/to/config.json --failon warning",
     "sf flow scan -d path/to/flows/directory",
-    "sf flow scan -p path/to/single/file.flow-meta.xml,path/to/another/file.flow-meta.xml",
+    "[DEPRECATION WARNING USE --files] sf flow scan -p path/to/single/file.flow-meta.xml,path/to/another/file.flow-meta.xml",
     "sf flow scan --files path/to/single/file.flow-meta.xml path/to/another/file.flow-meta.xml",
   ];
 
@@ -37,7 +38,7 @@ export default class Scan extends SfCommand<ScanResult> {
   public static requiresProject = false;
   protected static supportsUsername = true;
 
-  protected userConfig;
+  protected userConfig: object;
   protected failOn = "error";
   protected errorCounters: Map<string, number> = new Map<string, number>();
 
