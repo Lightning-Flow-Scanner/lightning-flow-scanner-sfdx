@@ -49,12 +49,10 @@ jobs:
           npm ci
       - name: Semantic Release Dependency
         run: |
-          npm install -g semantic-release https://github.com/oclif/semantic-release/archive/refs/tags/v3.1.5.tar.gz
-          cd semantic-release
-          npm install
+          npm install -g semantic-release
       - name: Publish Beta
         env:
           GITHUB_TOKEN: ${{ secrets.TOKENX }}
           NPM_TOKEN: ${{ secrets.NPM_TOKENX }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKENX }}
-        run: semantic-release -e @oclif/semantic-release ./semantic-release/release.config.mjs
+        run: semantic-release -e ./semantic-release/release.config.mjs
