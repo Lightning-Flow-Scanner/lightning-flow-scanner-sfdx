@@ -44,15 +44,13 @@ jobs:
           node-version: 22.x
           registry-url: https://registry.npmjs.org
           scope: rubenhalman
-      - name: Install Dependencies
-        run: |
-          npm ci
       - name: Semantic Release Dependency
-        run: |
-          npm install -g @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/npm conventional-changelog-conventionalcommits semantic-release
+        run: npm install -g @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/npm conventional-changelog-conventionalcommits semantic-release
+      - name: Install Dependencies
+        run: npm ci
       - name: Publish Beta
         env:
           GITHUB_TOKEN: ${{ secrets.TOKENX }}
           NPM_TOKEN: ${{ secrets.NPM_TOKENX }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKENX }}
-        run: semantic-release -e ./release.config.mjs
+        run: semantic-release
