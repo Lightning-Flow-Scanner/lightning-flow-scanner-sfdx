@@ -71,6 +71,11 @@ export default class Scan extends SfCommand<ScanResult> {
       description: "Comma-separated list of source flow paths to scan",
       required: false,
       multiple: false,
+      deprecated: {
+        to: "files",
+        message:
+          "Please use --files instead of --path, as --path will be deprecated",
+      },
     }),
     files: Flags.file({
       multiple: true,
@@ -111,7 +116,6 @@ export default class Scan extends SfCommand<ScanResult> {
 
     this.debug(`scan results: ${scanResults.length}`, ...scanResults);
     this.spinner.stop(`Scan complete`);
-    this.log("");
 
     // Build results
     const results = this.buildResults(scanResults);
@@ -129,6 +133,8 @@ export default class Scan extends SfCommand<ScanResult> {
         this.styledHeader(
           "Flow: " +
             chalk.yellow(resultKey) +
+            " " +
+            chalk.bgYellow(`(${matchingScanResult.flow.name}.flow-meta.xml)`) +
             " " +
             chalk.red("(" + resultsByFlow[resultKey].length + " results)"),
         );
@@ -207,16 +213,6 @@ export default class Scan extends SfCommand<ScanResult> {
       flowFiles = FindFlows(directory);
     } else if (sourcepath) {
       if (typeof sourcepath === "string") {
-        this.log(chalk.cyanBright("********"));
-        this.log("");
-        this.log(
-          chalk.yellowBright(
-            "WARN: flag --path or -p will be deprecated, please use --files to scan flow source files",
-          ),
-        );
-        this.log("");
-        this.log(chalk.cyanBright("********"));
-        this.log("");
         flowFiles = sourcepath.split(",").filter((f) => fse.exists(f));
       } else {
         flowFiles = sourcepath;
@@ -265,6 +261,8 @@ export default class Scan extends SfCommand<ScanResult> {
           ruleResult.details.length > 0
         ) {
           const severity = ruleResult.severity || "error";
+          const flowUri = scanResult.flow.fsPath;
+          const flowApiName = `${scanResult.flow.name}.flow-meta.xml`;
           for (const result of ruleResult.details as ResultDetails[]) {
             const detailObj = Object.assign(result, {
               ruleDescription,
@@ -272,6 +270,8 @@ export default class Scan extends SfCommand<ScanResult> {
               flowName,
               flowType,
               severity,
+              flowUri,
+              flowApiName,
             });
             errors.push(detailObj);
             this.errorCounters[severity] =
