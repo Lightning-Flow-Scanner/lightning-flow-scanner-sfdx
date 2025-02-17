@@ -47,7 +47,7 @@ sfdx flow:scan [options]
 
   -f, --failon                                                      provide a threshold level for returning status 1
 
-  -p, --sourcepath <C:\..\flow1.flow, C:\..\flow2.flow>             provide a comma-separated list of flow paths to scan.
+  -p, --files <C:\..\flow1.flow, C:\..\flow2.flow>                  provide a space-separated list of flow paths to scan.
 
   -u, --targetusername <username>                                   retrieve the latest metadata from the target before the scan.
 
