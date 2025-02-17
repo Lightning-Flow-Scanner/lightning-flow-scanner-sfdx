@@ -48,6 +48,7 @@ export default class Scan extends SfCommand<ScanResult> {
       description: messages.getMessage("directoryToScan"),
       required: false,
       exists: true,
+      exclusive: ["files"],
     }),
     config: Flags.file({
       char: "c",
@@ -71,6 +72,7 @@ export default class Scan extends SfCommand<ScanResult> {
       exists: true,
       description: "List of source flows paths to scan",
       charAliases: ["p"],
+      exclusive: ["directory"],
     }),
     targetusername: Flags.string({
       char: "u",
@@ -194,12 +196,7 @@ export default class Scan extends SfCommand<ScanResult> {
   private findFlows(directory: string, sourcepath: string[]) {
     // List flows that will be scanned
     let flowFiles;
-    if (directory && sourcepath) {
-      this.spinner.stop("Error");
-      throw new SfError(
-        "You can only specify one of either directory or sourcepath, not both.",
-      );
-    } else if (directory) {
+    if (directory) {
       flowFiles = FindFlows(directory);
     } else if (sourcepath) {
       flowFiles = sourcepath;

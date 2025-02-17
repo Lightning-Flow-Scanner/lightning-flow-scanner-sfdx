@@ -18,18 +18,13 @@ describe("flow:scan", () => {
     let output: ScanResult;
     try {
       const output = await new Scan(
-        [
-          "--directory",
-          "test/",
-          "--sourcepath",
-          "test/commands/flow/scan.test.ts",
-        ],
+        ["--directory", "test/", "--files", "test/commands/flow/scan.test.ts"],
         config,
       ).run();
       console.log(output);
     } catch (e) {
-      expect((e as Error).message).to.include(
-        "You can only specify one of either directory or sourcepath, not both.",
+      expect((e as Error).message).to.contains(
+        "cannot also be provided when using --directory",
       );
     }
     expect(output).to.be.equal(undefined);
