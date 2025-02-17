@@ -1,7 +1,6 @@
 import { SfCommand, Flags } from "@salesforce/sf-plugins-core";
 import { Messages, SfError } from "@salesforce/core";
 import chalk from "chalk";
-import * as fse from "fs-extra";
 import { exec } from "child_process";
 
 import { loadScannerOptions } from "../../libs/ScannerConfig.js";
@@ -27,10 +26,11 @@ export default class Scan extends SfCommand<ScanResult> {
     "sf flow scan",
     "sf flow scan --failon warning",
     "sf flow scan -c path/to/config.json",
+    "sf flow scan -c path/to/config.json --json",
     "sf flow scan -c path/to/config.json --failon warning",
     "sf flow scan -d path/to/flows/directory",
-    "[DEPRECATION WARNING USE --files] sf flow scan -p path/to/single/file.flow-meta.xml,path/to/another/file.flow-meta.xml",
     "sf flow scan --files path/to/single/file.flow-meta.xml path/to/another/file.flow-meta.xml",
+    "sf flow scan -p path/to/single/file.flow-meta.xml path/to/another/file.flow-meta.xml",
   ];
 
   protected static requiresUsername = false;
@@ -66,21 +66,11 @@ export default class Scan extends SfCommand<ScanResult> {
       description: "Force retrieve Flows from org at the start of the command",
       default: false,
     }),
-    sourcepath: Flags.directory({
-      char: "p",
-      description: "Comma-separated list of source flow paths to scan",
-      required: false,
-      multiple: false,
-      deprecated: {
-        to: "files",
-        message:
-          "Please use --files instead of --path, as --path will be deprecated",
-      },
-    }),
     files: Flags.file({
       multiple: true,
       exists: true,
       description: "List of source flows paths to scan",
+      charAliases: ["p"],
     }),
     targetusername: Flags.string({
       char: "u",
@@ -100,7 +90,7 @@ export default class Scan extends SfCommand<ScanResult> {
       await this.retrieveFlowsFromOrg(flags.targetusername);
     }
 
-    const targets: string | string[] = flags.sourcepath ?? flags.files;
+    const targets: string[] = flags.files;
 
     const flowFiles = this.findFlows(flags.directory, targets);
     this.spinner.start(`Identified ${flowFiles.length} flows to scan`);
@@ -201,7 +191,7 @@ export default class Scan extends SfCommand<ScanResult> {
     return { summary, status: status, results };
   }
 
-  private findFlows(directory: string, sourcepath: string | string[]) {
+  private findFlows(directory: string, sourcepath: string[]) {
     // List flows that will be scanned
     let flowFiles;
     if (directory && sourcepath) {
@@ -212,11 +202,7 @@ export default class Scan extends SfCommand<ScanResult> {
     } else if (directory) {
       flowFiles = FindFlows(directory);
     } else if (sourcepath) {
-      if (typeof sourcepath === "string") {
-        flowFiles = sourcepath.split(",").filter((f) => fse.exists(f));
-      } else {
-        flowFiles = sourcepath;
-      }
+      flowFiles = sourcepath;
     } else {
       flowFiles = FindFlows(".");
     }
@@ -288,9 +274,7 @@ export default class Scan extends SfCommand<ScanResult> {
     this.spinner.start(chalk.yellowBright("Retrieving Metadata..."));
     const retrieveCommand = `sf project retrieve start -m Flow -o "${targetusername}"`;
     try {
-      await exec(retrieveCommand, {
-        maxBuffer: 1000000 * 1024,
-      });
+      await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
     } catch (exception) {
       errored = true;
       this.toErrorJson(exception);
