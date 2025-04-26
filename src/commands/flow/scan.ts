@@ -5,22 +5,21 @@ import { exec } from "child_process";
 
 import { loadScannerOptions } from "../../libs/ScannerConfig.js";
 import { FindFlows } from "../../libs/FindFlows.js";
-import { ScanResult } from "../../models/ScanResult.js";
+import { ScanResult as Output } from "../../models/ScanResult.js";
 
-import {
-  ScanResult as ScanResults,
+import pkg, {
+  ParsedFlow,
+  ScanResult,
   RuleResult,
   ResultDetails,
-  parse as parseFlows,
-  scan as scanFlows,
-  ParsedFlow,
 } from "lightning-flow-scanner-core";
+const { parse: parseFlows, scan: scanFlows } = pkg;
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
 const messages = Messages.loadMessages("lightning-flow-scanner", "command");
 
-export default class Scan extends SfCommand<ScanResult> {
+export default class Scan extends SfCommand<Output> {
   public static description = messages.getMessage("commandDescription");
   public static examples: string[] = [
     "sf flow scan",
@@ -83,7 +82,7 @@ export default class Scan extends SfCommand<ScanResult> {
     }),
   };
 
-  public async run(): Promise<ScanResult> {
+  public async run(): Promise<Output> {
     const { flags } = await this.parse(Scan);
     this.failOn = flags.failon || "error";
     this.spinner.start("Loading Lightning Flow Scanner");
@@ -101,7 +100,7 @@ export default class Scan extends SfCommand<ScanResult> {
     const parsedFlows: ParsedFlow[] = await parseFlows(flowFiles);
     this.debug(`parsed flows ${parsedFlows.length}`, ...parsedFlows);
 
-    const scanResults: ScanResults[] =
+    const scanResults: ScanResult[] =
       this.userConfig && Object.keys(this.userConfig).length > 0
         ? scanFlows(parsedFlows, this.userConfig)
         : scanFlows(parsedFlows);
@@ -161,7 +160,7 @@ export default class Scan extends SfCommand<ScanResult> {
       chalk.bold(
         chalk.italic(
           chalk.yellowBright(
-            "Be a part of our mission to champion Flow Best Practices by starring us on GitHub:",
+            "Be a part of our mission to champion Flow Best Practices by starring ⭐ us on GitHub:",
           ),
         ),
       ),
