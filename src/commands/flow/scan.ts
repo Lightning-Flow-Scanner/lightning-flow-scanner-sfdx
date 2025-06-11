@@ -13,6 +13,7 @@ import pkg, {
   RuleResult,
   ResultDetails,
 } from "lightning-flow-scanner-core";
+import { inspect } from "util";
 const { parse: parseFlows, scan: scanFlows } = pkg;
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -100,11 +101,20 @@ export default class Scan extends SfCommand<Output> {
     const parsedFlows: ParsedFlow[] = await parseFlows(flowFiles);
     this.debug(`parsed flows ${parsedFlows.length}`, ...parsedFlows);
 
-    const scanResults: ScanResult[] =
-      this.userConfig && Object.keys(this.userConfig).length > 0
-        ? scanFlows(parsedFlows, this.userConfig)
-        : scanFlows(parsedFlows);
+    const tryScan = (): [ScanResult[], error: Error] => {
+      try {
+        const scanResult =
+          this.userConfig && Object.keys(this.userConfig).length > 0
+            ? scanFlows(parsedFlows, this.userConfig)
+            : scanFlows(parsedFlows);
+        return [scanResult, null];
+      } catch (error) {
+        return [null, error];
+      }
+    };
 
+    const [scanResults, error] = tryScan();
+    this.debug(`error:`, inspect(error));
     this.debug(`scan results: ${scanResults.length}`, ...scanResults);
     this.spinner.stop(`Scan complete`);
 
