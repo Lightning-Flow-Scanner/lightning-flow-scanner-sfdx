@@ -114,6 +114,7 @@ export default class Scan extends SfCommand<Output> {
     };
 
     const [scanResults, error] = tryScan();
+    this.debug(`use new scan? ${process.env.IS_NEW_SCAN_ENABLED}`);
     this.debug(`error:`, inspect(error));
     this.debug(`scan results: ${scanResults.length}`, ...scanResults);
     this.spinner.stop(`Scan complete`);
@@ -147,6 +148,8 @@ export default class Scan extends SfCommand<Output> {
           data: resultsByFlow[resultKey],
           columns: ["rule", "type", "name", "severity"],
         });
+        this.debug(`Results By Flow: 
+          ${inspect(resultsByFlow[resultKey])}`);
         this.log("");
       }
     }

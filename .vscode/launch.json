@@ -10,7 +10,7 @@
       "request": "launch",
       "type": "node-terminal",
       "env": {
-        "IS_NEW_SCAN_ENABLED": "false"
+        "IS_NEW_SCAN_ENABLED": "true"
       }
     },
     {
